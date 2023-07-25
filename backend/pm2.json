@@ -1,7 +1,7 @@
 {
     "apps": [
         {
-            "name": "Texas Ashram API (3023)",
+            "name": "Sameem API (3023)",
             "script": "npm start",
             "instances": "1",
             "autorestart": true,
