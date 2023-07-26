@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from "fs";
 import * as path from 'path';
+import { AdminSeederService } from "./admin-seeder/admin-seeder.service";
 
 const httpsOptions = {
     key: fs.readFileSync(path.join(__dirname, '', '/ssl/texas-key.txt').replace('dist', 'src')),
@@ -35,7 +36,12 @@ socket_io_server.listen(process.env.SOCKET_IO_PORT, () => {
 export const socketIoServer = io;
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
+
+    const app = await NestFactory.create(AppModule, { cors: true });
+    const adminSeederService = app.get(AdminSeederService);
+    adminSeederService.seed();
+    // await app.listen(3000);
+
     app.useGlobalPipes(new ValidationPipe());
     app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
     app.use('/images', express.static(path.join(__dirname, '..', 'images')));

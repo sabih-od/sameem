@@ -11,6 +11,7 @@ import {NotificationsModule} from "./notifications/notifications.module";
 import {MessagesModule} from "./messages/messages.module";
 import {ContactsModule} from "./contacts/contacts.module";
 import {AbusiveWordsMiddleware} from "./middlewares/abusiveWords.middleware";
+import { AdminSeederService } from "./admin-seeder/admin-seeder.service";
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import {AbusiveWordsMiddleware} from "./middlewares/abusiveWords.middleware";
       GroupRequestsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AdminSeederService],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
