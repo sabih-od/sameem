@@ -3,6 +3,7 @@ import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {Repository, EntityNotFoundError, QueryFailedError, Not} from 'typeorm';
 import {User} from './entities/user.entity';
+import { UserSeed } from './interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -11,6 +12,18 @@ export class UsersService {
         @Inject('USER_REPOSITORY')
         private userRepository: Repository<User>,
     ) {
+    }
+
+
+    async createUser(payload) {
+        const user = new User()
+        user.first_name = payload.first_name;
+        user.last_name = payload.last_name;
+        user.email = payload.email;
+        user.password = await bcrypt.hash(payload.password, 10);
+        user.role_id = 1;
+
+        await this.userRepository.save(user)
     }
 
     async create(createUserDto: CreateUserDto): Promise<any> {
