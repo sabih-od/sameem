@@ -6,9 +6,9 @@ import {faqProviders} from "./faq.provider";
 import {UsersModule} from "../users/users.module";
 
 @Module({
-  imports: [DatabaseModule, UsersModule],
+    imports: [DatabaseModule, UsersModule],
   controllers: [FaqController],
-  providers: [...faqProviders,FaqService],
-  exports: [FaqService,...faqProviders]
+  providers: [FaqService, ...faqProviders],
+    exports: [FaqService],
 })
 export class FaqModule {}
