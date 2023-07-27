@@ -48,6 +48,7 @@ async function bootstrap() {
         .setVersion('1.0')
         .addTag('Auth')
         .addTag('Contacts')
+        .addTag('FAQs')
         .addTag('Groups')
         .addTag('Group Requests')
         .addTag('Messages')

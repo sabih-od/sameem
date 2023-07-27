@@ -11,6 +11,7 @@ import {NotificationsModule} from "./notifications/notifications.module";
 import {MessagesModule} from "./messages/messages.module";
 import {ContactsModule} from "./contacts/contacts.module";
 import {AbusiveWordsMiddleware} from "./middlewares/abusiveWords.middleware";
+import { FaqModule } from './faq/faq.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import {AbusiveWordsMiddleware} from "./middlewares/abusiveWords.middleware";
       MessagesModule,
       NotificationsModule,
       GroupRequestsModule,
+      FaqModule,
   ],
   controllers: [AppController],
   providers: [AppService],
