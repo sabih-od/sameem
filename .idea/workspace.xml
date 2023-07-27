@@ -4,7 +4,6 @@
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +14,11 @@
     <execution />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="2T7UahkngGgKDMfUJLLNoPuQoXp" />
@@ -29,7 +33,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/ssl" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/faq" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/backend/node_modules/typescript/lib" />
@@ -37,6 +41,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src/faq" />
       <recent name="$PROJECT_DIR$/backend/src/ssl" />
     </key>
   </component>
@@ -78,7 +83,28 @@
       <option name="project" value="LOCAL" />
       <updated>1690495053156</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="workpspace in gitignore">
+      <created>1690497268676</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1690497268676</updated>
+    </task>
+    <task id="LOCAL-00006" summary="faq apis">
+      <created>1690498441238</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1690498441238</updated>
+    </task>
+    <task id="LOCAL-00007" summary="faq apis">
+      <created>1690498445856</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1690498445856</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -101,7 +127,9 @@
     <MESSAGE value="idea" />
     <MESSAGE value="ssl in gitignore, main.ts comments, readme changes, ssl files" />
     <MESSAGE value="files delete, workpspace in gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="files delete, workpspace in gitignore" />
+    <MESSAGE value="workpspace in gitignore" />
+    <MESSAGE value="faq apis" />
+    <option name="LAST_COMMIT_MESSAGE" value="faq apis" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

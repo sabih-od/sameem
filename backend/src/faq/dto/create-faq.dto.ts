@@ -3,14 +3,11 @@ import {ApiProperty} from "@nestjs/swagger";
 
 export class CreateFaqDto {
     @IsNotEmpty()
-    @ApiProperty({example: 'What is the capital of France?'})
-    question: string
+    @ApiProperty({ example: 'Is this an example question?' })
+    question: string;
 
-    @IsNotEmpty()
-    @ApiProperty({example:'the capital of france is Paris'})
-    answer:string
+    @ApiProperty({ example: 'This is an example answer' })
+    answer: string;
 
     created_at: string;
-
-    last_updated: string;
 }

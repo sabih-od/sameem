@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Faq } from "./entities/faq.entity";
+import {Faq} from "./entities/faq.entity";
 
 export const faqProviders = [
     {
