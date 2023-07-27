@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/users/interface.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +71,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690494617559</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="files delete, workpspace in gitignore">
+      <created>1690495053156</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1690495053156</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -92,7 +100,8 @@
     <MESSAGE value="interface work." />
     <MESSAGE value="idea" />
     <MESSAGE value="ssl in gitignore, main.ts comments, readme changes, ssl files" />
-    <option name="LAST_COMMIT_MESSAGE" value="ssl in gitignore, main.ts comments, readme changes, ssl files" />
+    <MESSAGE value="files delete, workpspace in gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="files delete, workpspace in gitignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

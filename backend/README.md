@@ -40,16 +40,18 @@ $ npm i @nestjs/swagger @nestjs/jwt @nestjs/config @types/multer class-validator
 # 5. create backend/uploads directory
 
 # 6. create backend/images directory
- 
-# 7. copy .env.example file and prepare .env file according to .env.example
 
-# 8. add following code to backend/.gitignore file
+# 7. create backend/ssl directory and place key.txt and cert.txt files
+ 
+# 8. copy .env.example file and prepare .env file according to .env.example
+
+# 9. add following code to backend/.gitignore file
 .env
 uploads/*
 
-# 9. copy backend/pm2.json file
+# 10. copy backend/pm2.json file
 
-# 10. import modules in app module, modify src/app.module.ts as follows
+# 11. import modules in app module, modify src/app.module.ts as follows
 convert:
 imports: [],
 to:
@@ -75,7 +77,7 @@ export class AppModule {
     }
 }
 
-# 11. setup src/main.ts file 
+# 12. setup src/main.ts file 
 
 -add following code above 'bootstrap' method
 
@@ -142,7 +144,7 @@ const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
 
     await app.listen(process.env.PORT);
     
-# 12. copy backend/README.md file
+# 13. copy backend/README.md file
 
 ```
 
