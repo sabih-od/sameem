@@ -85,8 +85,8 @@ import * as path from 'path';
 
 //https config
 const httpsOptions = {
-    key: fs.readFileSync(path.join(__dirname, '', '/ssl/texas-key.txt').replace('dist', 'src')),
-    cert: fs.readFileSync(path.join(__dirname, '', '/ssl/texas-cert.txt').replace('dist', 'src')),
+    key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
+    cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
 };
 
 //socket.io deps

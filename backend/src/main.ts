@@ -4,8 +4,8 @@ import * as fs from "fs";
 import * as path from 'path';
 
 const httpsOptions = {
-    key: fs.readFileSync(path.join(__dirname, '', '/ssl/texas-key.txt').replace('dist', 'src')),
-    cert: fs.readFileSync(path.join(__dirname, '', '/ssl/texas-cert.txt').replace('dist', 'src')),
+    key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
+    cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
 };
 
 //socket.io deps
@@ -20,16 +20,13 @@ const socket_io_server = https.createServer(httpsOptions, socket_app);
 const { Server } = require("socket.io");
 const io = new Server(socket_io_server);
 
-console.log('process.env.DB_HOST');
-console.log(process.env.DB_HOST);
-
 io.on('connection', (socket) => {
     // console.log('socket', socket);
     console.log('a user connected');
 });
 
 socket_io_server.listen(process.env.SOCKET_IO_PORT, () => {
-    console.log('listening on *:' + process.env.SOCKET_IO_PORT);
+    console.log('socket io server listening on *:' + process.env.SOCKET_IO_PORT);
 });
 
 export const socketIoServer = io;
