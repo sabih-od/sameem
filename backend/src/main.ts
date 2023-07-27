@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from "fs";
 import * as path from 'path';
-import { AdminSeederService } from "./admin-seeder/admin-seeder.service";
 
 const httpsOptions = {
     key: fs.readFileSync(path.join(__dirname, '', '/ssl/texas-key.txt').replace('dist', 'src')),
