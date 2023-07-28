@@ -40,6 +40,40 @@ export const deleteFileFromUploads = async (app_url, delete_path) => {
     }
 }
 
+export const handleUploadOnCreate = async (files, module, dir_path, indexed = true) => {
+    module = indexed ? module : [module];
+    if (files && module && module[0] && module[0].originalname && module[0].buffer) {
+        let app_url = process.env.APP_URL + ':' + process.env.PORT;
+
+        let file_name = getRandomFileName(module[0]);
+        let file_path = '.' + dir_path + file_name;
+
+        await uploadFile('.' + dir_path, file_path, module[0]);
+
+        return app_url + dir_path + file_name;
+    }
+
+    return null;
+}
+
+export const handleUploadOnUpdate = async (files, module, link, dir_path) => {
+    if (files && module && module[0] && module[0].originalname && module[0].buffer) {
+        let app_url = process.env.APP_URL + ':' + process.env.PORT;
+
+        // Delete existing file
+        await deleteFileFromUploads(app_url, link);
+
+        let file_name = getRandomFileName(module[0]);
+        let file_path = '.' + dir_path + file_name;
+
+        await uploadFile('.' + dir_path, file_path, module[0]);
+
+        return app_url + dir_path + file_name;
+    }
+
+    return link;
+}
+
 export const getRandomFileName = (file) => {
     return generateRandomString(20) + '.' + getFileExtension(file.originalname);
 }

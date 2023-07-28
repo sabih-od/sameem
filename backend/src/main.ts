@@ -51,8 +51,10 @@ async function bootstrap() {
         .addTag('FAQs')
         .addTag('Groups')
         .addTag('Group Requests')
+        .addTag('Media')
         .addTag('Messages')
         .addTag('Notifications')
+        .addTag('Posts')
         .addTag('Users')
         .addSecurity('bearer', {
             type: 'http',
