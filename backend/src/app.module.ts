@@ -12,6 +12,8 @@ import {MessagesModule} from "./messages/messages.module";
 import {ContactsModule} from "./contacts/contacts.module";
 import {AbusiveWordsMiddleware} from "./middlewares/abusiveWords.middleware";
 import { FaqModule } from './faq/faq.module';
+import { PostsModule } from './posts/posts.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { FaqModule } from './faq/faq.module';
       NotificationsModule,
       GroupRequestsModule,
       FaqModule,
+      PostsModule,
+      MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
