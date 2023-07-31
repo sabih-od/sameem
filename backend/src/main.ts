@@ -47,6 +47,7 @@ async function bootstrap() {
         .setDescription('Sameem API Documentation')
         .setVersion('1.0')
         .addTag('Auth')
+        .addTag('Categories')
         .addTag('Contacts')
         .addTag('FAQs')
         .addTag('Groups')

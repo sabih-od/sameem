@@ -1,31 +1,35 @@
 import {
-    Controller,
-    Get,
-    Post,
+    BadRequestException,
     Body,
-    Patch,
-    Param,
+    CallHandler,
+    Controller,
     Delete,
+    ExecutionContext,
+    Get,
+    Inject,
+    Injectable,
+    NestInterceptor,
+    Param,
+    Post,
     Query,
+    UploadedFiles,
     UseGuards,
-    UseInterceptors,
-    NestInterceptor, ExecutionContext, CallHandler, BadRequestException, UploadedFiles, Injectable
+    UseInterceptors
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import {PostsService} from './posts.service';
+import {CreatePostDto} from './dto/create-post.dto';
+import {UpdatePostDto} from './dto/update-post.dto';
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {Observable} from "rxjs";
+import {Post as PostEntity} from './entities/post.entity';
 import {map} from "rxjs/operators";
-import {
-    deleteFileFromUploads,
-    handleUploadOnCreate,
-    handleUploadOnUpdate,
-} from "../helpers/helper";
+import {deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate,} from "../helpers/helper";
 import {MediaService} from "../media/media.service";
 import {CreateMediaDto} from "../media/dto/create-media.dto";
+import {Repository} from "typeorm";
+import {CategoriesService} from "../categories/categories.service";
 
 @Injectable()
 export class MaxFileSizeInterceptor implements NestInterceptor {
@@ -36,12 +40,14 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
         const request = context.switchToHttp().getRequest();
         const files = request.files;
 
-        this.checkForFiles(files, files.video, 100000000);
-        this.checkForFiles(files, files.audio, 100000000);
-        this.checkForFiles(files, files.image, 100000000);
-        this.checkForFiles(files, files.pdf, 100000000);
+        if (files) {
+            this.checkForFiles(files, files.video, 100000000);
+            this.checkForFiles(files, files.audio, 100000000);
+            this.checkForFiles(files, files.image, 100000000);
+            this.checkForFiles(files, files.pdf, 100000000);
+        }
 
-        if (files.images) {
+        if (files && files.images) {
             files.images.forEach((image) => {
                 this.checkForFiles(files, image, 100000000);
             });
@@ -69,6 +75,9 @@ export class PostsController {
     constructor(
         private readonly postsService: PostsService,
         private readonly mediaService: MediaService,
+        private readonly categoryService: CategoriesService,
+        @Inject('POST_REPOSITORY')
+        private postRepository: Repository<PostEntity>,
     ) {}
 
     @Post()
@@ -93,20 +102,45 @@ export class PostsController {
         }
     ) {
         //file uploads
-        try {
-            createPostDto.video = await handleUploadOnCreate(files, files.video, '/uploads/posts/videos/');
-            createPostDto.audio = await handleUploadOnCreate(files, files.audio, '/uploads/posts/audios/');
-            createPostDto.image = await handleUploadOnCreate(files, files.image, '/uploads/posts/images/');
-            createPostDto.pdf = await handleUploadOnCreate(files, files.pdf, '/uploads/posts/pdfs/');
-        } catch (error) {
-            throw new BadRequestException(error.message);
+        if (files) {
+            try {
+                createPostDto.video = await handleUploadOnCreate(files, files.video, '/uploads/posts/videos/');
+                createPostDto.audio = await handleUploadOnCreate(files, files.audio, '/uploads/posts/audios/');
+                createPostDto.image = await handleUploadOnCreate(files, files.image, '/uploads/posts/images/');
+                createPostDto.pdf = await handleUploadOnCreate(files, files.pdf, '/uploads/posts/pdfs/');
+            } catch (error) {
+                throw new BadRequestException(error.message);
+            }
         }
 
         createPostDto.created_at = Date.now().toString();
         let res = await this.postsService.create(createPostDto);
 
+        //attach categories
+        if (createPostDto.category_ids) {
+            let post = await this.postRepository.findOne({
+                where: {
+                    id: res.id
+                }
+            });
+
+            post.categories = await Promise.all(
+                createPostDto.category_ids.map(async (category_id) => {
+                    let category = await this.categoryService.findOne(+category_id);
+
+                    if (!category.error) {
+                        return category;
+                    }
+                }).filter((item) => {
+                    return item !== null && item !== undefined;
+                })
+            );
+
+            await this.postRepository.save(post);
+        }
+
         //multiple image upload
-        if (files.images) {
+        if (files && files.images) {
             try {
                 await Promise.all(
                     files.images.map(async (file) => {
@@ -135,24 +169,9 @@ export class PostsController {
 
     @Get()
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
-        let res = await this.postsService.findAll(page, limit);
-
-        res.data = await Promise.all(
-            res.data.map(async (post) => {
-                let media_res = await this.mediaService.findAll(1, 1000, {
-                    where: {
-                        module: 'post',
-                        module_id: post.id,
-                    }
-                });
-
-                return {
-                    ...post,
-                    images: media_res.data
-                };
-
-            })
-        );
+        let res = await this.postsService.findAll(page, limit, {
+            relations: ['images']
+        });
 
         return {
             success: true,
@@ -165,17 +184,10 @@ export class PostsController {
     async findOne(@Param('id') id: string) {
         let res = await this.postsService.findOne(+id);
 
-        let images = await this.mediaService.findAll(1, 1000, {
-            where: {
-                module: 'post',
-                module_id: res.id,
-            }
-        });
-
         return {
             success: !res.error,
             message: res.error ? res.error : '',
-            data: res.error ? [] : {...res, images},
+            data: res.error ? [] : res,
         }
     }
 
@@ -212,13 +224,15 @@ export class PostsController {
 
         //file uploads
         try {
-            updatePostDto.video = await handleUploadOnUpdate(files, files.video, post.video, '/uploads/posts/videos/');
-            updatePostDto.audio = await handleUploadOnUpdate(files, files.audio, post.audio, '/uploads/posts/audios/');
-            updatePostDto.image = await handleUploadOnUpdate(files, files.image, post.image, '/uploads/posts/images/');
-            updatePostDto.pdf = await handleUploadOnUpdate(files, files.pdf, post.pdf, '/uploads/posts/pdfs/');
+            if (files) {
+                updatePostDto.video = await handleUploadOnUpdate(files, files.video, post.video, '/uploads/posts/videos/');
+                updatePostDto.audio = await handleUploadOnUpdate(files, files.audio, post.audio, '/uploads/posts/audios/');
+                updatePostDto.image = await handleUploadOnUpdate(files, files.image, post.image, '/uploads/posts/images/');
+                updatePostDto.pdf = await handleUploadOnUpdate(files, files.pdf, post.pdf, '/uploads/posts/pdfs/');
+            }
 
             //multiple image upload
-            if (files.images) {
+            if (files && files.images) {
                 await Promise.all(
                     files.images.map(async (file) => {
                         let createMediaDto = new CreateMediaDto();
@@ -236,7 +250,32 @@ export class PostsController {
             throw new BadRequestException(error.message);
         }
 
-        let res = await this.postsService.update(+id, updatePostDto);
+        let newUpdatePostDto = updatePostDto;
+        delete newUpdatePostDto.category_ids;
+        let res = await this.postsService.update(+id, newUpdatePostDto);
+
+        //attach categories
+        if (updatePostDto.category_ids) {
+            let post = await this.postRepository.findOne({
+                where: {
+                    id: id
+                }
+            });
+
+            post.categories = await Promise.all(
+                updatePostDto.category_ids.map(async (category_id) => {
+                    let category = await this.categoryService.findOne(+category_id);
+
+                    if (!category.error) {
+                        return category;
+                    }
+                }).filter((item) => {
+                    return item !== null && item !== undefined;
+                })
+            );
+
+            await this.postRepository.save(post);
+        }
 
         return {
             success: !res.error,

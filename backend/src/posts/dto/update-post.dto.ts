@@ -1,18 +1,18 @@
 import {ApiProperty, PartialType} from '@nestjs/swagger';
 import { CreatePostDto } from './create-post.dto';
-import {IsUrl} from "class-validator";
+import {IsNotEmpty} from "class-validator";
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {
-    @ApiProperty({ example: 1 })
-    category_id: number;
+    @ApiProperty({ example: [1, 2, 3] })
+    category_ids: number[];
 
+    @IsNotEmpty()
     @ApiProperty({ example: 'Post title' })
     title: string;
 
     @ApiProperty({ example: 'Post description' })
     description: string;
 
-    @IsUrl()
     @ApiProperty({ example: 'https://www.google.com' })
     url: string;
 
@@ -33,6 +33,9 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
 
     @ApiProperty({ example: 'https://localhost/post/pdfs/pdf.pdf' })
     pdf: string;
+
+    @ApiProperty({ example: ['https://localhost/post/images/1.jpg', 'https://localhost/post/images/2.jpg'] })
+    images: [];
 
     created_at: string;
 }

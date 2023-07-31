@@ -4,8 +4,14 @@
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/helpers/helper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/helpers/helper.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/media/entities/media.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/media/entities/media.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +49,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/media" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/categories" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -53,6 +59,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src/categories" />
       <recent name="$PROJECT_DIR$/backend/src/media" />
       <recent name="$PROJECT_DIR$/backend/src/posts" />
       <recent name="$PROJECT_DIR$/backend/src/faq" />
@@ -68,7 +75,8 @@
       <option name="presentableId" value="Default" />
       <updated>1690393677361</updated>
       <workItem from="1690393678684" duration="10367000" />
-      <workItem from="1690565758550" duration="13181000" />
+      <workItem from="1690565758550" duration="17758000" />
+      <workItem from="1690822754490" duration="12589000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -119,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690498445856</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="posts work">
+      <created>1690588049236</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1690588049236</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -144,7 +159,8 @@
     <MESSAGE value="files delete, workpspace in gitignore" />
     <MESSAGE value="workpspace in gitignore" />
     <MESSAGE value="faq apis" />
-    <option name="LAST_COMMIT_MESSAGE" value="faq apis" />
+    <MESSAGE value="posts work" />
+    <option name="LAST_COMMIT_MESSAGE" value="posts work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
