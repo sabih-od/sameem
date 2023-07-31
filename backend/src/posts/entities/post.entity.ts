@@ -1,12 +1,14 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Media} from "../../media/entities/media.entity";
+import {Category} from "../../categories/entities/category.entity";
 
 @Entity()
 export class Post {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({type: 'int', nullable: true})
-    category_id: number;
+    // @Column({type: 'int', nullable: true})
+    // category_id: number;
 
     @Column({ type: 'varchar' })
     title: string;
@@ -37,4 +39,14 @@ export class Post {
 
     @Column({ type: 'text', nullable: true })
     created_at: string;
+
+    //relations
+    @OneToMany(type => Media, media => media.post)
+    images: Media[];
+
+    @ManyToMany(type => Category, category => category.posts)
+    @JoinTable({
+        name: 'category_posts',
+    })
+    categories: Category[];
 }

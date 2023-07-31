@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Post} from "../../posts/entities/post.entity";
 
 @Entity()
 export class Media {
@@ -19,4 +20,9 @@ export class Media {
 
     @Column({type: 'varchar', nullable: true})
     created_at: string;
+
+    //relations
+    @ManyToOne(() => Post, post => post.images)
+    @JoinColumn({ name: "module_id" })
+    post: Post;
 }

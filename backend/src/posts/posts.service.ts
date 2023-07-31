@@ -30,10 +30,11 @@ export class PostsService {
         }
     }
 
-    async findAll(page: number = 1, limit: number = 10): Promise<any> {
+    async findAll(page: number = 1, limit: number = 10, args = {}): Promise<any> {
         let [data, total] = await this.postRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
+            ...args
         });
 
         const totalPages = Math.ceil(total / limit);
@@ -48,23 +49,12 @@ export class PostsService {
 
     async findOne(id: number): Promise<any> {
         try {
-            let res = await this.postRepository.findOneOrFail({
+            return await this.postRepository.findOneOrFail({
                 where: {
                     id: id
-                }
+                },
+                relations: ['images']
             });
-
-            let images = await this.mediaRepository.find({
-                where: {
-                    module: 'post',
-                    module_id: 24,
-                }
-            });
-
-            return {
-                ...res,
-                images
-            };
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
                 return {

@@ -14,6 +14,7 @@ import {AbusiveWordsMiddleware} from "./middlewares/abusiveWords.middleware";
 import { FaqModule } from './faq/faq.module';
 import { PostsModule } from './posts/posts.module';
 import { MediaModule } from './media/media.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MediaModule } from './media/media.module';
       FaqModule,
       PostsModule,
       MediaModule,
+      CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
