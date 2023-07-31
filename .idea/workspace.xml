@@ -3,15 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/media/entities/media.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/media/entities/media.entity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/auth/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/auth/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +69,7 @@
       <updated>1690393677361</updated>
       <workItem from="1690393678684" duration="10367000" />
       <workItem from="1690565758550" duration="17758000" />
-      <workItem from="1690822754490" duration="12589000" />
+      <workItem from="1690822754490" duration="14293000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -134,7 +127,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690588049236</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="category/sub-category, post category work, menu apis">
+      <created>1690841431480</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1690841431480</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,7 +160,8 @@
     <MESSAGE value="workpspace in gitignore" />
     <MESSAGE value="faq apis" />
     <MESSAGE value="posts work" />
-    <option name="LAST_COMMIT_MESSAGE" value="posts work" />
+    <MESSAGE value="category/sub-category, post category work, menu apis" />
+    <option name="LAST_COMMIT_MESSAGE" value="category/sub-category, post category work, menu apis" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
