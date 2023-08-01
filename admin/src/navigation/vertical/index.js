@@ -18,9 +18,9 @@ const navigation = () => {
         //   path: '/'
         // },
         {
-            title: 'Books',
+            title: 'Categories',
             icon: BookIcon,
-            path: '/books'
+            path: '/categories'
         },
         // {
         //     title: 'Announcements',
