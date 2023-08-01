@@ -22,58 +22,58 @@ const navigation = () => {
             icon: BookIcon,
             path: '/books'
         },
-        {
-            title: 'Announcements',
-            icon: BullhornOutline,
-            path: '/announcements'
-        },
-
         // {
-        //   title: 'Account Settings',
-        //   icon: AccountCogOutline,
-        //   path: '/account-settings'
+        //     title: 'Announcements',
+        //     icon: BullhornOutline,
+        //     path: '/announcements'
         // },
+        //
+        // // {
+        // //   title: 'Account Settings',
+        // //   icon: AccountCogOutline,
+        // //   path: '/account-settings'
+        // // },
         {
             title: 'Contacts',
             icon: ContactIcon,
             path: '/contacts'
         },
-
-        {
-            title: 'Donations',
-            icon: DonationIcon,
-            path: '/donations'
-        },
-
-        {
-            title: 'Events',
-            icon: EventIcon,
-            path: '/events'
-        },
-
+        //
+        // {
+        //     title: 'Donations',
+        //     icon: DonationIcon,
+        //     path: '/donations'
+        // },
+        //
+        // {
+        //     title: 'Events',
+        //     icon: EventIcon,
+        //     path: '/events'
+        // },
+        //
         {
             title: 'Posts',
             icon: PostIcon,
             path: '/posts',
         },
-
-        {
-            title: 'Prayer Requests',
-            icon: PostIcon,
-            path: '/prayers',
-        },
-
-        {
-            title: 'Sermons',
-            icon: PostIcon,
-            path: '/sermons',
-        },
-
-        {
-            title: 'Speaker',
-            icon: PeopleOutlinedIcon,
-            path: '/speakers',
-        },
+        //
+        // {
+        //     title: 'Prayer Requests',
+        //     icon: PostIcon,
+        //     path: '/prayers',
+        // },
+        //
+        // {
+        //     title: 'Sermons',
+        //     icon: PostIcon,
+        //     path: '/sermons',
+        // },
+        //
+        // {
+        //     title: 'Speaker',
+        //     icon: PeopleOutlinedIcon,
+        //     path: '/speakers',
+        // },
 
         {
             title: 'Users',
@@ -81,17 +81,17 @@ const navigation = () => {
             path: '/users',
         },
 
-        {
-            title: 'Report Users',
-            icon: ReportOutlinedIcon,
-            path: '/report-users',
-        },
-
-        {
-            title: 'Report Messages',
-            icon: ReportOutlinedIcon,
-            path: '/report-messages',
-        },
+        // {
+        //     title: 'Report Users',
+        //     icon: ReportOutlinedIcon,
+        //     path: '/report-users',
+        // },
+        //
+        // {
+        //     title: 'Report Messages',
+        //     icon: ReportOutlinedIcon,
+        //     path: '/report-messages',
+        // },
 
         // {
         //   title: 'Account Settings',
@@ -147,21 +147,21 @@ const navigation = () => {
         //   title: 'Form Layouts',
         //   path: '/form-layouts'
         // }
-        {
-            title: 'Staff Members',
-            icon: PeopleOutlinedIcon,
-            path: '/staff-members',
-        },
-        {
-            title: 'Groups',
-            icon: GroupsOutlinedIcon,
-            path: '/groups',
-        },
-        {
-            title: 'Group Requests',
-            icon: MarkAsUnreadOutlinedIcon,
-            path: '/group-requests',
-        },
+        // {
+        //     title: 'Staff Members',
+        //     icon: PeopleOutlinedIcon,
+        //     path: '/staff-members',
+        // },
+        // {
+        //     title: 'Groups',
+        //     icon: GroupsOutlinedIcon,
+        //     path: '/groups',
+        // },
+        // {
+        //     title: 'Group Requests',
+        //     icon: MarkAsUnreadOutlinedIcon,
+        //     path: '/group-requests',
+        // },
 
 
         // {
