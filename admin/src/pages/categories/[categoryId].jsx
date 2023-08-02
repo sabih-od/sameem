@@ -1,100 +1,123 @@
-import React, {forwardRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import Select from '@mui/material/Select'; // Correct import statement
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import {
+    getCategory,
+    category as categoryDetail,
+    loading as categoryLoading,
+    errors as categoryErrors,
+    success as categorySuccess, updateCategory, setErrors, setSuccess,
+    // categories as categoriesList,
+
+} from "../../store/slices/categorySlice";
 
 import {
     getCategories,
-    addCategory,
-    loading as categoryLoading,
-    errors as categoryErrors,
-    success as categorySuccess,
     categories as categoriesList,
-    setSuccess, setErrors,
-    // getCategories, // Import the getCategories async action
-
 } from '../../store/slices/categoriesSlice'
-import {useRouter} from "next/navigation";
-import Grid from "@mui/material/Grid";
-import {Alert, AlertTitle, Stack} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
 
-function Create(props) {
-    const [categoryAdded, setCategoryAdded] = useState(false);
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import {Alert, AlertTitle, Stack} from "@mui/material";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+
+function Category(props) {
+    const {push, query} = useRouter()
+    const {categoryId} = query
 
     const dispatch = useDispatch()
-    const {push} = useRouter()
 
+    const category = useSelector(categoryDetail)
     const loading = useSelector(categoryLoading)
     const errors = useSelector(categoryErrors)
     const success = useSelector(categorySuccess)
+
     const categories = useSelector(categoriesList)
 
-    const [successMsg, setSuccessMessage] = useState(null)
+    const [successMsg, setSuccessMessage] = useState('')
     const [name, setName] = useState('')
-    const [parentId, setParentId] = useState('')
-    // const [categories, setCategories] = useState([]);
+    const [parent_id, setParentId] = useState('')
 
     const [page, setPage] = useState(1)
 
-    useEffect(() => {
-        // Reset the success message when the component is mounted
-        setSuccessMessage(null);
-    }, []);
-    // useEffect(() => {
-    //     dispatch(setSuccess(false))
-    // }, [success])
-
-    // useEffect(() => {
-    //     dispatch(setSuccess(false));
-    //     dispatch(getCategories({ page: 1 })); // Fetch categories when the component mounts
-    // }, [success, dispatch]);
 
     useEffect(() => {
         dispatch(getCategories({page}))
     }, [page])
 
+
     useEffect(() => {
-        if (!loading && success && categoryAdded) {
-            setSuccessMessage('Category added successfully!')
+        if (categoryId) {
+            dispatch(getCategory({id: categoryId}))
+        }
+    }, [categoryId])
+
+    useEffect(() => {
+        if (category) {
+            setName(category.name)
+            setParentId(category.parent_id ?? '')
+        }
+    }, [category])
+
+    useEffect(() => {
+        dispatch(setSuccess(false))
+    }, [success])
+
+    useEffect(() => {
+        if (!loading && success) {
+            setSuccessMessage('Category updated successfully!')
             setTimeout(() => {
-                setSuccessMessage(null);
-            }, 500);
-            setTimeout(() => {
-                push('/categories')
+                push('/categories').then((r) => 'success');
             }, 500)
         }
-    }, [success, loading , categoryAdded])
-
-
-
-    // useEffect(() => {
-    //     // Update the categories state when the categories list changes
-    //     setCategories(categoriesSelector); // Replace 'categoriesSelector' with the actual selector for categories list from Redux
-    // }, [categoriesSelector]);
+    }, [success, loading])
 
     const handleSubmit = (e) => {
         e.preventDefault()
         if (loading) return
 
-        dispatch(addCategory({
-            name: name,
-            parent_id: parentId,
+        // if (!fileValidation()) return;
+        let data = {
+            name,
+            parent_id
+        }
+
+
+        dispatch(updateCategory({
+            id: categoryId,
+            ...data
         }))
-        setCategoryAdded(true);
+
     }
+
+    // const fileValidation = () => {
+    //     let _errors = []
+    //     /*if (file === null) {
+    //         _errors.push("File is required!")
+    //     }
+    //     if (image === null) {
+    //         _errors.push("Image is required!")
+    //     }*/
+    //
+    //     if (_errors.length > 0) {
+    //         dispatch(setErrors(_errors))
+    //     }
+    //
+    //     return _errors.length < 1
+    // }
 
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
                 <Typography variant='h5'>
-                    Create Category
+                    Edit Category
                 </Typography>
             </Grid>
 
@@ -106,7 +129,7 @@ function Create(props) {
                                 <AlertTitle>Success</AlertTitle>
                                 <Box component='strong' sx={{display: 'block'}}>{successMsg}</Box>
                             </Alert>
-                        ) : null}
+                        ) : ''}
                         {errors && errors.length > 0 ? (
                             <Alert severity="error" sx={{mb: 4}}>
                                 <AlertTitle>Errors</AlertTitle>
@@ -114,7 +137,7 @@ function Create(props) {
                                     <Box component='strong' sx={{display: 'block'}} key={ind}>{item}</Box>
                                 ))}
                             </Alert>
-                        ) : null}
+                        ) : ''}
                         <form onSubmit={handleSubmit}>
                             <Grid row>
                                 <Grid item xs={12}>
@@ -126,8 +149,13 @@ function Create(props) {
                                             onChange={(e) => setName(e.target.value)}
                                         />
                                         <FormControl fullWidth>
-                                            <Select  label="Select" value={parentId} onChange={(e) => setParentId(e.target.value)}>
-                                                {categories.map((category) =>  (
+                                            <Select label="Select" value={parent_id} onChange={(e) => setParentId(e.target.value)}>
+                                                { !categories ? (
+                                                    <MenuItem value="">
+                                                        <em>None</em>
+                                                    </MenuItem>
+                                                ) : null}
+                                                {categories.map((category) => (
                                                     <MenuItem key={category.id} value={category.id}>
                                                         {category.name}
                                                     </MenuItem>
@@ -144,7 +172,6 @@ function Create(props) {
                                 </Grid>
                             </Grid>
                         </form>
-
                     </CardContent>
                 </Card>
             </Grid>
@@ -152,4 +179,4 @@ function Create(props) {
     );
 }
 
-export default Create;
+export default Category;

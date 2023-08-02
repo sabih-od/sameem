@@ -22,6 +22,11 @@ const navigation = () => {
             icon: BookIcon,
             path: '/categories'
         },
+        {
+            title: 'Posts',
+            icon: BookIcon,
+            path: '/posts'
+        },
         // {
         //     title: 'Announcements',
         //     icon: BullhornOutline,

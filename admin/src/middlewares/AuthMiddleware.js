@@ -21,7 +21,7 @@ function AuthMiddleware({children}) {
                     Cookie.remove('token')
                     await router.reload()
                 } else if (router.pathname === '/login') {
-                    await router.push('/books')
+                    await router.push('/categories')
                 }
             } else if (!token && router.pathname !== '/login') {
                 await router.push('/login')

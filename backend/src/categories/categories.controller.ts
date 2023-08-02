@@ -72,7 +72,7 @@ export class CategoriesController {
         }
     }
 
-    @Patch(':id')
+    @Post(':id')
     async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
         let category = await this.categoriesService.findOne(+id);
         if (category.error) {

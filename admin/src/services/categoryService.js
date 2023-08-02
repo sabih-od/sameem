@@ -1,20 +1,16 @@
 import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, urlWithParams} from "./global";
 
 export const create = async (payload) => {
-    try {
-        const form = new FormData()
-        for (const payloadKey in payload) {
-            if (payload[payloadKey] != null) {
-                form.append(payloadKey, payload[payloadKey])
-            }
-        }
 
+    console.log(payload);
+    try {
         const response = await fetch(`${apiUrl()}/categories`, {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${getToken()}`
             },
-            body: form,
+            body: JSON.stringify(payload),
         });
 
         const data = await response.json();
@@ -30,22 +26,50 @@ export const create = async (payload) => {
     }
 }
 
-export const update = async ({
-                                 id,
-                                 ...payload
-                             }) => {
-    try {
-        const form = new FormData()
-        for (const payloadKey in payload) {
-            form.append(payloadKey, payload[payloadKey])
-        }
 
+// export const update = async ({
+//                                  id,
+//                                  ...payload
+//                              }) => {
+//     try {
+//         const form = new FormData()
+//         for (const payloadKey in payload) {
+//             form.append(payloadKey, payload[payloadKey])
+//         }
+//
+//         console.log(form);
+//         const response = await fetch(`${apiUrl()}/categories/${id}`, {
+//             method: 'PATCH',
+//             headers: {
+//                 'Authorization': `Bearer ${getToken()}`
+//             },
+//             body: form,
+//         });
+//
+//         const data = await response.json();
+//
+//         if (data?.success === false) {
+//             return errorResponse(null, data?.message ?? 'Server Error')
+//         } else if (data?.statusCode === 400) {
+//             return errorResponse(null, data?.message ?? ['Server Error'])
+//         }
+//         return successResponse(data)
+//     } catch (e) {
+//         return exceptionResponse()
+//     }
+// }
+
+
+export const update = async ({id, ...payload}) => {
+    try {
+        console.log(payload);
         const response = await fetch(`${apiUrl()}/categories/${id}`, {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${getToken()}`
             },
-            body: form,
+            body: JSON.stringify(payload),
         });
 
         const data = await response.json();
@@ -57,9 +81,12 @@ export const update = async ({
         }
         return successResponse(data)
     } catch (e) {
+        console.log('asdasdasda');
         return exceptionResponse()
     }
 }
+
+
 
 export const get = async (page = 1, limit = 15) => {
     try {

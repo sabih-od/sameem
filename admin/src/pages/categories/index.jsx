@@ -46,9 +46,20 @@ function Categories(props) {
         await dispatch(getCategories({page}))
     }
 
+
+
     useEffect(() => {
         dispatch(getCategories({page}))
     }, [page])
+
+    // Assuming you have a selector to get the 'data' array from the Redux store
+    const data = useSelector((state) => state.categories.data);
+
+    // Function to get the parent category name based on parent_id
+    const getParentName = (parentId) => {
+        const parentCategory = categories.find((category) => category.id === parentId);
+        return parentCategory ? parentCategory.name : 'N/A';
+    };
 
     return (
         <Grid container spacing={6}>
@@ -75,7 +86,7 @@ function Categories(props) {
                                             <TableCell>ID</TableCell>
                                             <TableCell>Name</TableCell>
                                             {/*<TableCell>Description</TableCell>*/}
-                                            <TableCell className="text-center" width="150">Parent Name</TableCell>
+                                            <TableCell className="text-center" width="150">Parent Category</TableCell>
                                             {/*<TableCell className="text-center" width="150">File</TableCell>*/}
                                             {/*<TableCell className="text-center" width="150">Image</TableCell>*/}
                                             <TableCell>Action</TableCell>
@@ -92,7 +103,9 @@ function Categories(props) {
                                                         <span>{category.name}</span>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <span>{category.name}</span>
+                                                        {/*<span>{category.name}</span>*/}
+                                                        <span>{getParentName(category.parent_id)}</span>
+
                                                     </TableCell>
 
                                                     <TableCell width="200">
