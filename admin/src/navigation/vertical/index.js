@@ -23,10 +23,15 @@ const navigation = () => {
             path: '/categories'
         },
         {
-            title: 'Posts',
+            title: 'View Categories Menu',
             icon: BookIcon,
-            path: '/posts'
+            path: '/categoryMenus'
         },
+        // {
+        //     title: 'Posts',
+        //     icon: BookIcon,
+        //     path: '/posts'
+        // },
         // {
         //     title: 'Announcements',
         //     icon: BullhornOutline,
@@ -84,6 +89,12 @@ const navigation = () => {
             title: 'Users',
             icon: PeopleOutlinedIcon,
             path: '/users',
+        },
+
+        {
+            title: 'FAQS',
+            icon: BookIcon,
+            path: '/faqs'
         },
 
         // {

@@ -80,8 +80,12 @@ console.log("posts" , posts)
                                         <TableRow>
                                             <TableCell>ID</TableCell>
                                             <TableCell>Title</TableCell>
-                                            <TableCell>Content</TableCell>
-                                            <TableCell className="text-center" width="150">Media</TableCell>
+                                            <TableCell>Description</TableCell>
+                                            <TableCell>Time</TableCell>
+                                            <TableCell>Video</TableCell>
+                                            <TableCell>Audio</TableCell>
+                                            <TableCell className="text-center" width="150">Image</TableCell>
+                                            <TableCell>PDF</TableCell>
                                             <TableCell>Action</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -97,17 +101,51 @@ console.log("posts" , posts)
                                                     </TableCell>
 
                                                     <TableCell>
-                                                        <span>{post.content}</span>
+                                                        <span>{post.description}</span>
                                                     </TableCell>
+
+                                                    <TableCell>
+                                                        <span>{post.time}</span>
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        {post.video && (
+                                                            <video width="240" height="150" controls>
+                                                                <source src={post.video} type="video/mp4" />
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        )}
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        {post.audio && (
+                                                            <audio controls>
+                                                                <source src={post.audio} type="audio/mpeg" />
+                                                                Your browser does not support the audio element.
+                                                            </audio>
+                                                        )}
+                                                    </TableCell>
+
                                                     <TableCell className="text-center">
-                                                        {(post.media !== null && post.media !== 'null') ? (
-                                                            <Button tag='a' href={post.media} target="_blank"
+                                                        {(post.image !== null && post.image !== 'null') ? (
+                                                            <Button tag='a' href={post.image} target="_blank"
                                                                     layout="link"
                                                                     size="small">
                                                                 View Image
                                                             </Button>
                                                         ) : null}
                                                     </TableCell>
+
+                                                    <TableCell className="text-center">
+                                                        {(post.pdf !== null && post.pdf !== 'null') ? (
+                                                            <Button tag='a' href={post.pdf} target="_blank"
+                                                                    layout="link"
+                                                                    size="small">
+                                                                View File
+                                                            </Button>
+                                                        ) : null}
+                                                    </TableCell>
+
                                                     <TableCell width="200">
                                                         <IconButton
                                                             size="small"
