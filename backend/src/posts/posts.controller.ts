@@ -19,7 +19,7 @@ import {
 import {PostsService} from './posts.service';
 import {CreatePostDto} from './dto/create-post.dto';
 import {UpdatePostDto} from './dto/update-post.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {Observable} from "rxjs";
@@ -81,6 +81,22 @@ export class PostsController {
     ) {}
 
     @Post()
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                video: {type: 'string', format: 'binary'},
+                audio: {type: 'string', format: 'binary'},
+                image: {type: 'string', format: 'binary'},
+                pdf: {type: 'string', format: 'binary'},
+                images: {
+                    type: 'array',
+                    items: { type: 'string', format: 'binary' },
+                },
+            }
+        }
+    })
     @UseInterceptors(
         FileFieldsInterceptor([
             {name: 'video', maxCount: 1},
@@ -168,9 +184,34 @@ export class PostsController {
     }
 
     @Get()
-    async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
+    @ApiQuery({ name: 'page', required: false})
+    @ApiQuery({ name: 'limit', required: false})
+    @ApiQuery({ name: 'category_id', required: false})
+    async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Query('category_id') category_id?: number) {
+        let where_object = {};
+
+        if (category_id) {
+            let category = await this.categoryService.findOne(category_id);
+            if (category.error) {
+                return {
+                    success: false,
+                    message: category.error,
+                    data: [],
+                }
+            }
+
+            where_object = {
+                where: {
+                    categories: {
+                        id: category_id,
+                    },
+                }
+            }
+        }
+
         let res = await this.postsService.findAll(page, limit, {
-            relations: ['images']
+            relations: ['images', 'categories.children'],
+            ...where_object
         });
 
         return {
@@ -192,6 +233,22 @@ export class PostsController {
     }
 
     @Post(':id')
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                video: {type: 'string', format: 'binary'},
+                audio: {type: 'string', format: 'binary'},
+                image: {type: 'string', format: 'binary'},
+                pdf: {type: 'string', format: 'binary'},
+                images: {
+                    type: 'array',
+                    items: { type: 'string', format: 'binary'},
+                },
+            }
+        }
+    })
     @UseInterceptors(
         FileFieldsInterceptor([
             {name: 'video', maxCount: 1},

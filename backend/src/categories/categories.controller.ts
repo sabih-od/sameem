@@ -38,7 +38,12 @@ export class CategoriesController {
 
     @Get()
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
-        let res = await this.categoriesService.findAll(page, limit);
+        let res = await this.categoriesService.findAll(page, limit, {
+            order: {
+                created_at: 'DESC'
+            },
+            relations: ['parent', 'children']
+        });
 
         return {
             success: true,

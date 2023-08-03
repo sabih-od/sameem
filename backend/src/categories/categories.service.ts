@@ -50,7 +50,7 @@ export class CategoriesService {
                 where: {
                     id: id
                 },
-                relations: ['posts']
+                relations: ['posts', 'parent', 'children']
             });
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
