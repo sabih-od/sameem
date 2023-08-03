@@ -14,7 +14,7 @@ import {AuthService} from "./auth.service";
 import { AuthGuard } from './auth.guard';
 import {SigninDto} from "./dto/signin.dto";
 import {CreateUserDto} from "../users/dto/create-user.dto";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiConsumes, ApiTags} from "@nestjs/swagger";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {
     deleteFileFromUploads,
@@ -83,6 +83,15 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post('upload-profile-picture')
     @ApiBearerAuth()
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                profile_picture: {type: 'string', format: 'binary'}
+            }
+        }
+    })
     @UseInterceptors(FileInterceptor('profile_picture'))
     async uploadProfilePicture(@Request() req, @UploadedFile(
         new ParseFilePipe({

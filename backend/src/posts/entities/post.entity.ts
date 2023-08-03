@@ -7,9 +7,6 @@ export class Post {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // @Column({type: 'int', nullable: true})
-    // category_id: number;
-
     @Column({ type: 'varchar' })
     title: string;
 

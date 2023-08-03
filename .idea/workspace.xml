@@ -3,8 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/auth/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/auth/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/auth/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/auth/auth.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +72,10 @@
       <updated>1690393677361</updated>
       <workItem from="1690393678684" duration="10367000" />
       <workItem from="1690565758550" duration="17758000" />
-      <workItem from="1690822754490" duration="14293000" />
+      <workItem from="1690822754490" duration="14975000" />
+      <workItem from="1690920737067" duration="3187000" />
+      <workItem from="1690992963265" duration="3094000" />
+      <workItem from="1691085265354" duration="8923000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -134,7 +140,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690841431480</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="ask a question api">
+      <created>1690843111809</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1690843111809</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,7 +174,8 @@
     <MESSAGE value="faq apis" />
     <MESSAGE value="posts work" />
     <MESSAGE value="category/sub-category, post category work, menu apis" />
-    <option name="LAST_COMMIT_MESSAGE" value="category/sub-category, post category work, menu apis" />
+    <MESSAGE value="ask a question api" />
+    <option name="LAST_COMMIT_MESSAGE" value="ask a question api" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
