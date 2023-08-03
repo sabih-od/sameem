@@ -1,42 +1,9 @@
 import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, urlWithParams} from "./global";
 
-// export const create = async ({
-//                                  title,
-//                                  content,
-//                                  media
-//                              }) => {
-//     try {
-//         const form = new FormData()
-//         form.append('title', title)
-//         form.append('content', content)
-//         form.append('media', media)
-//
-//         const response = await fetch(`${apiUrl()}/posts`, {
-//             method: 'POST',
-//             headers: {
-//                 'Authorization': `Bearer ${getToken()}`
-//             },
-//             body: form,
-//         });
-//
-//         const data = await response.json();
-//
-//         if (data?.success === false) {
-//             return errorResponse(null, data?.message ?? 'Server Error')
-//         } else if (data?.statusCode === 400) {
-//             return errorResponse(null, data?.message ?? ['Server Error'])
-//         }
-//         return successResponse(data)
-//     } catch (e) {
-//         return exceptionResponse()
-//     }
-// }
 
 export const create = async (payload) => {
-
-    console.log(payload);
     try {
-        const response = await fetch(`${apiUrl()}/posts`, {
+        const response = await fetch(`${apiUrl()}/faq/ask-a-question`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,31 +25,51 @@ export const create = async (payload) => {
     }
 }
 
-export const update = async ({
-                                 id,
-                                 title,
-                                 content,
-                                 media
-                             }) => {
-    try {
-        console.log("update form", id, title,
-            content,
-            media)
-        const form = new FormData()
-        form.append('title', title)
-        form.append('content', content)
-        form.append('media', media)
+// export const update = async ({
+//                                  id,
+//                                  ...payload
+//                              }) => {
+//     try {
+//         const form = new FormData()
+//         for (const payloadKey in payload) {
+//             form.append(payloadKey, payload[payloadKey])
+//         }
+//
+//         const response = await fetch(`${apiUrl()}/faq/${id}`, {
+//             method: 'POST',
+//             headers: {
+//                 'Authorization': `Bearer ${getToken()}`
+//             },
+//             body: form,
+//         });
+//
+//         const data = await response.json();
+//
+//         if (data?.success === false) {
+//             return errorResponse(null, data?.message ?? 'Server Error')
+//         } else if (data?.statusCode === 400) {
+//             return errorResponse(null, data?.message ?? ['Server Error'])
+//         }
+//         return successResponse(data)
+//     } catch (e) {
+//         return exceptionResponse()
+//     }
+// }
 
-        const response = await fetch(`${apiUrl()}/posts/${id}`, {
+export const update = async ({id, ...payload}) => {
+    try {
+        console.log(payload);
+        const response = await fetch(`${apiUrl()}/faq/${id}`, {
             method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${getToken()}`
             },
-            body: form,
+            body: JSON.stringify(payload),
         });
 
         const data = await response.json();
-        console.log("updated Data" , data)
+
         if (data?.success === false) {
             return errorResponse(null, data?.message ?? 'Server Error')
         } else if (data?.statusCode === 400) {
@@ -94,9 +81,10 @@ export const update = async ({
     }
 }
 
+
 export const get = async (page = 1, limit = 15) => {
     try {
-        const response = await fetch(urlWithParams(`${apiUrl()}/posts`, {
+        const response = await fetch(urlWithParams(`${apiUrl()}/faq`, {
             page, limit
         }), {
             method: 'GET',
@@ -121,7 +109,7 @@ export const get = async (page = 1, limit = 15) => {
 
 export const show = async (id) => {
     try {
-        const response = await fetch(`${apiUrl()}/posts/${id}`, {
+        const response = await fetch(`${apiUrl()}/faq/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -142,12 +130,12 @@ export const show = async (id) => {
 }
 
 export const destroy = async ({
-                                 id
-                             }) => {
+                                  id
+                              }) => {
     try {
         console.log("delete form", id)
 
-        const response = await fetch(`${apiUrl()}/posts/${id}`, {
+        const response = await fetch(`${apiUrl()}/faq/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${getToken()}`

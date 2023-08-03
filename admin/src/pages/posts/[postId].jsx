@@ -8,6 +8,10 @@ import {
     errors as postErrors,
     success as postSuccess, updatePost, setErrors, setSuccess
 } from "../../store/slices/postSlice";
+import {
+    getCategories,
+    categories as categoriesList,
+} from '../../store/slices/categoriesSlice'
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -16,6 +20,11 @@ import {Alert, AlertTitle, Stack} from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+// import {getCategories} from "../../store/slices/categoriesSlice";
 
 function Post(props) {
     const {push, query} = useRouter()
@@ -29,11 +38,32 @@ function Post(props) {
     const loading = useSelector(postLoading)
     const errors = useSelector(postErrors)
     const success = useSelector(postSuccess)
+    const categories = useSelector(categoriesList)
 
     const [successMsg, setSuccessMessage] = useState(null)
+
+    const [category_ids, setCategoryId] = useState([]); // Make sure to initialize category_ids as an array
+
     const [title, setTitle] = useState('')
-    const [media, setMedia] = useState(null)
-    const [content, setContent] = useState('')
+    const [description, setDescription] = useState('')
+    const [url, setUrl] = useState('')
+    const [date, setDate] = useState('')
+    const [time, setTime] = useState('')
+    const [video, setVideo] = useState('')
+    const [audio, setAudio] = useState('')
+    const [image, setImage] = useState(null)
+    const [pdf, setPdf] = useState(null)
+
+    const [page, setPage] = useState(1)
+
+    const handleCategoryChange = (event) => {
+        setCategoryId(event.target.value);
+    };
+    // const [file, setFile] = useState(null)
+
+    useEffect(() => {
+        dispatch(getCategories({page}))
+    }, [page])
 
     useEffect(() => {
         if (postId) {
@@ -45,9 +75,16 @@ function Post(props) {
     useEffect(() => {
         if (post) {
             console.log("post" , post)
+            // setCategoryId(post.category_ids)
             setTitle(post.title)
-            setContent(post.content)
-            setMedia(post.media)
+            setDescription(post.description)
+            setUrl(post.url)
+            setDate(post.date)
+            setTime(post.time)
+            setVideo(post.video)
+            setAudio(post.audio)
+            setImage(post.image)
+            setPdf(post.pdf)
         }
     }, [post])
 
@@ -72,7 +109,7 @@ function Post(props) {
 
         dispatch(updatePost({
             id: postId,
-            title, content, media
+            category_ids , title, description, url , date , time , video , audio , image , pdf
         }))
 
     }
@@ -82,9 +119,9 @@ function Post(props) {
         // if (file === null) {
         //     _errors.push("File is required!")
         // }
-        if (media === null) {
-            _errors.push("Image is required!")
-        }
+        // if (media === null) {
+        //     _errors.push("Image is required!")
+        // }
 
         if (_errors.length > 0) {
             dispatch(setErrors(_errors))
@@ -121,26 +158,119 @@ function Post(props) {
                         <form onSubmit={handleSubmit}>
                             <Grid row>
                                 <Grid item xs={12}>
+                                    <FormControl fullWidth required>
+                                        <InputLabel>Select Category</InputLabel>
+                                        <Select
+                                            multiple // This allows selecting multiple categories
+                                            value={category_ids}
+                                            onChange={handleCategoryChange}
+                                        >
+                                            {categories.map((category) => (
+                                                <MenuItem key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <br/>
+                                <Grid item xs={12}>
                                     <TextField fullWidth label='Title' value={title}
                                                onChange={e => setTitle(e.target.value)}/>
                                 </Grid>
                                 <br/>
                                 <Grid item xs={12}>
-                                    <TextField fullWidth label='Content' value={content}
-                                               onChange={e => setContent(e.target.value)}/>
+                                    <TextField fullWidth label='Description' value={description}
+                                               onChange={e => setDescription(e.target.value)}/>
                                 </Grid>
+                                <br/>
+                                <Grid item xs={12}>
+                                    <TextField fullWidth label='Url' value={url}
+                                               onChange={e => setUrl(e.target.value)}/>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{mt: 5}}>
+                                    <TextField fullWidth label='Date '
+                                               type="text"
+                                               onFocus={e => {
+                                                   e.target.type = 'date'
+                                               }}
+                                               onBlur={e => {
+                                                   e.target.type = 'text'
+                                               }}
+                                               value={date}
+                                               onChange={e => setDate(e.target.value)}/>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ mt: 5 }}>
+                                    <TextField
+                                        fullWidth
+                                        label='Time'
+                                        type="text"
+                                        onFocus={e => {
+                                            e.target.type = 'time'; // Change type to 'time' on focus
+                                        }}
+                                        onBlur={e => {
+                                            e.target.type = 'text'; // Change type back to 'text' on blur
+                                        }}
+                                        value={time}
+                                        onChange={e => setTime(e.target.value)}
+                                    />
+                                </Grid>
+
                                 <Grid item xs={12} sx={{mt: 5}}>
                                     <Stack direction="row" gap={2}>
                                         <Button
                                             variant="contained"
                                             component="label"
                                         >
-                                            Upload Media
+                                            Upload Video
                                             <input
                                                 type="file"
                                                 hidden
                                                 onChange={e => {
-                                                    setMedia(e.target?.files[0] ?? null)
+                                                    setVideo(e.target?.files[0] ?? null)
+                                                }}
+                                            />
+                                        </Button>
+
+                                        <Button
+                                            variant="contained"
+                                            component="label"
+                                        >
+                                            Upload Audio
+                                            <input
+                                                type="file"
+                                                hidden
+                                                onChange={e => {
+                                                    setAudio(e.target?.files[0] ?? null)
+                                                }}
+                                            />
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            component="label"
+                                        >
+                                            Upload PDF
+                                            <input
+                                                type="file"
+                                                hidden
+                                                onChange={e => {
+                                                    setPdf(e.target?.files[0] ?? null)
+                                                }}
+                                            />
+                                        </Button>
+
+                                        <Button
+                                            variant="contained"
+                                            component="label"
+                                        >
+                                            Upload Image
+                                            <input
+                                                type="file"
+                                                hidden
+                                                onChange={e => {
+                                                    setImage(e.target?.files[0] ?? null)
                                                 }}
                                             />
                                         </Button>
