@@ -7,11 +7,12 @@ import {UsersModule} from "../users/users.module";
 import {MediaModule} from "../media/media.module";
 import {mediaProviders} from "../media/media.provider";
 import {CategoriesModule} from "../categories/categories.module";
+import {categoryProviders} from "../categories/categories.provider";
 
 @Module({
     imports: [DatabaseModule, UsersModule, MediaModule, CategoriesModule],
-  controllers: [PostsController],
-  providers: [PostsService, ...postProviders, ...mediaProviders],
+    controllers: [PostsController],
+    providers: [PostsService, ...postProviders, ...mediaProviders, ...categoryProviders],
     exports: [PostsService],
 })
 export class PostsModule {}

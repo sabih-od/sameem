@@ -4,6 +4,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import {EntityNotFoundError, QueryFailedError, Repository} from "typeorm";
 import {Post} from "./entities/post.entity";
 import {Media} from "../media/entities/media.entity";
+import {Category} from "../categories/entities/category.entity";
 
 @Injectable()
 export class PostsService {
@@ -12,6 +13,8 @@ export class PostsService {
         private postRepository: Repository<Post>,
         @Inject('MEDIA_REPOSITORY')
         private mediaRepository: Repository<Media>,
+        @Inject('CATEGORY_REPOSITORY')
+        private categoryRepository: Repository<Category>,
     ) {}
 
     async create(createPostDto: CreatePostDto): Promise<any> {
@@ -92,5 +95,27 @@ export class PostsService {
         }
 
         return await this.postRepository.delete(id);
+    }
+
+    async findAllByCategory(id: number, page: number = 1, limit: number = 10, args = {}): Promise<any> {
+
+        let [data, total] = await this.postRepository.findAndCount({
+            skip: (page - 1) * limit,
+            take: limit,
+            where: {
+                categories: {
+                    id: id
+                }
+            }
+        });
+
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            data,
+            total,
+            currentPage: page,
+            totalPages,
+        };
     }
 }
