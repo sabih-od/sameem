@@ -3,11 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/auth/auth.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/auth/auth.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
