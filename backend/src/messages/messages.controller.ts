@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Param, Delete, UseGuards, Query, Req} from 
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {GroupsService} from "../groups/groups.service";
 import {UpdateGroupDto} from "../groups/dto/update-group.dto";
@@ -108,6 +108,8 @@ export class MessagesController {
   }
 
   @Get()
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'limit', required: false})
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
       let res = await this.messagesService.findAll(page, limit, {where: {blocked_at: IsNull()}});
 

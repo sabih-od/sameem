@@ -3,9 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/contacts/contacts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/contacts/contacts.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/groups/groups.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/groups/groups.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/media/media.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/media/media.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/messages/messages.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/messages/messages.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/notifications/notifications.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/notifications/notifications.controller.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/users/users.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/users/users.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -145,7 +152,14 @@
       <option name="project" value="LOCAL" />
       <updated>1690843111809</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="posts: screen wise api">
+      <created>1691189477703</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1691189477703</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -173,7 +187,8 @@
     <MESSAGE value="posts work" />
     <MESSAGE value="category/sub-category, post category work, menu apis" />
     <MESSAGE value="ask a question api" />
-    <option name="LAST_COMMIT_MESSAGE" value="ask a question api" />
+    <MESSAGE value="posts: screen wise api" />
+    <option name="LAST_COMMIT_MESSAGE" value="posts: screen wise api" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

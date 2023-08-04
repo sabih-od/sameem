@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Param, Delete, Query, UseGuards} from '@nes
 import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {MailService} from "../mail/mail.service";
 
@@ -42,6 +42,8 @@ export class FaqController {
     }
 
     @Get()
+    @ApiQuery({ name: 'page', required: false})
+    @ApiQuery({ name: 'limit', required: false})
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
         let res = await this.faqService.findAll(page, limit);
 

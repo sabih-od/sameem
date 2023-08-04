@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query} fro
 import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 
 @ApiTags('Media')
@@ -25,6 +25,8 @@ export class MediaController {
     }
 
     @Get()
+    @ApiQuery({ name: 'page', required: false})
+    @ApiQuery({ name: 'limit', required: false})
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
         let res = await this.mediaService.findAll(page, limit);
 

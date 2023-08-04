@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {AuthGuard} from "../auth/auth.guard";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -25,6 +25,8 @@ export class UsersController {
   }
 
   @Get()
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'limit', required: false})
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
     let res = await this.usersService.findAll(page, limit);
 

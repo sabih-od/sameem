@@ -69,7 +69,7 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
 
 @ApiTags('Posts')
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller('posts')
 export class PostsController {
     constructor(
@@ -82,10 +82,16 @@ export class PostsController {
 
     @Post()
     @ApiConsumes('multipart/form-data')
+    @ApiConsumes('application/json')
     @ApiBody({
         schema: {
             type: 'object',
             properties: {
+                title: {type: 'string'},
+                description: {type: 'string'},
+                url: {type: 'string'},
+                date: {type: 'string'},
+                time: {type: 'string'},
                 video: {type: 'string', format: 'binary'},
                 audio: {type: 'string', format: 'binary'},
                 image: {type: 'string', format: 'binary'},
@@ -133,7 +139,7 @@ export class PostsController {
         let res = await this.postsService.create(createPostDto);
 
         //attach categories
-        if (createPostDto.category_ids) {
+        if (createPostDto.category_ids && createPostDto.category_ids.length > 0) {
             let post = await this.postRepository.findOne({
                 where: {
                     id: res.id
