@@ -1,8 +1,8 @@
 {
     "apps": [
         {
-            "name": "Texas Ashram Admin (3024)",
-            "script": "yarn run dev:static",
+            "name": "Sameem Admin (3014)",
+            "script": "npm run dev:static",
             "instances": "1",
             "autorestart": true,
             "max_restarts": 100,

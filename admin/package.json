@@ -5,10 +5,10 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "dev": "next dev -p 3024",
+    "dev": "next dev -p 3014",
     "build": "next build",
-    "dev:static": "serve ./out -p 3024",
-    "start": "next start -p 3024",
+    "dev:static": "serve ./out -p 3014",
+    "start": "next start -p 3014",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\""
