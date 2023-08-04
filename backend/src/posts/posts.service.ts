@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import {CreatePostDto} from './dto/create-post.dto';
+import {UpdatePostDto} from './dto/update-post.dto';
 import {EntityNotFoundError, QueryFailedError, Repository} from "typeorm";
 import {Post} from "./entities/post.entity";
 import {Media} from "../media/entities/media.entity";
@@ -49,6 +49,17 @@ export class PostsService {
             totalPages,
         };
     }
+
+    async findAllNoPagination(args = {}): Promise<any> {
+        return await this.postRepository.find({
+            take: 10,
+            order: {
+                created_at: 'DESC'
+            },
+            ...args,
+        });
+    }
+
 
     async findOne(id: number): Promise<any> {
         try {

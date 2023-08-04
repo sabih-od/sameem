@@ -28,7 +28,7 @@ import {map} from "rxjs/operators";
 import {deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate,} from "../helpers/helper";
 import {MediaService} from "../media/media.service";
 import {CreateMediaDto} from "../media/dto/create-media.dto";
-import {Repository} from "typeorm";
+import {IsNull, Repository} from "typeorm";
 import {CategoriesService} from "../categories/categories.service";
 
 @Injectable()
@@ -188,7 +188,9 @@ export class PostsController {
     @ApiQuery({ name: 'limit', required: false})
     @ApiQuery({ name: 'category_id', required: false})
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Query('category_id') category_id?: number) {
-        let where_object = {};
+        let where_object = {
+            where: {}
+        };
 
         if (category_id) {
             let category = await this.categoryService.findOne(category_id);
@@ -218,6 +220,66 @@ export class PostsController {
             success: true,
             message: '',
             ...res
+        }
+    }
+
+    @Get('/screen-wise')
+    @ApiQuery({ name: 'category_id', required: false})
+    async findAllScreenWise(@Query('category_id') category_id?: number) {
+        let video_where_object = { where: {} };
+        let audio_where_object = { where: {} };
+        let image_where_object = { where: {} };
+        let pdf_where_object = { where: {} };
+
+        if (category_id) {
+            let category = await this.categoryService.findOne(category_id);
+            if (category.error) {
+                return {
+                    success: false,
+                    message: category.error,
+                    data: [],
+                }
+            }
+
+            video_where_object.where['categories'] = { id: category_id };
+            audio_where_object.where['categories'] = { id: category_id };
+            image_where_object.where['categories'] = { id: category_id };
+            pdf_where_object.where['categories'] = { id: category_id };
+        }
+
+        video_where_object.where['video'] = !IsNull();
+        let videos = await this.postsService.findAllNoPagination({
+            relations: ['images', 'categories.children'],
+            ...video_where_object
+        });
+
+        audio_where_object.where['audio'] = !IsNull();
+        let audios = await this.postsService.findAllNoPagination({
+            relations: ['images', 'categories.children'],
+            ...audio_where_object
+        });
+
+        image_where_object.where['image'] = !IsNull();
+        let images = await this.postsService.findAllNoPagination({
+            relations: ['images', 'categories.children'],
+            ...image_where_object
+        });
+
+        pdf_where_object.where['pdf'] = !IsNull();
+        let pdfs = await this.postsService.findAllNoPagination({
+            relations: ['images', 'categories.children'],
+            ...pdf_where_object
+        });
+
+        return {
+            success: true,
+            message: '',
+            data: {
+                videos,
+                audios,
+                images,
+                pdfs,
+            }
         }
     }
 
@@ -393,6 +455,4 @@ export class PostsController {
             data: res.error ? [] : res,
         }
     }
-
-
 }
