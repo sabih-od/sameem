@@ -28,7 +28,7 @@ const Dashboard = () => {
     const {push} = useRouter()
 
     useEffect(() => {
-        push('/books');
+        push('/categories');
     }, [])
     return <></>
 

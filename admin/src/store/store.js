@@ -17,7 +17,9 @@ import {prayersSlice} from "./slices/prayersSlice";
 import {sermonsSlice} from "./slices/sermonsSlice"
 import {sermonSlice} from "./slices/sermonSlice"
 import {usersSlice} from "./slices/usersSlice";
+
 import {categoriesSlice} from "./slices/categoriesSlice";
+import {categoryMenusSlice} from "./slices/categoryMenusSlice";
 import {categorySlice} from "./slices/categorySlice";
 import {faqsSlice} from "./slices/faqsSlice";
 import {faqSlice} from "./slices/faqSlice";
@@ -52,6 +54,7 @@ const makeStore = () =>
             [userSlice.name]: userSlice.reducer,
             [categoriesSlice.name]: categoriesSlice.reducer,
             [categorySlice.name]: categorySlice.reducer,
+            [categoryMenusSlice.name]: categoryMenusSlice.reducer,
             [faqsSlice.name]: faqsSlice.reducer,
             [faqSlice.name]: faqSlice.reducer,
             [speakersSlice.name]: speakersSlice.reducer,

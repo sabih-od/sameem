@@ -23,7 +23,7 @@ const navigation = () => {
             path: '/categories'
         },
         {
-            title: 'View Categories Menu',
+            title: 'Category Menus',
             icon: BookIcon,
             path: '/categoryMenus'
         },
