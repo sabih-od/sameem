@@ -33,7 +33,7 @@ export const socketIoServer = io;
 
 async function bootstrap() {
 
-    const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
+    const app = await NestFactory.create(AppModule, { cors: true });
 
     app.useGlobalPipes(new ValidationPipe());
     app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));

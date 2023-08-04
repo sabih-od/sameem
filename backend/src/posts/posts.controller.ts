@@ -381,4 +381,18 @@ export class PostsController {
             data: res.error ? [] : res,
         }
     }
+
+
+    @Get('category-post/:id')
+    async findByCategoryById(@Param('id') id: string) {
+        let res = await this.postsService.findAllByCategory(+id,1, 1000);
+
+        return {
+            success: !res.error,
+            message: res.error ? res.error : '',
+            data: res.error ? [] : res,
+        }
+    }
+
+
 }
