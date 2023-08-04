@@ -134,4 +134,5 @@ export class CategoriesController {
             data: res.error ? [] : res,
         }
     }
+
 }
