@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Param, Delete, Query, UseGuards, Inject, Re
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {MessagesService} from "../messages/messages.service";
 import {AddUserDto} from "./dto/add-user.dto";
@@ -36,6 +36,8 @@ export class GroupsController {
   }
 
   @Get()
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'limit', required: false})
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
       let res = await this.groupsService.findAll(page, limit);
 

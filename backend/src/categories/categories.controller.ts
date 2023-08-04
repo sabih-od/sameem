@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query} fro
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {IsNull} from "typeorm";
 
@@ -37,6 +37,8 @@ export class CategoriesController {
     }
 
     @Get()
+    @ApiQuery({ name: 'page', required: false})
+    @ApiQuery({ name: 'limit', required: false})
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
         let res = await this.categoriesService.findAll(page, limit, {
             order: {
