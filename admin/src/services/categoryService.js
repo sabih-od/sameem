@@ -1,9 +1,14 @@
 import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, urlWithParams} from "./global";
 
 export const create = async (payload) => {
-
-    console.log(payload);
     try {
+
+        if (payload.parent_id === "") {
+            payload.parent_id = null;
+        }
+
+        console.log(payload);
+
         const response = await fetch(`${apiUrl()}/categories`, {
             method: 'POST',
             headers: {
