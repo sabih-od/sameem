@@ -60,7 +60,7 @@ const navigation = () => {
         ...categories.map(category => ({
             title: category.name,
             icon: BookIcon,
-            path: `/post/${category.name}/${category.id}`
+            path: `/categoryPosts/${category.id}`
         }))
 
 
