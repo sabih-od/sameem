@@ -9,8 +9,14 @@ export class CreatePostDto {
     @ApiProperty({ example: 'Post title' })
     title: string;
 
+    @ApiProperty({ example: 'اسم' })
+    title_ar: string;
+
     @ApiProperty({ example: 'Post description' })
     description: string;
+
+    @ApiProperty({ example: ' اسم اسم اسم اسم اسم اسم اسم اسم اسم' })
+    description_ar: string;
 
     @ApiProperty({ example: 'https://www.google.com' })
     url: string;
