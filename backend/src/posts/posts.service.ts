@@ -60,7 +60,6 @@ export class PostsService {
         });
     }
 
-
     async findOne(id: number): Promise<any> {
         try {
             return await this.postRepository.findOneOrFail({

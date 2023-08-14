@@ -15,6 +15,7 @@ import { FaqModule } from './faq/faq.module';
 import { PostsModule } from './posts/posts.module';
 import { MediaModule } from './media/media.module';
 import { CategoriesModule } from './categories/categories.module';
+import { TranslationsModule } from './translations/translations.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CategoriesModule } from './categories/categories.module';
       PostsModule,
       MediaModule,
       CategoriesModule,
+      TranslationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

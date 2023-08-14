@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/contacts/contacts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/contacts/contacts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/faq/faq.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/groups/groups.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/groups/groups.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/media/media.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/media/media.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/messages/messages.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/messages/messages.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/notifications/notifications.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/notifications/notifications.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/dto/create-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/dto/create-category.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/dto/update-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/dto/update-category.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/users/users.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/users/users.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +54,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/categories" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/translations" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -60,11 +64,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src/translations" />
+      <recent name="$PROJECT_DIR$/backend/src/category-translations" />
       <recent name="$PROJECT_DIR$/backend/src/categories" />
       <recent name="$PROJECT_DIR$/backend/src/media" />
       <recent name="$PROJECT_DIR$/backend/src/posts" />
-      <recent name="$PROJECT_DIR$/backend/src/faq" />
-      <recent name="$PROJECT_DIR$/backend/src/ssl" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -81,6 +85,7 @@
       <workItem from="1690920737067" duration="3187000" />
       <workItem from="1690992963265" duration="3094000" />
       <workItem from="1691085265354" duration="8923000" />
+      <workItem from="1692031316655" duration="12117000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>

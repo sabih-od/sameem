@@ -5,7 +5,7 @@ import {
     Controller,
     Delete,
     ExecutionContext,
-    Get,
+    Get, Headers,
     Inject,
     Injectable,
     NestInterceptor,
@@ -13,14 +13,12 @@ import {
     Post,
     Query,
     UploadedFiles,
-    UseGuards,
     UseInterceptors
 } from '@nestjs/common';
 import {PostsService} from './posts.service';
 import {CreatePostDto} from './dto/create-post.dto';
 import {UpdatePostDto} from './dto/update-post.dto';
-import {ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiTags} from "@nestjs/swagger";
-import {AuthGuard} from "../auth/auth.guard";
+import {ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {FileFieldsInterceptor} from "@nestjs/platform-express";
 import {Observable} from "rxjs";
 import {Post as PostEntity} from './entities/post.entity';
@@ -30,6 +28,9 @@ import {MediaService} from "../media/media.service";
 import {CreateMediaDto} from "../media/dto/create-media.dto";
 import {IsNull, Repository} from "typeorm";
 import {CategoriesService} from "../categories/categories.service";
+import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
+import {TranslationsService} from "../translations/translations.service";
+import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
 
 @Injectable()
 export class MaxFileSizeInterceptor implements NestInterceptor {
@@ -72,15 +73,18 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
 // @UseGuards(AuthGuard)
 @Controller('posts')
 export class PostsController {
+    private readonly translated_columns: string[];
     constructor(
         private readonly postsService: PostsService,
         private readonly mediaService: MediaService,
         private readonly categoryService: CategoriesService,
+        private readonly translationsService: TranslationsService,
         @Inject('POST_REPOSITORY')
         private postRepository: Repository<PostEntity>,
-    ) {}
+    ) {
+        this.translated_columns = ['title', 'description'];
+    }
 
-    @Post()
     @ApiConsumes('multipart/form-data')
     @ApiConsumes('application/json')
     @ApiBody({
@@ -113,6 +117,7 @@ export class PostsController {
         ]),
         new MaxFileSizeInterceptor(),
     )
+    @Post()
     async create(
         @Body() createPostDto: CreatePostDto,
         @UploadedFiles() files: {
@@ -137,6 +142,35 @@ export class PostsController {
 
         createPostDto.created_at = Date.now().toString();
         let res = await this.postsService.create(createPostDto);
+
+        //translation work
+        if (!res.error) {
+            let createTranslationDto = new CreateTranslationDto();
+            createTranslationDto.module = 'post';
+            createTranslationDto.module_id = res.id;
+            createTranslationDto.language_id = 1;
+            createTranslationDto.key = 'title';
+            createTranslationDto.value = createPostDto.title;
+            await this.translationsService.create(createTranslationDto);
+
+            createTranslationDto.key = 'description';
+            createTranslationDto.value = createPostDto.description;
+            await this.translationsService.create(createTranslationDto);
+
+            if (createPostDto.title_ar) {
+                createTranslationDto.language_id = 2;
+                createTranslationDto.key = 'title';
+                createTranslationDto.value = createPostDto.title_ar;
+                await this.translationsService.create(createTranslationDto);
+            }
+
+            if (createPostDto.description_ar) {
+                createTranslationDto.language_id = 2;
+                createTranslationDto.key = 'description';
+                createTranslationDto.value = createPostDto.description_ar;
+                await this.translationsService.create(createTranslationDto);
+            }
+        }
 
         //attach categories
         if (createPostDto.category_ids && createPostDto.category_ids.length > 0) {
@@ -189,11 +223,17 @@ export class PostsController {
         }
     }
 
-    @Get()
+    @ApiHeader({ name: 'lang', required: false})
     @ApiQuery({ name: 'page', required: false})
     @ApiQuery({ name: 'limit', required: false})
     @ApiQuery({ name: 'category_id', required: false})
-    async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Query('category_id') category_id?: number) {
+    @Get()
+    async findAll(
+        @Query('page') page?: number,
+        @Query('limit') limit?: number,
+        @Query('category_id') category_id?: number,
+        @Headers('lang') lang?: number
+    ) {
         let where_object = {
             where: {}
         };
@@ -222,6 +262,29 @@ export class PostsController {
             ...where_object
         });
 
+        //translation work
+        if(res.data) {
+            let language_id = lang ?? 1;
+            res.data = await Promise.all(
+                res.data.map(async (post) => {
+                    for (const key of this.translated_columns) {
+                        let record = await this.translationsService.findOneWhere({
+                            where: {
+                                module: 'post',
+                                module_id: post.id,
+                                language_id: language_id,
+                                key: key,
+                            },
+                        });
+
+                        post[key] = record.value ?? post[key];
+                    }
+
+                    return post;
+                })
+            );
+        }
+
         return {
             success: true,
             message: '',
@@ -229,9 +292,10 @@ export class PostsController {
         }
     }
 
-    @Get('/screen-wise')
+    @ApiHeader({ name: 'lang', required: false})
     @ApiQuery({ name: 'category_id', required: false})
-    async findAllScreenWise(@Query('category_id') category_id?: number) {
+    @Get('/screen-wise')
+    async findAllScreenWise(@Query('category_id') category_id?: number, @Headers('lang') lang?: number) {
         let video_where_object = { where: {} };
         let audio_where_object = { where: {} };
         let image_where_object = { where: {} };
@@ -253,29 +317,104 @@ export class PostsController {
             pdf_where_object.where['categories'] = { id: category_id };
         }
 
+        let language_id = lang ?? 1;
+
         video_where_object.where['video'] = !IsNull();
         let videos = await this.postsService.findAllNoPagination({
             relations: ['images', 'categories.children'],
             ...video_where_object
         });
+        videos = await Promise.all(
+            videos.map(async (post) => {
+                for (const key of this.translated_columns) {
+                    let record = await this.translationsService.findOneWhere({
+                        where: {
+                            module: 'post',
+                            module_id: post.id,
+                            language_id: language_id,
+                            key: key,
+                        },
+                    });
+
+                    post[key] = record.value ?? post[key];
+                }
+
+                return post;
+            })
+        );
+
 
         audio_where_object.where['audio'] = !IsNull();
         let audios = await this.postsService.findAllNoPagination({
             relations: ['images', 'categories.children'],
             ...audio_where_object
         });
+        audios = await Promise.all(
+            audios.map(async (post) => {
+                for (const key of this.translated_columns) {
+                    let record = await this.translationsService.findOneWhere({
+                        where: {
+                            module: 'post',
+                            module_id: post.id,
+                            language_id: language_id,
+                            key: key,
+                        },
+                    });
+
+                    post[key] = record.value ?? post[key];
+                }
+
+                return post;
+            })
+        );
 
         image_where_object.where['image'] = !IsNull();
         let images = await this.postsService.findAllNoPagination({
             relations: ['images', 'categories.children'],
             ...image_where_object
         });
+        images = await Promise.all(
+            images.map(async (post) => {
+                for (const key of this.translated_columns) {
+                    let record = await this.translationsService.findOneWhere({
+                        where: {
+                            module: 'post',
+                            module_id: post.id,
+                            language_id: language_id,
+                            key: key,
+                        },
+                    });
+
+                    post[key] = record.value ?? post[key];
+                }
+
+                return post;
+            })
+        );
 
         pdf_where_object.where['pdf'] = !IsNull();
         let pdfs = await this.postsService.findAllNoPagination({
             relations: ['images', 'categories.children'],
             ...pdf_where_object
         });
+        pdfs = await Promise.all(
+            pdfs.map(async (post) => {
+                for (const key of this.translated_columns) {
+                    let record = await this.translationsService.findOneWhere({
+                        where: {
+                            module: 'post',
+                            module_id: post.id,
+                            language_id: language_id,
+                            key: key,
+                        },
+                    });
+
+                    post[key] = record.value ?? post[key];
+                }
+
+                return post;
+            })
+        );
 
         return {
             success: true,
@@ -289,9 +428,27 @@ export class PostsController {
         }
     }
 
+    @ApiHeader({ name: 'lang', required: false})
     @Get(':id')
-    async findOne(@Param('id') id: string) {
+    async findOne(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.postsService.findOne(+id);
+
+        //translation work
+        if (!res.error) {
+            let language_id = lang ?? 1;
+            for (const key of this.translated_columns) {
+                let record = await this.translationsService.findOneWhere({
+                    where: {
+                        module: 'post',
+                        module_id: res.id,
+                        language_id: language_id,
+                        key: key,
+                    },
+                });
+
+                res[key] = record.value ?? res[key];
+            }
+        }
 
         return {
             success: !res.error,
@@ -379,6 +536,73 @@ export class PostsController {
         delete newUpdatePostDto.category_ids;
         let res = await this.postsService.update(+id, newUpdatePostDto);
 
+        //translation work
+        if (!res.error) {
+            let title_en_tr_res = await this.translationsService.findOneWhere({
+                where: {
+                    module: 'post',
+                    module_id: res.id,
+                    language_id: 1,
+                    key: 'title'
+                },
+            });
+
+            if (!title_en_tr_res.error) {
+                let updateTranslationDto = new UpdateTranslationDto();
+                updateTranslationDto.value = updatePostDto.title;
+                await this.translationsService.update(title_en_tr_res.id, updateTranslationDto);
+            }
+
+            let description_en_tr_res = await this.translationsService.findOneWhere({
+                where: {
+                    module: 'post',
+                    module_id: res.id,
+                    language_id: 1,
+                    key: 'description'
+                },
+            });
+
+            if (!description_en_tr_res.error) {
+                let updateTranslationDto = new UpdateTranslationDto();
+                updateTranslationDto.value = updatePostDto.description;
+                await this.translationsService.update(description_en_tr_res.id, updateTranslationDto);
+            }
+
+            if (updatePostDto.title_ar) {
+                let title_ar_tr_res = await this.translationsService.findOneWhere({
+                    where: {
+                        module: 'post',
+                        module_id: res.id,
+                        language_id: 2,
+                        key: 'title'
+                    },
+                });
+
+                if (!title_ar_tr_res.error) {
+                    let updateTranslationDto = new UpdateTranslationDto();
+                    updateTranslationDto.value = updatePostDto.title_ar;
+                    await this.translationsService.update(title_ar_tr_res.id, updateTranslationDto);
+                }
+            }
+
+            if (updatePostDto.description_ar) {
+                let description_ar_tr_res = await this.translationsService.findOneWhere({
+                    where: {
+                        module: 'post',
+                        module_id: res.id,
+                        language_id: 2,
+                        key: 'description'
+                    },
+                });
+
+                if (!description_ar_tr_res.error) {
+                    let updateTranslationDto = new UpdateTranslationDto();
+                    updateTranslationDto.value = updatePostDto.description_ar;
+                    await this.translationsService.update(description_ar_tr_res.id, updateTranslationDto);
+                }
+            }
+        }
+
         //attach categories
         if (updatePostDto.category_ids) {
             let post = await this.postRepository.findOne({
@@ -443,6 +667,24 @@ export class PostsController {
 
         let res = await this.postsService.remove(+id);
 
+        //translation work
+        let languages = [1, 2];
+        for (const language_id of languages) {
+            for (const key of this.translated_columns) {
+                let record = await this.translationsService.findOneWhere({
+                    where: {
+                        module: 'post',
+                        module_id: id,
+                        language_id: language_id,
+                        key: key,
+                    },
+                });
+                if (!record.error) {
+                    await this.translationsService.remove(record.id);
+                }
+            }
+        }
+
         return {
             success: !res.error,
             message: res.error ? res.error : 'Post deleted successfully!',
@@ -451,9 +693,33 @@ export class PostsController {
     }
 
 
+    @ApiHeader({ name: 'lang', required: false})
     @Get('category-post/:id')
-    async findByCategoryById(@Param('id') id: string) {
+    async findByCategoryById(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.postsService.findAllByCategory(+id,1, 1000);
+
+        //translation work
+        if(res.data) {
+            let language_id = lang ?? 1;
+            res.data = await Promise.all(
+                res.data.map(async (post) => {
+                    for (const key of this.translated_columns) {
+                        let record = await this.translationsService.findOneWhere({
+                            where: {
+                                module: 'post',
+                                module_id: post.id,
+                                language_id: language_id,
+                                key: key,
+                            },
+                        });
+
+                        post[key] = record.value ?? post[key];
+                    }
+
+                    return post;
+                })
+            );
+        }
 
         return {
             success: !res.error,
