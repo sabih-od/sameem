@@ -5,18 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/dto/create-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/dto/create-category.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/dto/update-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/dto/update-category.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/users/entities/user.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/users/entities/user.entity.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +76,9 @@
       <workItem from="1690920737067" duration="3187000" />
       <workItem from="1690992963265" duration="3094000" />
       <workItem from="1691085265354" duration="8923000" />
-      <workItem from="1692031316655" duration="12117000" />
+      <workItem from="1692031316655" duration="14333000" />
+      <workItem from="1692055343212" duration="1222000" />
+      <workItem from="1692118858559" duration="10107000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -164,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691189477703</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="category, posts translation work">
+      <created>1692048024559</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1692048024559</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,7 +193,8 @@
     <MESSAGE value="category/sub-category, post category work, menu apis" />
     <MESSAGE value="ask a question api" />
     <MESSAGE value="posts: screen wise api" />
-    <option name="LAST_COMMIT_MESSAGE" value="posts: screen wise api" />
+    <MESSAGE value="category, posts translation work" />
+    <option name="LAST_COMMIT_MESSAGE" value="category, posts translation work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -1,5 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable} from 'typeorm';
-import {Group} from "../../groups/entities/group.entity";
+import {Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
 export class User {
@@ -41,6 +40,9 @@ export class User {
 
     @Column({ type: 'text', nullable: true })
     blocked_users: string;
+
+    @Column({ type: 'text', nullable: true })
+    favourite_posts: string;
 
     @Column({ type: 'text', nullable: true })
     created_at: string;

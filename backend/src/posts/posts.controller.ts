@@ -13,7 +13,8 @@ import {
     Post,
     Query,
     UploadedFiles,
-    UseInterceptors
+    UseInterceptors,
+    Request, UseGuards
 } from '@nestjs/common';
 import {PostsService} from './posts.service';
 import {CreatePostDto} from './dto/create-post.dto';
@@ -31,6 +32,9 @@ import {CategoriesService} from "../categories/categories.service";
 import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
 import {TranslationsService} from "../translations/translations.service";
 import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
+import {UsersService} from "../users/users.service";
+import {AuthGuard} from "../auth/auth.guard";
+import {User} from "../users/entities/user.entity";
 
 @Injectable()
 export class MaxFileSizeInterceptor implements NestInterceptor {
@@ -70,7 +74,7 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
 
 @ApiTags('Posts')
 @ApiBearerAuth()
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('posts')
 export class PostsController {
     private readonly translated_columns: string[];
@@ -79,8 +83,11 @@ export class PostsController {
         private readonly mediaService: MediaService,
         private readonly categoryService: CategoriesService,
         private readonly translationsService: TranslationsService,
+        private readonly usersService: UsersService,
         @Inject('POST_REPOSITORY')
         private postRepository: Repository<PostEntity>,
+        @Inject('USER_REPOSITORY')
+        private userRepository: Repository<User>,
     ) {
         this.translated_columns = ['title', 'description'];
     }
@@ -457,7 +464,6 @@ export class PostsController {
         }
     }
 
-    @Post(':id')
     @ApiConsumes('multipart/form-data')
     @ApiBody({
         schema: {
@@ -484,6 +490,7 @@ export class PostsController {
         ]),
         new MaxFileSizeInterceptor(),
     )
+    @Post(':id')
     async update(
         @Param('id') id: number,
         @Body() updatePostDto: UpdatePostDto,
@@ -692,7 +699,6 @@ export class PostsController {
         }
     }
 
-
     @ApiHeader({ name: 'lang', required: false})
     @Get('category-post/:id')
     async findByCategoryById(@Param('id') id: string, @Headers('lang') lang?: number) {
@@ -726,5 +732,95 @@ export class PostsController {
             message: res.error ? res.error : '',
             data: res.error ? [] : res,
         }
+    }
+
+    @Post('add-to-favourites/:id')
+    async addToFavourites (@Param('id') id: string, @Request() req) {
+        let post = await this.postsService.findOne(+id);
+        if (post.error) {
+            return {
+                success: false,
+                message: post.error,
+                data: [],
+            };
+        }
+
+        let user = await this.usersService.findOne(+req.user.id);
+        let favourite_posts;
+        if (user.favourite_posts == null) {
+            favourite_posts = [];
+        } else {
+            favourite_posts = JSON.parse(user.favourite_posts);
+        }
+        let post_found = !!favourite_posts.includes(+id);
+
+        if (post_found) {
+            favourite_posts = favourite_posts.filter((post_id) => {
+                return post_id != id;
+            });
+        } else {
+            favourite_posts.push(+id);
+        }
+
+        user.favourite_posts = JSON.stringify(favourite_posts);
+        await this.userRepository.save(user);
+
+        return {
+            success: true,
+            message: (post_found ? 'Removed from ' : 'Added to ') + 'favourites!',
+            data: []
+        };
+    }
+
+    @ApiHeader({ name: 'lang', required: false})
+    @Get('favourites/list')
+    async favouritesList (@Request() req, @Headers('lang') lang?: number) {
+        let user = await this.usersService.findOne(+req.user.id);
+
+        let favourite_posts;
+        if (user.favourite_posts == null) {
+            favourite_posts = [];
+        } else {
+            favourite_posts = JSON.parse(user.favourite_posts);
+        }
+
+        favourite_posts = await Promise.all(
+            favourite_posts.map(async (post_id) => {
+                let post = await this.postsService.findOne(post_id);
+
+                if (!post.error) {
+                    return post;
+                }
+            })
+        );
+
+        favourite_posts = favourite_posts.filter((item) => item !== null && item !== undefined);
+
+        //translation work
+        let language_id = lang ?? 1;
+        favourite_posts = await Promise.all(
+            favourite_posts.map(async (post) => {
+                for (const key of this.translated_columns) {
+                    let record = await this.translationsService.findOneWhere({
+                        where: {
+                            module: 'post',
+                            module_id: post.id,
+                            language_id: language_id,
+                            key: key,
+                        },
+                    });
+
+                    post[key] = record.value ?? post[key];
+                }
+
+                return post;
+            })
+        );
+
+        return {
+            success: true,
+            message: '',
+            data: favourite_posts
+        };
     }
 }
