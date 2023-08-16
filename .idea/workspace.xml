@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/users/entities/user.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/users/entities/user.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/translations/entities/translation.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/translations/entities/translation.entity.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +79,8 @@
       <workItem from="1691085265354" duration="8923000" />
       <workItem from="1692031316655" duration="14333000" />
       <workItem from="1692055343212" duration="1222000" />
-      <workItem from="1692118858559" duration="10107000" />
+      <workItem from="1692118858559" duration="14065000" />
+      <workItem from="1692204665537" duration="2732000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -164,7 +166,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692048024559</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="add/remove post to favourites list api, favourites list api.">
+      <created>1692132056354</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1692132056354</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,7 +203,8 @@
     <MESSAGE value="ask a question api" />
     <MESSAGE value="posts: screen wise api" />
     <MESSAGE value="category, posts translation work" />
-    <option name="LAST_COMMIT_MESSAGE" value="category, posts translation work" />
+    <MESSAGE value="add/remove post to favourites list api, favourites list api." />
+    <option name="LAST_COMMIT_MESSAGE" value="add/remove post to favourites list api, favourites list api." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -1,6 +1,7 @@
-import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Media} from "../../media/entities/media.entity";
 import {Category} from "../../categories/entities/category.entity";
+import {Translation} from "../../translations/entities/translation.entity";
 
 @Entity()
 export class Post {
@@ -46,4 +47,8 @@ export class Post {
         name: 'category_posts',
     })
     categories: Category[];
+
+    @OneToMany(() => Translation, translation => translation.module_relation)
+    @JoinColumn({ name: 'id', referencedColumnName: 'module_id' }) // specify the join column
+    translations: Translation[];
 }
