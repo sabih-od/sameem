@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Post} from "../../posts/entities/post.entity";
 
 @Entity()
 export class Translation {
@@ -19,4 +20,8 @@ export class Translation {
 
     @Column({ type: 'text' })
     value: string;
+
+    @ManyToOne(() => Post, post => post.translations)
+    @JoinColumn({ name: 'module_id', referencedColumnName: 'id' }) // specify the join column
+    module_relation: Post;
 }

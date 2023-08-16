@@ -27,7 +27,7 @@ import {map} from "rxjs/operators";
 import {deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate,} from "../helpers/helper";
 import {MediaService} from "../media/media.service";
 import {CreateMediaDto} from "../media/dto/create-media.dto";
-import {IsNull, Repository} from "typeorm";
+import {ILike, IsNull, Repository} from "typeorm";
 import {CategoriesService} from "../categories/categories.service";
 import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
 import {TranslationsService} from "../translations/translations.service";
@@ -234,16 +234,19 @@ export class PostsController {
     @ApiQuery({ name: 'page', required: false})
     @ApiQuery({ name: 'limit', required: false})
     @ApiQuery({ name: 'category_id', required: false})
+    @ApiQuery({ name: 'title', required: false})
     @Get()
     async findAll(
         @Query('page') page?: number,
         @Query('limit') limit?: number,
         @Query('category_id') category_id?: number,
+        @Query('title') title?: string,
         @Headers('lang') lang?: number
     ) {
         let where_object = {
             where: {}
         };
+        let language_id = lang ?? 1;
 
         if (category_id) {
             let category = await this.categoryService.findOne(category_id);
@@ -255,13 +258,11 @@ export class PostsController {
                 }
             }
 
-            where_object = {
-                where: {
-                    categories: {
-                        id: category_id,
-                    },
-                }
-            }
+            where_object['where']['categories'] = { id: category_id }
+        }
+
+        if (title) {
+            where_object['where']['translations'] = {  module: 'post', key: 'title', 'value': ILike(`%${title}%`)  }
         }
 
         let res = await this.postsService.findAll(page, limit, {
@@ -271,7 +272,6 @@ export class PostsController {
 
         //translation work
         if(res.data) {
-            let language_id = lang ?? 1;
             res.data = await Promise.all(
                 res.data.map(async (post) => {
                     for (const key of this.translated_columns) {
@@ -301,12 +301,14 @@ export class PostsController {
 
     @ApiHeader({ name: 'lang', required: false})
     @ApiQuery({ name: 'category_id', required: false})
+    @ApiQuery({ name: 'title', required: false})
     @Get('/screen-wise')
-    async findAllScreenWise(@Query('category_id') category_id?: number, @Headers('lang') lang?: number) {
+    async findAllScreenWise(@Query('category_id') category_id?: number, @Query('title') title?: string, @Headers('lang') lang?: number) {
         let video_where_object = { where: {} };
         let audio_where_object = { where: {} };
         let image_where_object = { where: {} };
         let pdf_where_object = { where: {} };
+        let language_id = lang ?? 1;
 
         if (category_id) {
             let category = await this.categoryService.findOne(category_id);
@@ -324,7 +326,12 @@ export class PostsController {
             pdf_where_object.where['categories'] = { id: category_id };
         }
 
-        let language_id = lang ?? 1;
+        if (title) {
+            video_where_object.where['translations'] = { module: 'post', key: 'title', 'value': ILike(`%${title}%`) };
+            audio_where_object.where['translations'] = { module: 'post', key: 'title', 'value': ILike(`%${title}%`) };
+            image_where_object.where['translations'] = { module: 'post', key: 'title', 'value': ILike(`%${title}%`) };
+            pdf_where_object.where['translations'] = { module: 'post', key: 'title', 'value': ILike(`%${title}%`) };
+        }
 
         video_where_object.where['video'] = !IsNull();
         let videos = await this.postsService.findAllNoPagination({
