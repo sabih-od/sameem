@@ -6,19 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/categories/[categoryId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categories/[categoryId].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/categories/create.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categories/create.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/[postId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/[postId].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/create.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/create.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/services/categoryService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/categoryService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/services/postService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/postService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/store/slices/categorySlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/store/slices/categorySlice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/store/slices/postSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/store/slices/postSlice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/translations/translations.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/translations/translations.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/database/database.providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/database.providers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +80,7 @@
       <workItem from="1692118858559" duration="14065000" />
       <workItem from="1692204665537" duration="3131000" />
       <workItem from="1692219428829" duration="10787000" />
-      <workItem from="1692291594312" duration="4065000" />
+      <workItem from="1692291594312" duration="5451000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -192,7 +180,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692207488613</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="(admin) Post, Category: Translation work">
+      <created>1692301575946</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1692301575946</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -224,7 +219,8 @@
     <MESSAGE value="category, posts translation work" />
     <MESSAGE value="add/remove post to favourites list api, favourites list api." />
     <MESSAGE value="add post search by title feature" />
-    <option name="LAST_COMMIT_MESSAGE" value="add post search by title feature" />
+    <MESSAGE value="(admin) Post, Category: Translation work" />
+    <option name="LAST_COMMIT_MESSAGE" value="(admin) Post, Category: Translation work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
