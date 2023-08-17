@@ -69,7 +69,10 @@ export class CategoriesService {
                 return category;
             }
 
+            let name_ar = updateCategoryDto.name_ar;
+            delete updateCategoryDto.name_ar;
             await this.categoryRepository.update(category.id, updateCategoryDto);
+            updateCategoryDto['name_ar'] = name_ar;
 
             return await this.findOne(id);
         } catch (error) {

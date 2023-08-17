@@ -38,6 +38,7 @@ function Create(props) {
 
     const [successMsg, setSuccessMessage] = useState(null)
     const [name, setName] = useState('')
+    const [name_ar, setNameAr] = useState('')
     const [parentId, setParentId] = useState('')
     // const [categories, setCategories] = useState([]);
 
@@ -85,6 +86,7 @@ function Create(props) {
 
         dispatch(addCategory({
             name: name,
+            name_ar: name_ar,
             parent_id: parentId,
         }))
         setCategoryAdded(true);
@@ -124,6 +126,12 @@ function Create(props) {
                                             label="Name"
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Name Arabic"
+                                            value={name_ar}
+                                            onChange={(e) => setNameAr(e.target.value)}
                                         />
                                         <FormControl fullWidth>
                                             <Select  label="Select" value={parentId} onChange={(e) => setParentId(e.target.value)}>

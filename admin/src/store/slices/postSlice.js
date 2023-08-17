@@ -1,11 +1,26 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {HYDRATE} from 'next-redux-wrapper';
 import {update, show} from '../../services/postService';
+import {showTranslation} from "../../services/postService";
 
 export const getPost = createAsyncThunk(
     'post/get',
     async ({id}, thunkAPI) => {
         return await show(id)
+    }
+)
+
+export const getPostTitleArabicTranslation = createAsyncThunk(
+    'post/translation/get',
+    async ({module_id, language_id, key}, thunkAPI) => {
+        return await showTranslation(module_id, language_id, key)
+    }
+)
+
+export const getPostDescriptionArabicTranslation = createAsyncThunk(
+    'post/translation/get',
+    async ({module_id, language_id, key}, thunkAPI) => {
+        return await showTranslation(module_id, language_id, key)
     }
 )
 

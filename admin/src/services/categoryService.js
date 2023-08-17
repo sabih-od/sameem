@@ -67,7 +67,6 @@ export const create = async (payload) => {
 
 export const update = async ({id, ...payload}) => {
     try {
-        console.log(payload);
         const response = await fetch(`${apiUrl()}/categories/${id}`, {
             method: 'POST',
             headers: {
@@ -162,6 +161,33 @@ export const destroy = async ({
             return errorResponse(null, data?.message ?? ['Server Error'])
         }
         return successResponse(data)
+    } catch (e) {
+        return exceptionResponse()
+    }
+}
+
+export const showTranslation = async (module_id, language_id, key) => {
+    try {
+        const response = await fetch(`${apiUrl()}/categories/translation/get/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify({
+                module_id: module_id,
+                language_id: language_id,
+                key: key,
+            })
+        });
+
+        const data = await response.json();
+
+        if (data?.success === false) {
+            return errorResponse(null, data?.message ?? 'Server Error')
+        }
+
+        return data;
     } catch (e) {
         return exceptionResponse()
     }

@@ -15,7 +15,9 @@ export class TranslationsService {
         try {
             const translation = await this.translationRepository.create(createTranslationDto);
 
+            await this.translationRepository.query('SET FOREIGN_KEY_CHECKS = 0');
             await this.translationRepository.save(translation);
+            await this.translationRepository.query('SET FOREIGN_KEY_CHECKS = 1');
 
             return await this.findOne(translation.id);
         } catch (error) {
@@ -82,7 +84,9 @@ export class TranslationsService {
                 return translation;
             }
 
+            await this.translationRepository.query('SET FOREIGN_KEY_CHECKS = 0');
             await this.translationRepository.update(id, updateTranslationDto);
+            await this.translationRepository.query('SET FOREIGN_KEY_CHECKS = 1');
 
             return await this.findOne(id);
         } catch (error) {
@@ -101,6 +105,10 @@ export class TranslationsService {
             return translation;
         }
 
-        return await this.translationRepository.delete(id);
+        await this.translationRepository.query('SET FOREIGN_KEY_CHECKS = 0');
+        let res = await this.translationRepository.delete(id);
+        await this.translationRepository.query('SET FOREIGN_KEY_CHECKS = 1');
+
+        return res;
     }
 }

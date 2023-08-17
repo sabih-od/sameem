@@ -6,9 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/categories/[categoryId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categories/[categoryId].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/categories/create.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categories/create.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/[postId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/[postId].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/create.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/create.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/services/categoryService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/categoryService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/services/postService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/postService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/store/slices/categorySlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/store/slices/categorySlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/store/slices/postSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/store/slices/postSlice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/translations/entities/translation.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/translations/entities/translation.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/translations/translations.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/translations/translations.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +56,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/translations" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/posts/dto" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -56,11 +66,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src/posts/dto" />
       <recent name="$PROJECT_DIR$/backend/src/translations" />
       <recent name="$PROJECT_DIR$/backend/src/category-translations" />
       <recent name="$PROJECT_DIR$/backend/src/categories" />
       <recent name="$PROJECT_DIR$/backend/src/media" />
-      <recent name="$PROJECT_DIR$/backend/src/posts" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -80,7 +90,9 @@
       <workItem from="1692031316655" duration="14333000" />
       <workItem from="1692055343212" duration="1222000" />
       <workItem from="1692118858559" duration="14065000" />
-      <workItem from="1692204665537" duration="2732000" />
+      <workItem from="1692204665537" duration="3131000" />
+      <workItem from="1692219428829" duration="10787000" />
+      <workItem from="1692291594312" duration="4065000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -173,7 +185,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692132056354</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="add post search by title feature">
+      <created>1692207488613</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1692207488613</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,7 +223,8 @@
     <MESSAGE value="posts: screen wise api" />
     <MESSAGE value="category, posts translation work" />
     <MESSAGE value="add/remove post to favourites list api, favourites list api." />
-    <option name="LAST_COMMIT_MESSAGE" value="add/remove post to favourites list api, favourites list api." />
+    <MESSAGE value="add post search by title feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="add post search by title feature" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
