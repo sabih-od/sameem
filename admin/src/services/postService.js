@@ -61,15 +61,21 @@ export const create = async (payload) => {
 export const update = async ({
                                  id,
                                  title,
+                                 title_ar,
+                                 description,
+                                 description_ar,
                                  content,
                                  media
                              }) => {
     try {
-        console.log("update form", id, title,
+        console.log("update form", id, title, title_ar, description, description_ar,
             content,
             media)
         const form = new FormData()
         form.append('title', title)
+        form.append('title_ar', title_ar)
+        form.append('description', description)
+        form.append('description_ar', description_ar)
         form.append('content', content)
         form.append('media', media)
 
@@ -163,6 +169,33 @@ export const destroy = async ({
             return errorResponse(null, data?.message ?? ['Server Error'])
         }
         return successResponse(data)
+    } catch (e) {
+        return exceptionResponse()
+    }
+}
+
+export const showTranslation = async (module_id, language_id, key) => {
+    try {
+        const response = await fetch(`${apiUrl()}/posts/translation/get/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify({
+                module_id: module_id,
+                language_id: language_id,
+                key: key,
+            })
+        });
+
+        const data = await response.json();
+
+        if (data?.success === false) {
+            return errorResponse(null, data?.message ?? 'Server Error')
+        }
+
+        return data;
     } catch (e) {
         return exceptionResponse()
     }

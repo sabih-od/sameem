@@ -6,7 +6,7 @@ import {
     post as postDetail,
     loading as postLoading,
     errors as postErrors,
-    success as postSuccess, updatePost, setErrors, setSuccess
+    success as postSuccess, updatePost, setErrors, setSuccess, getPostTitleArabicTranslation, getPostDescriptionArabicTranslation
 } from "../../store/slices/postSlice";
 import {
     getCategories,
@@ -45,7 +45,9 @@ function Post(props) {
     const [category_ids, setCategoryId] = useState([]); // Make sure to initialize category_ids as an array
 
     const [title, setTitle] = useState('')
+    const [title_ar, setTitleAr] = useState('')
     const [description, setDescription] = useState('')
+    const [description_ar, setDescriptionAr] = useState('')
     const [url, setUrl] = useState('')
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
@@ -69,6 +71,20 @@ function Post(props) {
         if (postId) {
             console.log("postId" , postId)
             dispatch(getPost({id: postId}))
+
+            let translation_record = dispatch(getPostTitleArabicTranslation({module_id: parseInt(postId), language_id: 2, key: 'title'}))
+            translation_record.then((record) => {
+                if (record.payload.data && record.payload.data.value) {
+                    setTitleAr(record.payload.data.value)
+                }
+            });
+
+            translation_record = dispatch(getPostDescriptionArabicTranslation({module_id: parseInt(postId), language_id: 2, key: 'description'}))
+            translation_record.then((record) => {
+                if (record.payload.data && record.payload.data.value) {
+                    setDescriptionAr(record.payload.data.value)
+                }
+            });
         }
     }, [postId])
 
@@ -109,7 +125,7 @@ function Post(props) {
 
         dispatch(updatePost({
             id: postId,
-            category_ids , title, description, url , date , time , video , audio , image , pdf
+            category_ids , title, title_ar, description, description_ar, url , date , time , video , audio , image , pdf
         }))
 
     }
@@ -178,10 +194,18 @@ function Post(props) {
                                     <TextField fullWidth label='Title' value={title}
                                                onChange={e => setTitle(e.target.value)}/>
                                 </Grid>
+                                <Grid item xs={12}>
+                                    <TextField fullWidth label='Title Arabic' value={title_ar}
+                                               onChange={e => setTitleAr(e.target.value)}/>
+                                </Grid>
                                 <br/>
                                 <Grid item xs={12}>
                                     <TextField fullWidth label='Description' value={description}
                                                onChange={e => setDescription(e.target.value)}/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField fullWidth label='Description Arabic' value={description_ar}
+                                               onChange={e => setDescriptionAr(e.target.value)}/>
                                 </Grid>
                                 <br/>
                                 <Grid item xs={12}>

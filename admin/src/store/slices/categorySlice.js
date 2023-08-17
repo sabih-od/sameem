@@ -1,11 +1,18 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {HYDRATE} from 'next-redux-wrapper';
-import {update, show , get} from '../../services/categoryService';
+import {update, show, get, showTranslation} from '../../services/categoryService';
 
 export const getCategory = createAsyncThunk(
     'category/get',
     async ({id}, thunkAPI) => {
         return await show(id)
+    }
+)
+
+export const getCategoryNameArabicTranslation = createAsyncThunk(
+    'category/translation/get',
+    async ({module_id, language_id, key}, thunkAPI) => {
+        return await showTranslation(module_id, language_id, key)
     }
 )
 

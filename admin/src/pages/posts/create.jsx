@@ -57,7 +57,9 @@ function Create(props) {
 
 
     const [title, setTitle] = useState('')
+    const [title_ar, setTitleAr] = useState('')
     const [description, setDescription] = useState('')
+    const [description_ar, setDescriptionAr] = useState('')
     const [url, setUrl] = useState('')
     const [date, setDate] = useState('')
     const [time, setTime] = useState('')
@@ -97,7 +99,7 @@ function Create(props) {
         if (!fileValidation()) return;
 
         dispatch(addPost({
-            category_ids , title, description, url , date , time , video , audio , image , pdf
+            category_ids , title, title_ar, description, description_ar, url , date , time , video , audio , image , pdf
         }))
 
     }
@@ -167,10 +169,18 @@ function Create(props) {
                                     <TextField fullWidth label='Title' value={title}
                                                onChange={e => setTitle(e.target.value)}/>
                                 </Grid>
+                                <Grid item xs={12}>
+                                    <TextField fullWidth label='Title Arabic' value={title_ar}
+                                               onChange={e => setTitleAr(e.target.value)}/>
+                                </Grid>
 <br/>
                                 <Grid item xs={12}>
                                     <TextField fullWidth label='Description' value={description}
                                                onChange={e => setDescription(e.target.value)}/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField fullWidth label='Description Arabic' value={description_ar}
+                                               onChange={e => setDescriptionAr(e.target.value)}/>
                                 </Grid>
                                 <br/>
                                 <Grid item xs={12}>

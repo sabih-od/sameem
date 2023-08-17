@@ -6,7 +6,7 @@ import {
     category as categoryDetail,
     loading as categoryLoading,
     errors as categoryErrors,
-    success as categorySuccess, updateCategory, setErrors, setSuccess,
+    success as categorySuccess, updateCategory, setErrors, setSuccess, getCategoryNameArabicTranslation,
     // categories as categoriesList,
 
 } from "../../store/slices/categorySlice";
@@ -43,6 +43,7 @@ function Category(props) {
 
     const [successMsg, setSuccessMessage] = useState('')
     const [name, setName] = useState('')
+    const [name_ar, setNameAr] = useState('')
     const [parent_id, setParentId] = useState('')
 
     const [page, setPage] = useState(1)
@@ -56,6 +57,13 @@ function Category(props) {
     useEffect(() => {
         if (categoryId) {
             dispatch(getCategory({id: categoryId}))
+
+            let translation_record = dispatch(getCategoryNameArabicTranslation({module_id: parseInt(categoryId), language_id: 2, key: 'name'}))
+            translation_record.then((record) => {
+                if (record.payload.data && record.payload.data.value) {
+                    setNameAr(record.payload.data.value)
+                }
+            });
         }
     }, [categoryId])
 
@@ -86,6 +94,7 @@ function Category(props) {
         // if (!fileValidation()) return;
         let data = {
             name,
+            name_ar,
             parent_id
         }
 
@@ -147,6 +156,12 @@ function Category(props) {
                                             label="Name"
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Name Arabic"
+                                            value={name_ar}
+                                            onChange={(e) => setNameAr(e.target.value)}
                                         />
                                         <FormControl fullWidth>
                                             <Select label="Select" value={parent_id} onChange={(e) => setParentId(e.target.value)}>

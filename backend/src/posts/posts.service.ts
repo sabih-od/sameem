@@ -21,7 +21,9 @@ export class PostsService {
         try {
             const post = await this.postRepository.create(createPostDto);
 
+            await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 0');
             await this.postRepository.save(post);
+            await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 1');
 
             return await this.findOne(post.id);
         } catch (error) {
@@ -78,23 +80,34 @@ export class PostsService {
     }
 
     async update(id: number, updatePostDto: UpdatePostDto): Promise<any> {
-        try {
+        // console.log(updatePostDto);
+        // try {
             const post = await this.findOne(id);
 
             if (post.error) {
                 return post;
             }
 
+            let title_ar = updatePostDto.title_ar;
+            let description_ar = updatePostDto.description_ar;
+            delete updatePostDto.title_ar;
+            delete updatePostDto.description_ar;
+            delete updatePostDto['content'];
+            delete updatePostDto['media'];
+            await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 0');
             await this.postRepository.update(id, updatePostDto);
+            await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 1');
+            updatePostDto['title_ar'] = title_ar;
+            updatePostDto['description_ar'] = description_ar;
 
             return await this.findOne(id);
-        } catch (error) {
-            if (error instanceof QueryFailedError) {
-                return {
-                    error: error['sqlMessage']
-                };
-            }
-        }
+        // } catch (error) {
+        //     if (error instanceof QueryFailedError) {
+        //         return {
+        //             error: error['sqlMessage']
+        //         };
+        //     }
+        // }
     }
 
     async remove(id: number): Promise<any> {
@@ -104,7 +117,11 @@ export class PostsService {
             return post;
         }
 
-        return await this.postRepository.delete(id);
+        await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 0');
+        let res = await this.postRepository.delete(id);
+        await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 1');
+
+        return res;
     }
 
     async findAllByCategory(id: number, page: number = 1, limit: number = 10, args = {}): Promise<any> {

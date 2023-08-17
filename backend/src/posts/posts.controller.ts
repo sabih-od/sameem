@@ -35,6 +35,7 @@ import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
 import {UsersService} from "../users/users.service";
 import {AuthGuard} from "../auth/auth.guard";
 import {User} from "../users/entities/user.entity";
+import {GetPostTranslationDto} from "./dto/get-post-translation.dto";
 
 @Injectable()
 export class MaxFileSizeInterceptor implements NestInterceptor {
@@ -509,6 +510,7 @@ export class PostsController {
             images?: Express.Multer.File[],
         },
     ) {
+        console.log(updatePostDto);
         let post = await this.postsService.findOne(+id);
         if (post.error) {
             return {
@@ -829,5 +831,23 @@ export class PostsController {
             message: '',
             data: favourite_posts
         };
+    }
+
+    @Post('translation/get')
+    async getTranslation (@Body() getPostTranslationDto: GetPostTranslationDto) {
+        let res = await this.translationsService.findOneWhere({
+            where: {
+                module: 'post',
+                module_id: getPostTranslationDto.module_id,
+                language_id: getPostTranslationDto.language_id,
+                key: getPostTranslationDto.key,
+            }
+        })
+
+        return {
+            success: !res.error,
+            message: res.error ? res.error : '',
+            data: res.error ? [] : res,
+        }
     }
 }

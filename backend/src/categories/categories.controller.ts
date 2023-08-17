@@ -8,6 +8,7 @@ import {IsNull} from "typeorm";
 import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
 import {TranslationsService} from "../translations/translations.service";
 import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
+import {GetCategoryTranslationDto} from "./dto/get-category-translation.dto";
 
 @ApiTags('Categories')
 @ApiBearerAuth()
@@ -318,4 +319,21 @@ export class CategoriesController {
         }
     }
 
+    @Post('translation/get')
+    async getTranslation (@Body() getCategoryTranslationDto: GetCategoryTranslationDto) {
+        let res = await this.translationsService.findOneWhere({
+            where: {
+                module: 'category',
+                module_id: getCategoryTranslationDto.module_id,
+                language_id: getCategoryTranslationDto.language_id,
+                key: getCategoryTranslationDto.key,
+            }
+        })
+
+        return {
+            success: !res.error,
+            message: res.error ? res.error : '',
+            data: res.error ? [] : res,
+        }
+    }
 }
