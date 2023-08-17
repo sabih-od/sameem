@@ -19,6 +19,7 @@ export const databaseProviders = [
                     __dirname + '/../../dist/**/entities/*.entity.js',
                 ],
                 synchronize: true,
+                charset: 'utf8'
             });
 
             return dataSource.initialize();
