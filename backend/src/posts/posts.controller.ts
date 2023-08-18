@@ -5,16 +5,18 @@ import {
     Controller,
     Delete,
     ExecutionContext,
-    Get, Headers,
+    Get,
+    Headers,
     Inject,
     Injectable,
     NestInterceptor,
     Param,
     Post,
     Query,
+    Request,
     UploadedFiles,
-    UseInterceptors,
-    Request, UseGuards
+    UseGuards,
+    UseInterceptors
 } from '@nestjs/common';
 import {PostsService} from './posts.service';
 import {CreatePostDto} from './dto/create-post.dto';
@@ -199,7 +201,6 @@ export class PostsController {
                     return item !== null && item !== undefined;
                 })
             );
-
             await this.postRepository.save(post);
         }
 
@@ -473,6 +474,7 @@ export class PostsController {
     }
 
     @ApiConsumes('multipart/form-data')
+    @ApiConsumes('application/json')
     @ApiBody({
         schema: {
             type: 'object',
