@@ -34,3 +34,6 @@ yarn-error.log*
 .vercel
 
 .env
+./src/ssl/
+/src/ssl/cert.txt
+/src/ssl/key.txt
