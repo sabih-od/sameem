@@ -1,70 +1,60 @@
+import React, { useState } from 'react';
+import {
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+} from '@mui/material';
+import Collapse from '@mui/material/Collapse';
 import BookIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ContactIcon from '@mui/icons-material/ContactPhoneOutlined';
-import DonationIcon from '@mui/icons-material/VolunteerActivismOutlined';
-import EventIcon from '@mui/icons-material/EventOutlined';
-import PostIcon from '@mui/icons-material/DynamicFeedOutlined';
-import {BullhornOutline} from 'mdi-material-ui';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
-import MarkAsUnreadOutlinedIcon from '@mui/icons-material/MarkAsUnreadOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
-import ReportOutlinedIcon from '@mui/icons-material/ReportOutlined';
-import {useDispatch, useSelector} from "react-redux";
+import PostIcon from '@mui/icons-material/DynamicFeedOutlined';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { useSelector } from 'react-redux';
 
 import {
     getCategories,
     categories as categoriesList,
 } from '../../store/slices/categoriesSlice'
-
 const navigation = () => {
-
-    // const [categories, getCategories] = useState([]);
-    const categories = useSelector(categoriesList)
-
+    const categories = useSelector(categoriesList);
 
     return [
-
         {
             title: 'Categories',
             icon: BookIcon,
-            path: '/categories'
+            path: '/categories',
+
         },
         {
             title: 'Category Menus',
             icon: BookIcon,
-            path: '/categoryMenus'
-        },
+            path: '/categoryMenus',
 
+        },
         {
             title: 'Contacts',
             icon: ContactIcon,
-            path: '/contacts'
+            path: '/contacts',
         },
-
         {
             title: 'Posts',
             icon: PostIcon,
             path: '/posts',
         },
-
         {
             title: 'Users',
             icon: PeopleOutlinedIcon,
             path: '/users',
         },
+        // ...categories.map(category => ({
+        //     title: category.name,
+        //     icon: BookIcon,
+        //     path: `/categoryPosts/${category.id}`
+        // }))
+    ];
+};
 
-        {
-            title: 'FAQS',
-            icon: BookIcon,
-            path: '/faqs'
-        },
-        ...categories.map(category => ({
-            title: category.name,
-            icon: BookIcon,
-            path: `/categoryPosts/${category.id}`
-        }))
-
-
-    ]
-}
-
-export default navigation
+export default navigation;
