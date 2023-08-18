@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/database/database.providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/database.providers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/admin/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/admin/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/pm2.json" beforeDir="false" afterPath="$PROJECT_DIR$/admin/pm2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/admin/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +47,9 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/posts/dto" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.22.9" />
+    <property name="javascript.nodejs.core.library.typings.version" value="12.20.55" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -54,11 +59,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/admin/src" />
       <recent name="$PROJECT_DIR$/backend/src/posts/dto" />
       <recent name="$PROJECT_DIR$/backend/src/translations" />
       <recent name="$PROJECT_DIR$/backend/src/category-translations" />
       <recent name="$PROJECT_DIR$/backend/src/categories" />
-      <recent name="$PROJECT_DIR$/backend/src/media" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -80,7 +85,8 @@
       <workItem from="1692118858559" duration="14065000" />
       <workItem from="1692204665537" duration="3131000" />
       <workItem from="1692219428829" duration="10787000" />
-      <workItem from="1692291594312" duration="13471000" />
+      <workItem from="1692291594312" duration="14081000" />
+      <workItem from="1692377811883" duration="2729000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -215,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692320522246</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="swagger change">
+      <created>1692321744619</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1692321744619</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

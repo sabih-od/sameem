@@ -1,8 +1,8 @@
 {
     "apps": [
         {
-            "name": "Sameem Admin (3014)",
-            "script": "npm run dev:static",
+            "name": "Sameem Admin Server (3014)",
+            "script": "node server.js",
             "instances": "1",
             "autorestart": true,
             "max_restarts": 100,
