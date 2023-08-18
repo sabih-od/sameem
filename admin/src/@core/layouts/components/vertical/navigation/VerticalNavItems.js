@@ -12,8 +12,9 @@ import List from '@mui/material/List';
 import BookIcon from "@mui/icons-material/AutoStoriesOutlined";
 import VerticalNavLink from './VerticalNavLink'
 import VerticalNavSectionTitle from './VerticalNavSectionTitle'
-import {router} from "next/client";
-import {CategoryOutlined, StarBorder} from "@mui/icons-material";
+import {useRouter} from "next/router";
+import CategoryOutlined from "@mui/icons-material/CategoryOutlined";
+import StarBorder from "@mui/icons-material/StarBorder";
 
 const resolveNavItemComponent = item => {
     if (item.sectionTitle) return VerticalNavSectionTitle
@@ -27,6 +28,7 @@ const VerticalNavItems = props => {
     const [expandedChildCategory, setExpandedChildCategory] = useState(null);
 
     const [open, setOpen] = useState(true);
+    const router = useRouter();
 
     const handleClick = () => {
         setOpen(!open);
@@ -43,14 +45,6 @@ const VerticalNavItems = props => {
             setExpandedCategory(categoryId);
         }
     };
-
-
-    // const dropdownItems = categories.map((category) => ({
-    //   title: category.name,
-    //   icon: BookIcon,
-    //   // onClick: () => router.push(`/categoryPosts/${category.id}`),
-    //   onClick: () => handleCategoryClick(category.id),
-    // }));
 
     const dropdownItems = categories.map((category) => ({
         title: category.name,
@@ -116,25 +110,12 @@ const VerticalNavItems = props => {
                                                 ))}
                                             </List>
                                         )}
-                                        {/* Render posts for the expanded category */}
                                     </Collapse>
                                 )}
                             </div>
                         ))}
                     </List>
                 </Collapse>
-                {/*<Collapse in={open} timeout="auto" unmountOnExit>*/}
-                {/*  <List component="div" disablePadding>*/}
-                {/*    {dropdownItems.map((item) => (*/}
-                {/*        <ListItemButton key={item.title} sx={{ pl: 4 }} onClick={item.onClick}>*/}
-                {/*          <ListItemIcon>*/}
-                {/*            <item.icon />*/}
-                {/*          </ListItemIcon>*/}
-                {/*          <ListItemText primary={item.title} />*/}
-                {/*        </ListItemButton>*/}
-                {/*    ))}*/}
-                {/*  </List>*/}
-                {/*</Collapse>*/}
             </List>
             {RenderMenuItems}
         </>
