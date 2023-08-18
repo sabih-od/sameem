@@ -28,12 +28,12 @@ const navigation = () => {
             path: '/categories',
 
         },
-        {
-            title: 'Category Menus',
-            icon: BookIcon,
-            path: '/categoryMenus',
-
-        },
+        // {
+        //     title: 'Category Menus',
+        //     icon: BookIcon,
+        //     path: '/categoryMenus',
+        //
+        // },
         {
             title: 'Contacts',
             icon: ContactIcon,
