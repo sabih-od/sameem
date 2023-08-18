@@ -39,6 +39,9 @@ export class CreatePostDto {
     @ApiProperty({ example: 'https://localhost/post/pdfs/pdf.pdf' })
     pdf: string;
 
+    @ApiProperty({ example: 1 })
+    is_featured: number;
+
     @ApiProperty({ example: ['https://localhost/post/images/1.jpg', 'https://localhost/post/images/2.jpg'] })
     images: [];
 

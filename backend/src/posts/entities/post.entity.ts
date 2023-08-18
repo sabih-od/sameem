@@ -35,6 +35,9 @@ export class Post {
     @Column({ type: 'text', nullable: true })
     pdf: string;
 
+    @Column({ type: 'int', default: 0 })
+    is_featured: number;
+
     @Column({ type: 'text', nullable: true })
     created_at: string;
 

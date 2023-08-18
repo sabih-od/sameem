@@ -502,17 +502,14 @@ export class PostsController {
     )
     @Post(':id')
     async update(
-        @Param('id') id: number,
-        @Body() updatePostDto: UpdatePostDto,
-        @UploadedFiles() files: {
+        @Param('id') id: number, @Body() updatePostDto: UpdatePostDto, @UploadedFiles() files: {
             video?: Express.Multer.File[],
             audio?: Express.Multer.File[],
             image?: Express.Multer.File[],
             pdf?: Express.Multer.File[],
             images?: Express.Multer.File[],
-        },
+        }
     ) {
-        console.log(updatePostDto);
         let post = await this.postsService.findOne(+id);
         if (post.error) {
             return {
@@ -648,6 +645,27 @@ export class PostsController {
             success: !res.error,
             message: res.error ? res.error : 'Post updated successfully!',
             data: res.error ? [] : res,
+        }
+    }
+
+    @Post(':id/mark-as-featured')
+    async markAsFeatured (@Param('id') id: number, @Body() updatePostDto: UpdatePostDto) {
+        let post = await this.postsService.findOne(+id);
+        if (post.error) {
+            return {
+                success: false,
+                message: post.error,
+                data: [],
+            }
+        }
+
+        post.is_featured = updatePostDto.is_featured;
+        await this.postRepository.save(post)
+
+        return {
+            success: true,
+            message: 'Post marked successfully!',
+            data: []
         }
     }
 

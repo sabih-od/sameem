@@ -39,6 +39,9 @@ export class PostsService {
         let [data, total] = await this.postRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
+            order: {
+                is_featured: 'DESC'
+            },
             ...args
         });
 
@@ -56,7 +59,7 @@ export class PostsService {
         return await this.postRepository.find({
             take: 10,
             order: {
-                created_at: 'DESC'
+                is_featured: 'DESC'
             },
             ...args,
         });
@@ -81,7 +84,7 @@ export class PostsService {
 
     async update(id: number, updatePostDto: UpdatePostDto): Promise<any> {
         // console.log(updatePostDto);
-        // try {
+        try {
             const post = await this.findOne(id);
 
             if (post.error) {
@@ -101,13 +104,13 @@ export class PostsService {
             updatePostDto['description_ar'] = description_ar;
 
             return await this.findOne(id);
-        // } catch (error) {
-        //     if (error instanceof QueryFailedError) {
-        //         return {
-        //             error: error['sqlMessage']
-        //         };
-        //     }
-        // }
+        } catch (error) {
+            if (error instanceof QueryFailedError) {
+                return {
+                    error: error['sqlMessage']
+                };
+            }
+        }
     }
 
     async remove(id: number): Promise<any> {
@@ -129,6 +132,10 @@ export class PostsService {
         let [data, total] = await this.postRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
+            order: {
+                created_at: 'DESC',
+                is_featured: 'DESC'
+            },
             where: {
                 categories: {
                     id: id
