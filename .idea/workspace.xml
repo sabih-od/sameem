@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/database/database.providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/database.providers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +80,7 @@
       <workItem from="1692118858559" duration="14065000" />
       <workItem from="1692204665537" duration="3131000" />
       <workItem from="1692219428829" duration="10787000" />
-      <workItem from="1692291594312" duration="12336000" />
+      <workItem from="1692291594312" duration="13471000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -208,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692303284015</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="swagger change">
+      <created>1692320522246</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1692320522246</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -242,7 +249,8 @@
     <MESSAGE value="add post search by title feature" />
     <MESSAGE value="(admin) Post, Category: Translation work" />
     <MESSAGE value="db encoding" />
-    <option name="LAST_COMMIT_MESSAGE" value="db encoding" />
+    <MESSAGE value="swagger change" />
+    <option name="LAST_COMMIT_MESSAGE" value="swagger change" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
