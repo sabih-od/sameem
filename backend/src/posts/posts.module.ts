@@ -9,9 +9,10 @@ import {mediaProviders} from "../media/media.provider";
 import {CategoriesModule} from "../categories/categories.module";
 import {categoryProviders} from "../categories/categories.provider";
 import {TranslationsModule} from "../translations/translations.module";
+import {UserPostHistoriesModule} from "../user_post_histories/user_post_histories.module";
 
 @Module({
-    imports: [DatabaseModule, UsersModule, MediaModule, CategoriesModule, TranslationsModule],
+    imports: [DatabaseModule, UsersModule, MediaModule, CategoriesModule, TranslationsModule, UserPostHistoriesModule],
     controllers: [PostsController],
     providers: [PostsService, ...postProviders, ...mediaProviders, ...categoryProviders],
     exports: [PostsService],

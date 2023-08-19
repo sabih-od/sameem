@@ -26,13 +26,11 @@ export class UserPostHistoriesService {
         }
     }
 
-    async findAll(page: number = 1, limit: number = 10): Promise<any> {
+    async findAll(page: number = 1, limit: number = 10, args: {} = {}): Promise<any> {
         const [data, total] = await this.userPostHistoryRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
-            order: {
-                id: 'DESC'
-            }
+            ...args
         });
 
         const totalPages = Math.ceil(total / limit);
