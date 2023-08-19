@@ -16,6 +16,7 @@ import { PostsModule } from './posts/posts.module';
 import { MediaModule } from './media/media.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TranslationsModule } from './translations/translations.module';
+import { UserPostHistoriesModule } from './user_post_histories/user_post_histories.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TranslationsModule } from './translations/translations.module';
       MediaModule,
       CategoriesModule,
       TranslationsModule,
+      UserPostHistoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

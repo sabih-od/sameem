@@ -75,9 +75,9 @@ export class GroupRequestsController {
       }
   }
 
-  @Get()
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'limit', required: false})
+  @Get()
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
       let res = await this.groupRequestsService.findAll(page, limit);
 

@@ -57,6 +57,7 @@ async function bootstrap() {
         .addTag('Notifications')
         .addTag('Posts')
         .addTag('Users')
+        .addTag('User Post Histories')
         .addSecurity('bearer', {
             type: 'http',
             scheme: 'bearer',
