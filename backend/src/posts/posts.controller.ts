@@ -38,6 +38,7 @@ import {UsersService} from "../users/users.service";
 import {AuthGuard} from "../auth/auth.guard";
 import {User} from "../users/entities/user.entity";
 import {GetPostTranslationDto} from "./dto/get-post-translation.dto";
+import {UserPostHistoriesService} from "../user_post_histories/user_post_histories.service";
 
 @Injectable()
 export class MaxFileSizeInterceptor implements NestInterceptor {
@@ -87,6 +88,7 @@ export class PostsController {
         private readonly categoryService: CategoriesService,
         private readonly translationsService: TranslationsService,
         private readonly usersService: UsersService,
+        private readonly userPostHistoriesService: UserPostHistoriesService,
         @Inject('POST_REPOSITORY')
         private postRepository: Repository<PostEntity>,
         @Inject('USER_REPOSITORY')
@@ -473,6 +475,65 @@ export class PostsController {
         }
     }
 
+    @ApiHeader({ name: 'lang', required: false})
+    @ApiQuery({ name: 'page', required: false})
+    @ApiQuery({ name: 'limit', required: false})
+    @Get('/post-history')
+    async postHistory (
+        @Request() req,
+        @Query('page') page?: number,
+        @Query('limit') limit?: number,
+        @Headers('lang') lang?: number
+    ) {
+        let res = await this.userPostHistoriesService.findAll(page, limit, {
+            where: {
+                user_id: 1
+            },
+            order: {
+                created_at: 'DESC'
+            }
+        });
+
+        res.data = await Promise.all(
+            res.data.map(async (user_post_history) => {
+                let post = await this.postsService.findOne(user_post_history.post_id)
+
+                if (!post.error) {
+                    return post;
+                }
+            })
+        );
+
+        //translation work
+        if(res.data) {
+            let language_id = lang ?? 1;
+            res.data = await Promise.all(
+                res.data.map(async (post) => {
+                    for (const key of this.translated_columns) {
+                        let record = await this.translationsService.findOneWhere({
+                            where: {
+                                module: 'post',
+                                module_id: post.id,
+                                language_id: language_id,
+                                key: key,
+                            },
+                        });
+
+                        post[key] = record.value ?? post[key];
+                    }
+
+                    return post;
+                })
+            );
+        }
+
+        return {
+            success: true,
+            message: '',
+            ...res
+        }
+    }
+
     @ApiConsumes('multipart/form-data')
     @ApiConsumes('application/json')
     @ApiBody({
@@ -502,17 +563,14 @@ export class PostsController {
     )
     @Post(':id')
     async update(
-        @Param('id') id: number,
-        @Body() updatePostDto: UpdatePostDto,
-        @UploadedFiles() files: {
+        @Param('id') id: number, @Body() updatePostDto: UpdatePostDto, @UploadedFiles() files: {
             video?: Express.Multer.File[],
             audio?: Express.Multer.File[],
             image?: Express.Multer.File[],
             pdf?: Express.Multer.File[],
             images?: Express.Multer.File[],
-        },
+        }
     ) {
-        console.log(updatePostDto);
         let post = await this.postsService.findOne(+id);
         if (post.error) {
             return {
@@ -648,6 +706,27 @@ export class PostsController {
             success: !res.error,
             message: res.error ? res.error : 'Post updated successfully!',
             data: res.error ? [] : res,
+        }
+    }
+
+    @Post(':id/mark-as-featured')
+    async markAsFeatured (@Param('id') id: number, @Body() updatePostDto: UpdatePostDto) {
+        let post = await this.postsService.findOne(+id);
+        if (post.error) {
+            return {
+                success: false,
+                message: post.error,
+                data: [],
+            }
+        }
+
+        post.is_featured = updatePostDto.is_featured;
+        await this.postRepository.save(post)
+
+        return {
+            success: true,
+            message: 'Post marked successfully!',
+            data: []
         }
     }
 
