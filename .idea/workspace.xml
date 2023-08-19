@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/user_post_histories/user_post_histories.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/user_post_histories/user_post_histories.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/user_post_histories/user_post_histories.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/user_post_histories/user_post_histories.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +86,7 @@
       <workItem from="1692204665537" duration="3131000" />
       <workItem from="1692219428829" duration="10787000" />
       <workItem from="1692291594312" duration="14081000" />
-      <workItem from="1692377811883" duration="9189000" />
+      <workItem from="1692377811883" duration="10555000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -241,7 +242,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692399946779</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Add post to history APIs">
+      <created>1692405813019</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1692405813019</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -278,7 +286,8 @@
     <MESSAGE value="swagger change" />
     <MESSAGE value="admin: https config" />
     <MESSAGE value="Post: mark as featured" />
-    <option name="LAST_COMMIT_MESSAGE" value="Post: mark as featured" />
+    <MESSAGE value="Add post to history APIs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add post to history APIs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
