@@ -56,6 +56,7 @@ async function bootstrap() {
         .addTag('Messages')
         .addTag('Notifications')
         .addTag('Posts')
+        .addTag('Quotations')
         .addTag('Users')
         .addTag('User Post Histories')
         .addSecurity('bearer', {
