@@ -6,12 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/database/database.providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/database.providers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/create-post.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/entities/post.entity.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/group-requests/group-requests.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +48,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="12.22.9" />
     <property name="javascript.nodejs.core.library.typings.version" value="12.20.55" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/user_post_histories" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -61,11 +58,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src/user_post_histories" />
       <recent name="$PROJECT_DIR$/admin/src" />
       <recent name="$PROJECT_DIR$/backend/src/posts/dto" />
       <recent name="$PROJECT_DIR$/backend/src/translations" />
       <recent name="$PROJECT_DIR$/backend/src/category-translations" />
-      <recent name="$PROJECT_DIR$/backend/src/categories" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -88,7 +85,7 @@
       <workItem from="1692204665537" duration="3131000" />
       <workItem from="1692219428829" duration="10787000" />
       <workItem from="1692291594312" duration="14081000" />
-      <workItem from="1692377811883" duration="6733000" />
+      <workItem from="1692377811883" duration="9189000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -237,7 +234,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692380554206</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Post: mark as featured">
+      <created>1692399946779</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1692399946779</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -273,7 +277,8 @@
     <MESSAGE value="db encoding" />
     <MESSAGE value="swagger change" />
     <MESSAGE value="admin: https config" />
-    <option name="LAST_COMMIT_MESSAGE" value="admin: https config" />
+    <MESSAGE value="Post: mark as featured" />
+    <option name="LAST_COMMIT_MESSAGE" value="Post: mark as featured" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
