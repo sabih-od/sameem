@@ -539,8 +539,7 @@ export class PostsController {
     @ApiBody({
         schema: {
             type: 'object',
-            properties: {
-                video: {type: 'string', format: 'binary'},
+            properties: {video: {type: 'string', format: 'binary'},
                 audio: {type: 'string', format: 'binary'},
                 image: {type: 'string', format: 'binary'},
                 pdf: {type: 'string', format: 'binary'},
@@ -610,6 +609,7 @@ export class PostsController {
 
         let newUpdatePostDto = updatePostDto;
         delete newUpdatePostDto.category_ids;
+        delete newUpdatePostDto.images;
         let res = await this.postsService.update(+id, newUpdatePostDto);
 
         //translation work
