@@ -304,6 +304,50 @@ export class PostsController {
     }
 
     @ApiHeader({ name: 'lang', required: false})
+    @Get('get/featured-posts')
+    async findAllFeatured(@Headers('lang') lang?: number) {
+        let language_id = lang ?? 1;
+
+        let res = await this.postsService.findAll(1, 10, {
+            relations: ['images', 'categories.children'],
+            where: {
+                is_featured: 1
+            },
+            order: {
+                created_at: 'DESC'
+            }
+        });
+
+        //translation work
+        if(res.data) {
+            res.data = await Promise.all(
+                res.data.map(async (post) => {
+                    for (const key of this.translated_columns) {
+                        let record = await this.translationsService.findOneWhere({
+                            where: {
+                                module: 'post',
+                                module_id: post.id,
+                                language_id: language_id,
+                                key: key,
+                            },
+                        });
+
+                        post[key] = record.value ?? post[key];
+                    }
+
+                    return post;
+                })
+            );
+        }
+
+        return {
+            success: true,
+            message: '',
+            ...res
+        }
+    }
+
+    @ApiHeader({ name: 'lang', required: false})
     @ApiQuery({ name: 'category_id', required: false})
     @ApiQuery({ name: 'title', required: false})
     @Get('/screen-wise')
