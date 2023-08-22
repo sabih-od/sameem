@@ -522,7 +522,7 @@ export class PostsController {
     @ApiHeader({ name: 'lang', required: false})
     @ApiQuery({ name: 'page', required: false})
     @ApiQuery({ name: 'limit', required: false})
-    @Get('/post-history')
+    @Get('/get/post-history')
     async postHistory (
         @Request() req,
         @Query('page') page?: number,

@@ -1,10 +1,24 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, Request, Query, UseGuards} from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    Request,
+    Query,
+    UseGuards,
+    UploadedFile, ParseFilePipe, BadRequestException, UseInterceptors, MaxFileSizeValidator
+} from '@nestjs/common';
 import { QuotationsService } from './quotations.service';
 import { CreateQuotationDto } from './dto/create-quotation.dto';
 import { UpdateQuotationDto } from './dto/update-quotation.dto';
-import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {Between} from "typeorm";
 import {AuthGuard} from "../auth/auth.guard";
+import {deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate} from "../helpers/helper";
+import {FileInterceptor} from "@nestjs/platform-express";
 
 @ApiTags('Quotations')
 @ApiBearerAuth()
@@ -13,8 +27,37 @@ import {AuthGuard} from "../auth/auth.guard";
     export class QuotationsController {
     constructor(private readonly quotationsService: QuotationsService) {}
 
+    @UseInterceptors(FileInterceptor('audio'))
+    @ApiConsumes('multipart/form-data')
+    @ApiConsumes('application/json')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                title: {type: 'string'},
+                description: {type: 'string'},
+                author: {type: 'string'},
+                audio: {type: 'string', format: 'binary'}
+            }
+        }
+    })
     @Post()
-    async create(@Body() createQuotationDto: CreateQuotationDto) {
+    async create(@Body() createQuotationDto: CreateQuotationDto, @UploadedFile(
+        new ParseFilePipe({
+            validators: [
+                new MaxFileSizeValidator({maxSize: 100000000})
+            ]
+        })
+    ) audio: Express.Multer.File) {
+        //audio uploads
+        if (audio) {
+            try {
+                createQuotationDto.audio = await handleUploadOnCreate({}, [audio], '/uploads/quotations/audios/');
+            } catch (error) {
+                throw new BadRequestException(error.message);
+            }
+        }
+
         createQuotationDto.created_at = Date.now().toString();
         let res = await this.quotationsService.create(createQuotationDto);
 
@@ -79,14 +122,43 @@ import {AuthGuard} from "../auth/auth.guard";
         }
     }
 
+    @UseInterceptors(FileInterceptor('audio'))
+    @ApiConsumes('multipart/form-data')
+    @ApiConsumes('application/json')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                title: {type: 'string'},
+                description: {type: 'string'},
+                author: {type: 'string'},
+                audio: {type: 'string', format: 'binary'}
+            }
+        }
+    })
     @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateQuotationDto: UpdateQuotationDto) {
+    async update(@Param('id') id: string, @Body() updateQuotationDto: UpdateQuotationDto, @UploadedFile(
+        new ParseFilePipe({
+            validators: [
+                new MaxFileSizeValidator({maxSize: 100000000})
+            ]
+        })
+    ) audio: Express.Multer.File) {
         let quotation = await this.quotationsService.findOne(+id);
         if (quotation.error) {
             return {
                 success: false,
                 message: quotation.error,
                 data: [],
+            }
+        }
+
+        //audio uploads
+        if (audio) {
+            try {
+                updateQuotationDto.audio = await handleUploadOnUpdate({}, [audio], quotation.audio, '/uploads/quotations/audios/');
+            } catch (error) {
+                throw new BadRequestException(error.message);
             }
         }
 
@@ -109,6 +181,9 @@ import {AuthGuard} from "../auth/auth.guard";
                 data: [],
             }
         }
+
+        // Delete uploaded file
+        await deleteFileFromUploads(process.env.APP_URL + ':' + process.env.PORT, quotation.audio);
 
         let res = await this.quotationsService.remove(+id);
 

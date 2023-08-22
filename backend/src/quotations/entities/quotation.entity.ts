@@ -14,6 +14,9 @@ export class Quotation {
     @Column({type: 'varchar'})
     author: string;
 
+    @Column({ type: 'text', nullable: true })
+    audio: string;
+
     @Column({type: 'varchar', nullable: true})
     created_at: string;
 }

@@ -12,5 +12,8 @@ export class UpdateQuotationDto extends PartialType(CreateQuotationDto) {
     @ApiProperty({ example: 'John Doe' })
     author: string;
 
+    @ApiProperty({ example: 'https://localhost/quotations/audios/audio.wav' })
+    audio: string;
+
     created_at: string;
 }
