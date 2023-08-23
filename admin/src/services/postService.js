@@ -61,6 +61,7 @@ export const create = async (payload) => {
 export const update = async ({
                                  id,
                                  title,
+                                 category_ids,
                                  title_ar,
                                  description,
                                  description_ar,
@@ -73,6 +74,10 @@ export const update = async ({
             media)
         const form = new FormData()
         form.append('title', title)
+        // let cat_array = category_ids.split(',');
+        // console.log('category_ids.split', category_ids.split(','))
+        form.append('category_ids[]', category_ids);
+        console.log('form.category_ids', form.category_ids);
         form.append('title_ar', title_ar)
         form.append('description', description)
         form.append('description_ar', description_ar)
@@ -82,7 +87,8 @@ export const update = async ({
         const response = await fetch(`${apiUrl()}/posts/${id}`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${getToken()}`
+                'Authorization': `Bearer ${getToken()}`,
+                // 'Content-Type': 'multipart/form-data'
             },
             body: form,
         });

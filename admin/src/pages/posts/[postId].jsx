@@ -91,7 +91,11 @@ function Post(props) {
     useEffect(() => {
         if (post) {
             console.log("post" , post)
-            // setCategoryId(post.category_ids)
+            let category_ids = [];
+            post.categories.forEach((category) => {
+                category_ids.push(category.id)
+            });
+            setCategoryId(category_ids)
             setTitle(post.title)
             setDescription(post.description)
             setUrl(post.url)

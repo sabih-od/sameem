@@ -495,8 +495,8 @@ export class PostsController {
     async findOne(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.postsService.findOne(+id);
 
-        //translation work
         if (!res.error) {
+            //translation work
             let language_id = lang ?? 1;
             for (const key of this.translated_columns) {
                 let record = await this.translationsService.findOneWhere({
@@ -652,9 +652,9 @@ export class PostsController {
         }
 
         let newUpdatePostDto = updatePostDto;
-        delete newUpdatePostDto.category_ids;
         delete newUpdatePostDto.images;
         let res = await this.postsService.update(+id, newUpdatePostDto);
+        console.log(updatePostDto);
 
         //translation work
         if (!res.error) {
@@ -721,6 +721,12 @@ export class PostsController {
                     await this.translationsService.update(description_ar_tr_res.id, updateTranslationDto);
                 }
             }
+        }
+
+        //if category in string
+        if (updatePostDto.category_ids.length > 0 && typeof updatePostDto.category_ids[0] == 'string') {
+            let string = updatePostDto.category_ids.toString();
+            updatePostDto.category_ids = string.split(',').map(Number);
         }
 
         //attach categories

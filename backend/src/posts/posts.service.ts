@@ -71,7 +71,7 @@ export class PostsService {
                 where: {
                     id: id
                 },
-                relations: ['images']
+                relations: ['images', 'categories']
             });
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
@@ -93,8 +93,10 @@ export class PostsService {
 
             let title_ar = updatePostDto.title_ar;
             let description_ar = updatePostDto.description_ar;
+            let category_ids = updatePostDto.category_ids;
             delete updatePostDto.title_ar;
             delete updatePostDto.description_ar;
+            delete updatePostDto.category_ids;
             delete updatePostDto['content'];
             delete updatePostDto['media'];
             await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -102,6 +104,7 @@ export class PostsService {
             await this.postRepository.query('SET FOREIGN_KEY_CHECKS = 1');
             updatePostDto['title_ar'] = title_ar;
             updatePostDto['description_ar'] = description_ar;
+            updatePostDto['category_ids'] = category_ids;
 
             return await this.findOne(id);
         } catch (error) {
