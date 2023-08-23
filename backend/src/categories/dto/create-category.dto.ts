@@ -12,5 +12,8 @@ export class CreateCategoryDto {
     @ApiProperty({ example: 1 })
     parent_id: number;
 
+    @ApiProperty({ example: 1 })
+    is_active: number;
+
     created_at: string;
 }

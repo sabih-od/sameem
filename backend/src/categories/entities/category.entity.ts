@@ -12,6 +12,9 @@ export class Category {
     @Column({ type: 'int', nullable: true })
     parent_id: number;
 
+    @Column({ type: 'int', default: 1 })
+    is_active: number;
+
     @Column({ type: 'text', nullable: true })
     created_at: string;
 

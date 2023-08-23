@@ -72,7 +72,10 @@ export class CategoriesController {
             order: {
                 created_at: 'DESC'
             },
-            relations: ['parent', 'children']
+            relations: ['parent', 'children'],
+            where: {
+                is_active: 1
+            }
         });
 
         //translation work
@@ -127,7 +130,10 @@ export class CategoriesController {
     @ApiHeader({ name: 'lang', required: false})
     async getMenu(@Headers('lang') lang?: number) {
         let res = await this.categoriesService.findAll(1, 10000, {
-            where: { parent_id: IsNull() },
+            where: {
+                parent_id: IsNull(),
+                is_active: 1
+            },
             relations: ['children']
         });
 

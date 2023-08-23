@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/categories/[categoryId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categories/[categoryId].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/categories.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/dto/create-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/dto/create-category.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/dto/update-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/dto/update-category.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/categories/entities/category.entity.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/categories/entities/category.entity.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/database/database.providers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/database/database.providers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +50,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="12.22.9" />
     <property name="javascript.nodejs.core.library.typings.version" value="12.20.55" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../hunterssocial" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/admin/src/store/slices" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -56,11 +60,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/admin/src/store/slices" />
+      <recent name="$PROJECT_DIR$/admin/src/services" />
+      <recent name="$PROJECT_DIR$/admin/src/pages" />
       <recent name="$PROJECT_DIR$/backend/src/quotations" />
       <recent name="$PROJECT_DIR$/backend/src/user_post_histories" />
-      <recent name="$PROJECT_DIR$/admin/src" />
-      <recent name="$PROJECT_DIR$/backend/src/posts/dto" />
-      <recent name="$PROJECT_DIR$/backend/src/translations" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -87,7 +91,7 @@
       <workItem from="1692636932567" duration="7093000" />
       <workItem from="1692723129806" duration="2315000" />
       <workItem from="1692742935471" duration="2645000" />
-      <workItem from="1692810353122" duration="1555000" />
+      <workItem from="1692810353122" duration="7317000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -292,7 +296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692754425653</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="update functionality is not working in admin panel on the categories">
+      <created>1692811946623</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1692811946623</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -311,7 +322,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="interface work." />
     <MESSAGE value="idea" />
     <MESSAGE value="ssl in gitignore, main.ts comments, readme changes, ssl files" />
     <MESSAGE value="files delete, workpspace in gitignore" />
@@ -336,7 +346,8 @@
     <MESSAGE value="audio work in quotations, posts error" />
     <MESSAGE value="sync false" />
     <MESSAGE value="posts: category mark" />
-    <option name="LAST_COMMIT_MESSAGE" value="posts: category mark" />
+    <MESSAGE value="update functionality is not working in admin panel on the categories" />
+    <option name="LAST_COMMIT_MESSAGE" value="update functionality is not working in admin panel on the categories" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
