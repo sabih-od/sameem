@@ -9,7 +9,14 @@ import {
     Request,
     Query,
     UseGuards,
-    UploadedFile, ParseFilePipe, BadRequestException, UseInterceptors, MaxFileSizeValidator
+    UploadedFile,
+    ParseFilePipe,
+    BadRequestException,
+    UseInterceptors,
+    MaxFileSizeValidator,
+    Injectable,
+    NestInterceptor,
+    ExecutionContext, CallHandler, UploadedFiles
 } from '@nestjs/common';
 import { QuotationsService } from './quotations.service';
 import { CreateQuotationDto } from './dto/create-quotation.dto';
@@ -18,7 +25,45 @@ import {ApiBearerAuth, ApiBody, ApiConsumes, ApiQuery, ApiTags} from "@nestjs/sw
 import {Between} from "typeorm";
 import {AuthGuard} from "../auth/auth.guard";
 import {deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate} from "../helpers/helper";
-import {FileInterceptor} from "@nestjs/platform-express";
+import {FileFieldsInterceptor, FileInterceptor} from "@nestjs/platform-express";
+import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
+
+@Injectable()
+export class MaxFileSizeInterceptor implements NestInterceptor {
+    constructor() {
+    }
+
+    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+        const request = context.switchToHttp().getRequest();
+        const files = request.files;
+
+        if (files) {
+            // this.checkForFiles(files, files.video, 100000000);
+            this.checkForFiles(files, files.audio, 100000000);
+            // this.checkForFiles(files, files.image, 100000000);
+            // this.checkForFiles(files, files.pdf, 100000000);
+        }
+
+        // if (files && files.images) {
+        //     files.images.forEach((image) => {
+        //         this.checkForFiles(files, image, 100000000);
+        //     });
+        // }
+
+        return next.handle().pipe(
+            map((data) => {
+                return data;
+            }),
+        );
+    }
+
+    checkForFiles(files, module, max_size) {
+        if (files && module && module[0] && module[0].size > max_size) {
+            throw new BadRequestException(`File size exceeds the limit of ${max_size} bytes`);
+        }
+    }
+}
 
 @ApiTags('Quotations')
 @ApiBearerAuth()
@@ -27,7 +72,12 @@ import {FileInterceptor} from "@nestjs/platform-express";
     export class QuotationsController {
     constructor(private readonly quotationsService: QuotationsService) {}
 
-    @UseInterceptors(FileInterceptor('audio'))
+    @UseInterceptors(
+        FileFieldsInterceptor([
+            {name: 'audio', maxCount: 1},
+        ]),
+        new MaxFileSizeInterceptor(),
+    )
     @ApiConsumes('multipart/form-data')
     @ApiConsumes('application/json')
     @ApiBody({
@@ -42,17 +92,14 @@ import {FileInterceptor} from "@nestjs/platform-express";
         }
     })
     @Post()
-    async create(@Body() createQuotationDto: CreateQuotationDto, @UploadedFile(
-        new ParseFilePipe({
-            validators: [
-                new MaxFileSizeValidator({maxSize: 100000000})
-            ]
-        })
-    ) audio: Express.Multer.File) {
+    async create(@Body() createQuotationDto: CreateQuotationDto, @UploadedFiles() files: {
+        audio?: Express.Multer.File[],
+    }) {
+        console.log(createQuotationDto);
         //audio uploads
-        if (audio) {
+        if (files) {
             try {
-                createQuotationDto.audio = await handleUploadOnCreate({}, [audio], '/uploads/quotations/audios/');
+                createQuotationDto.audio = await handleUploadOnCreate(files, files.audio, '/uploads/quotations/audios/');
             } catch (error) {
                 throw new BadRequestException(error.message);
             }
@@ -122,7 +169,12 @@ import {FileInterceptor} from "@nestjs/platform-express";
         }
     }
 
-    @UseInterceptors(FileInterceptor('audio'))
+    @UseInterceptors(
+        FileFieldsInterceptor([
+            {name: 'audio', maxCount: 1},
+        ]),
+        new MaxFileSizeInterceptor(),
+    )
     @ApiConsumes('multipart/form-data')
     @ApiConsumes('application/json')
     @ApiBody({
@@ -136,14 +188,10 @@ import {FileInterceptor} from "@nestjs/platform-express";
             }
         }
     })
-    @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateQuotationDto: UpdateQuotationDto, @UploadedFile(
-        new ParseFilePipe({
-            validators: [
-                new MaxFileSizeValidator({maxSize: 100000000})
-            ]
-        })
-    ) audio: Express.Multer.File) {
+    @Post(':id')
+    async update(@Param('id') id: string, @Body() updateQuotationDto: UpdateQuotationDto, @UploadedFiles() files: {
+        audio?: Express.Multer.File[],
+    }) {
         let quotation = await this.quotationsService.findOne(+id);
         if (quotation.error) {
             return {
@@ -154,9 +202,9 @@ import {FileInterceptor} from "@nestjs/platform-express";
         }
 
         //audio uploads
-        if (audio) {
+        if (files) {
             try {
-                updateQuotationDto.audio = await handleUploadOnUpdate({}, [audio], quotation.audio, '/uploads/quotations/audios/');
+                updateQuotationDto.audio = await handleUploadOnUpdate(files, files.audio, quotation.audio, '/uploads/quotations/audios/');
             } catch (error) {
                 throw new BadRequestException(error.message);
             }

@@ -1,18 +1,58 @@
 import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, urlWithParams} from "./global";
 
-// export const create = async ({
-//                                  title,
-//                                  content,
-//                                  media
+export const create = async ({
+                                 title,
+                                 description,
+                                 author,
+                                 audio,
+                             }) => {
+    try {
+
+        const form = new FormData()
+        form.append('title', title)
+        form.append('description', description)
+        form.append('author', author)
+        form.append('audio', audio)
+
+        console.log('audioaudioaudioaudioaudioaudioaudioaudioaudioaudio', audio);
+
+        const response = await fetch(`${apiUrl()}/quotations`, {
+            method: 'POST',
+            headers: {
+                // 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            // body: JSON.stringify(payload),
+            body: form,
+        });
+
+        const data = await response.json();
+
+        if (data?.success === false) {
+            return errorResponse(null, data?.message ?? 'Server Error')
+        } else if (data?.statusCode === 400) {
+            return errorResponse(null, data?.message ?? ['Server Error'])
+        }
+        return successResponse(data)
+    } catch (e) {
+        return exceptionResponse()
+    }
+}
+
+
+// export const update = async ({
+//                                  id,
+//                                  ...payload
 //                              }) => {
 //     try {
 //         const form = new FormData()
-//         form.append('title', title)
-//         form.append('content', content)
-//         form.append('media', media)
+//         for (const payloadKey in payload) {
+//             form.append(payloadKey, payload[payloadKey])
+//         }
 //
-//         const response = await fetch(`${apiUrl()}/posts`, {
-//             method: 'POST',
+//         console.log(form);
+//         const response = await fetch(`${apiUrl()}/quotations/${id}`, {
+//             method: 'PATCH',
 //             headers: {
 //                 'Authorization': `Bearer ${getToken()}`
 //             },
@@ -32,110 +72,35 @@ import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, url
 //     }
 // }
 
-export const create = async ({
-                                 title,
-                                 category_ids,
-                                 title_ar,
-                                 description,
-                                 description_ar,
-                                 url,
-                                 date,
-                                 time,
-                                 image,
-                                 video,
-                                 audio,
-                                 pdf,
-                             }) => {
-    try {
-
-        console.log(image);
-        const form = new FormData()
-        form.append('title', title)
-        // let cat_array = category_ids.split(',');
-        // console.log('category_ids.split', category_ids.split(','))
-        form.append('category_ids[]', category_ids);
-        console.log('form.category_ids', form.category_ids);
-        form.append('title_ar', title_ar)
-        form.append('description', description)
-        form.append('description_ar', description_ar)
-        form.append('url', url)
-        form.append('date', date)
-        form.append('time', time)
-        form.append('content', content)
-        form.append('image', image)
-        form.append('video', video)
-        form.append('audio', audio)
-        form.append('pdf', pdf)
-
-
-        const response = await fetch(`${apiUrl()}/posts`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${getToken()}`
-            },
-            body: form,
-        });
-
-        const data = await response.json();
-
-        console.log('datadata', data);
-
-        if (data?.success === false) {
-            return errorResponse(null, data?.message ?? 'Server Error')
-        } else if (data?.statusCode === 400) {
-            return errorResponse(null, data?.message ?? ['Server Error'])
-        }
-        return successResponse(data)
-    } catch (e) {
-        return exceptionResponse()
-    }
-}
 
 export const update = async ({
                                  id,
                                  title,
-                                 category_ids,
-                                 title_ar,
                                  description,
-                                 description_ar,
-                                 url,
-                                 date,
-                                 time,
-                                 video,
+                                 author,
                                  audio,
-                                 image,
-                                 pdf
                              }) => {
     try {
-        console.log("update form", id, title, title_ar, description, description_ar)
+
+
         const form = new FormData()
         form.append('title', title)
-        // let cat_array = category_ids.split(',');
-        // console.log('category_ids.split', category_ids.split(','))
-        form.append('category_ids[]', category_ids);
-        console.log('form.category_ids', form.category_ids);
-        form.append('title_ar', title_ar)
         form.append('description', description)
-        form.append('description_ar', description_ar)
-        form.append('url', url)
-        form.append('date', date)
-        form.append('time', time)
-        form.append('image', image)
-        form.append('video', video)
+        form.append('author', author)
         form.append('audio', audio)
-        form.append('pdf', pdf)
 
-        const response = await fetch(`${apiUrl()}/posts/${id}`, {
+        const response = await fetch(`${apiUrl()}/quotations/${id}`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${getToken()}`,
-                // 'Content-Type': 'multipart/form-data'
+                // 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
             },
+            // body: JSON.stringify(payload),
             body: form,
         });
 
         const data = await response.json();
-        console.log("updated Data" , data)
+
         if (data?.success === false) {
             return errorResponse(null, data?.message ?? 'Server Error')
         } else if (data?.statusCode === 400) {
@@ -143,13 +108,16 @@ export const update = async ({
         }
         return successResponse(data)
     } catch (e) {
+        console.log('asdasdasda');
         return exceptionResponse()
     }
 }
 
+
+
 export const get = async (page = 1, limit = 15) => {
     try {
-        const response = await fetch(urlWithParams(`${apiUrl()}/posts`, {
+        const response = await fetch(urlWithParams(`${apiUrl()}/quotations`, {
             page, limit
         }), {
             method: 'GET',
@@ -174,7 +142,7 @@ export const get = async (page = 1, limit = 15) => {
 
 export const show = async (id) => {
     try {
-        const response = await fetch(`${apiUrl()}/posts/${id}`, {
+        const response = await fetch(`${apiUrl()}/quotations/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,12 +163,12 @@ export const show = async (id) => {
 }
 
 export const destroy = async ({
-                                 id
-                             }) => {
+                                  id
+                              }) => {
     try {
         console.log("delete form", id)
 
-        const response = await fetch(`${apiUrl()}/posts/${id}`, {
+        const response = await fetch(`${apiUrl()}/quotations/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${getToken()}`
@@ -223,7 +191,7 @@ export const destroy = async ({
 
 export const showTranslation = async (module_id, language_id, key) => {
     try {
-        const response = await fetch(`${apiUrl()}/posts/translation/get/`, {
+        const response = await fetch(`${apiUrl()}/quotations/translation/get/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
