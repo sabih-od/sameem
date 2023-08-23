@@ -527,11 +527,11 @@ export class PostsController {
         @Request() req,
         @Query('page') page?: number,
         @Query('limit') limit?: number,
-        @Headers('lang') lang?: number
+        @Headers('lang') lang?: number,
     ) {
         let res = await this.userPostHistoriesService.findAll(page, limit, {
             where: {
-                user_id: 1
+                user_id: req.user.id
             },
             order: {
                 created_at: 'DESC'
