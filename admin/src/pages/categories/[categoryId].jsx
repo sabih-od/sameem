@@ -44,7 +44,7 @@ function Category(props) {
     const [successMsg, setSuccessMessage] = useState('')
     const [name, setName] = useState('')
     const [name_ar, setNameAr] = useState('')
-    const [parent_id, setParentId] = useState('')
+    const [parent_id, setParentId] = useState(null)
 
     const [page, setPage] = useState(1)
 
@@ -70,7 +70,7 @@ function Category(props) {
     useEffect(() => {
         if (category) {
             setName(category.name)
-            setParentId(category.parent_id ?? '')
+            setParentId(category.parent_id ?? null)
         }
     }, [category])
 
@@ -164,7 +164,12 @@ function Category(props) {
                                             onChange={(e) => setNameAr(e.target.value)}
                                         />
                                         <FormControl fullWidth>
-                                            <Select label="Select" value={parent_id} onChange={(e) => setParentId(e.target.value)}>
+                                            <Select label="Select" value={parent_id} onChange={(e) => {
+                                                setParentId((isNaN(e.target.value) || e.target.value === "") ? null : e.target.value);
+                                            }}>
+                                                <MenuItem value="">
+                                                    <em>Select Parent</em>
+                                                </MenuItem>
                                                 { !categories ? (
                                                     <MenuItem value="">
                                                         <em>None</em>
