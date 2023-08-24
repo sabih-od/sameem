@@ -43,8 +43,11 @@ function Quotation(props) {
 
     const [successMsg, setSuccessMessage] = useState('')
     const [title, setTitle] = useState('')
+    const [title_ar, setTitleAr] = useState('')
     const [description, setDescription] = useState('')
+    const [description_ar, setDescriptionAr] = useState('')
     const [author, setAuthor] = useState('')
+    const [author_ar, setAuthorAr] = useState('')
     const [audio, setAudio] = useState('')
 
     const [page, setPage] = useState(1)
@@ -64,8 +67,11 @@ function Quotation(props) {
     useEffect(() => {
         if (quotation) {
             setTitle(quotation.title)
+            setTitleAr(quotation.title_ar)
             setDescription(quotation.description)
+            setDescriptionAr(quotation.description_ar)
             setAuthor(quotation.author)
+            setAuthorAr(quotation.author_ar)
             setAudio(quotation.audio)
         }
     }, [quotation])
@@ -90,8 +96,11 @@ function Quotation(props) {
         // if (!fileValidation()) return;
         let data = {
             title,
+            title_ar,
             description,
+            description_ar,
             author,
+            author_ar,
             audio
         }
 
@@ -156,15 +165,37 @@ function Quotation(props) {
                                         />
                                         <TextField
                                             fullWidth
+                                            label="Title Arabic"
+                                            value={title_ar}
+                                            onChange={(e) => setTitleAr(e.target.value)}
+                                        />
+                                    </Stack>
+                                    <Stack direction="row" gap={5}>
+                                        <TextField
+                                            fullWidth
                                             label="Description"
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                         />
                                         <TextField
                                             fullWidth
+                                            label="Description Arabic"
+                                            value={description_ar}
+                                            onChange={(e) => setDescriptionAr(e.target.value)}
+                                        />
+                                    </Stack>
+                                    <Stack direction="row" gap={5}>
+                                        <TextField
+                                            fullWidth
                                             label="Author"
                                             value={author}
                                             onChange={(e) => setAuthor(e.target.value)}
+                                        />
+                                        <TextField
+                                            fullWidth
+                                            label="Author Arabic"
+                                            value={author_ar}
+                                            onChange={(e) => setAuthorAr(e.target.value)}
                                         />
                                     </Stack>
                                 </Grid>

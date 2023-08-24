@@ -6,10 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/navigation/vertical/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/navigation/vertical/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/services/postService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/postService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/store/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/store/store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/quotations/[quotationId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/quotations/[quotationId].jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/quotations/create.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/quotations/create.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/services/quotationService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/quotationService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/quotations/dto/create-quotation.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/quotations/dto/create-quotation.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/quotations/dto/update-quotation.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/quotations/dto/update-quotation.dto.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/quotations/quotations.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/quotations/quotations.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/quotations/quotations.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/quotations/quotations.module.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +93,7 @@
       <workItem from="1692636932567" duration="7093000" />
       <workItem from="1692723129806" duration="2315000" />
       <workItem from="1692742935471" duration="2645000" />
-      <workItem from="1692810353122" duration="17778000" />
+      <workItem from="1692810353122" duration="30319000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -316,7 +319,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692821404201</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="quotation module: (backend, admin)">
+      <created>1692831448703</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1692831448703</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -335,7 +345,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ssl in gitignore, main.ts comments, readme changes, ssl files" />
     <MESSAGE value="files delete, workpspace in gitignore" />
     <MESSAGE value="workpspace in gitignore" />
     <MESSAGE value="faq apis" />
@@ -360,7 +369,8 @@
     <MESSAGE value="update functionality is not working in admin panel on the categories" />
     <MESSAGE value="category: is_active" />
     <MESSAGE value="sync false" />
-    <option name="LAST_COMMIT_MESSAGE" value="sync false" />
+    <MESSAGE value="quotation module: (backend, admin)" />
+    <option name="LAST_COMMIT_MESSAGE" value="quotation module: (backend, admin)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -2,16 +2,22 @@ import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, url
 
 export const create = async ({
                                  title,
+                                 title_ar,
                                  description,
+                                 description_ar,
                                  author,
+                                 author_ar,
                                  audio,
                              }) => {
     try {
 
         const form = new FormData()
         form.append('title', title)
+        form.append('title_ar', title_ar)
         form.append('description', description)
+        form.append('description_ar', description_ar)
         form.append('author', author)
+        form.append('author_ar', author_ar)
         form.append('audio', audio)
 
         console.log('audioaudioaudioaudioaudioaudioaudioaudioaudioaudio', audio);
@@ -76,8 +82,11 @@ export const create = async ({
 export const update = async ({
                                  id,
                                  title,
+                                 title_ar,
                                  description,
+                                 description_ar,
                                  author,
+                                 author_ar,
                                  audio,
                              }) => {
     try {
@@ -85,8 +94,11 @@ export const update = async ({
 
         const form = new FormData()
         form.append('title', title)
+        form.append('title_ar', title_ar)
         form.append('description', description)
+        form.append('description_ar', description_ar)
         form.append('author', author)
+        form.append('author_ar', author_ar)
         form.append('audio', audio)
 
         const response = await fetch(`${apiUrl()}/quotations/${id}`, {
