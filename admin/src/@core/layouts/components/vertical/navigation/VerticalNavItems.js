@@ -1,5 +1,7 @@
-import {useSelector} from "react-redux";
-import {categories as categoriesList} from '../../../../../store/slices/categoriesSlice';
+// import {useSelector} from "react-redux";
+// import {categories as categoriesList, getCategories} from '../../../../../store/slices/categoriesSlice';
+// import {getMenuCategories} from '../../../../../store/slices/categoriesSlice';
+import {getMenu} from '../../../../../services/categoryService';
 import {useState} from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -9,13 +11,12 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Collapse from '@mui/material/Collapse';
 import List from '@mui/material/List';
-import BookIcon from "@mui/icons-material/AutoStoriesOutlined";
+// import BookIcon from "@mui/icons-material/AutoStoriesOutlined";
 import VerticalNavLink from './VerticalNavLink'
 import VerticalNavSectionTitle from './VerticalNavSectionTitle'
 import {useRouter} from "next/router";
 import CategoryOutlined from "@mui/icons-material/CategoryOutlined";
 import StarBorder from "@mui/icons-material/StarBorder";
-import {log} from "next/dist/server/typescript/utils";
 
 const resolveNavItemComponent = item => {
     if (item.sectionTitle) return VerticalNavSectionTitle
@@ -24,14 +25,26 @@ const resolveNavItemComponent = item => {
 }
 
 const VerticalNavItems = props => {
-    const categories = useSelector(categoriesList);
+    // const categories = useSelector(categoriesList);
     const [expandedCategory, setExpandedCategory] = useState(null);
 
     const [open, setOpen] = useState(true);
     const router = useRouter();
 
-    const handleClick = () => {
+    const [categories, setCategories] = useState([]);
+
+    const handleClick = async (e) => {
+        e.preventDefault();
         setOpen(!open);
+
+        try {
+            const categoriesResponse = await getMenu();
+            const fetchedCategories = categoriesResponse?.data?.data;
+
+            setCategories(fetchedCategories);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
     };
 
     const navigateToPath = (path) => {
@@ -45,31 +58,6 @@ const VerticalNavItems = props => {
             setExpandedCategory(categoryId);
         }
     };
-
-    categories.map((category) => ({
-        title: category.name,
-        icon: category.children.length > 0 ? BookIcon : null,
-        onClick: () => {
-            if (category.children.length > 0) {
-                handleCategoryClick(category.id);
-            } else {
-                navigateToPath(`/categoryPosts/${category.id}`);
-            }
-        },
-    }));
-    // console.log('categories', categories);
-
-    // check category and his child
-    /*categories.forEach((category) => {
-        category.children.forEach((childCategory) => {
-            // console.log('childCategory', category);
-            const transformedChildCategory = {
-                ...childCategory,
-            };
-
-            // console.log('After:', transformedChildCategory);
-        });
-    });*/
 
     const RenderMenuItems = props.verticalNavItems?.map((item, index) => {
         const TagName = resolveNavItemComponent(item);
@@ -96,46 +84,15 @@ const VerticalNavItems = props => {
                         {categories.map((category) => (
                             <div key={category.id}>
                                 <ListItemButton
-                                    sx={{ pl: 4 }}
+                                    sx={{pl: 4}}
                                     onClick={() => {
                                         handleCategoryClick(category.id);
                                         navigateToPath(`/categoryPosts/${category.id}`);
                                     }}
                                 >
-                                    <ListItemIcon><CategoryOutlined /></ListItemIcon>
-                                    <ListItemText primary={category.name} />
-                                    {category.children.length > 0 && (
-                                        expandedCategory === category.id ? <ExpandLess /> : <ExpandMore />
-                                    )}
-                                </ListItemButton>
-                                <Collapse in={expandedCategory === category.id} timeout="auto" unmountOnExit>
-                                    {category.children.length > 0 && (
-                                        <List component="div" disablePadding>
-                                            {category.children.map((childCategory) => (
-                                                <ListItemButton
-                                                    key={childCategory.id}
-                                                    sx={{ pl: 8 }}
-                                                    onClick={() => navigateToPath(`/categoryPosts/${childCategory.id}`)}
-                                                >
-                                                    <ListItemIcon><StarBorder /></ListItemIcon>
-                                                    <ListItemText primary={childCategory.name} />
-                                                </ListItemButton>
-                                            ))}
-                                        </List>
-                                    )}
-                                </Collapse>
-                            </div>
-                        ))}
-
-                        {/*{categories.map((category) => (
-                            <div key={category.id}>
-                                <ListItemButton sx={{pl: 4}} onClick={() => {
-                                    handleCategoryClick(category.id);
-                                    navigateToPath(`/categoryPosts/${category.id}`)
-                                }}>
                                     <ListItemIcon><CategoryOutlined/></ListItemIcon>
                                     <ListItemText primary={category.name}/>
-                                    {category.parent_id !== null && (
+                                    {category.children.length > 0 && (
                                         expandedCategory === category.id ? <ExpandLess/> : <ExpandMore/>
                                     )}
                                 </ListItemButton>
@@ -158,7 +115,7 @@ const VerticalNavItems = props => {
                                     </Collapse>
                                 )}
                             </div>
-                        ))}*/}
+                        ))}
                     </List>
                 </Collapse>
             </List>
