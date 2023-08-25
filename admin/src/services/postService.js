@@ -147,6 +147,35 @@ export const update = async ({
     }
 }
 
+export const markAsFeatured = async ({post_id, is_featured}) => {
+    try {
+        const form = new FormData()
+        form.append('is_featured', is_featured)
+
+        const response = await fetch(`${apiUrl()}/posts/${post_id}/mark-as-featured`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`,
+                'Content-Type': 'application/json'
+            },
+            // body: form,
+            body: JSON.stringify({
+                is_featured: is_featured
+            }),
+        });
+
+        const data = await response.json();
+        if (data?.success === false) {
+            return errorResponse(null, data?.message ?? 'Server Error')
+        } else if (data?.statusCode === 400) {
+            return errorResponse(null, data?.message ?? ['Server Error'])
+        }
+        return successResponse(data)
+    } catch (e) {
+        return exceptionResponse()
+    }
+}
+
 export const get = async (page = 1, limit = 15) => {
     try {
         const response = await fetch(urlWithParams(`${apiUrl()}/posts`, {

@@ -6,6 +6,7 @@ import {
     posts as postsList,
     total as postTotal,
     totalPages as postTotalPages,
+    markAsFeatured as sliceMarkAsFeatured,
     deletePost
 } from '../../store/slices/postsSlice'
 import Link from "next/link";
@@ -24,6 +25,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import {IconButton, Pagination, Stack} from "@mui/material";
 import {Pencil, Delete} from 'mdi-material-ui'
+import { Switch } from '@mui/base';
 import {log} from "next/dist/server/typescript/utils";
 //Additonal
 // import {deletePost} from "../../store/slices/postsSlice";
@@ -49,6 +51,15 @@ console.log("posts" , posts)
         e.preventDefault()
         console.log(id)
         await dispatch(deletePost({id}))
+        await dispatch(getPosts({page}))
+    }
+
+    const markAsFeatured = async (post, value) => {
+        await dispatch(sliceMarkAsFeatured({
+            post_id: post.id,
+            is_featured: value
+        }))
+
         await dispatch(getPosts({page}))
     }
 
@@ -80,12 +91,12 @@ console.log("posts" , posts)
                                         <TableRow>
                                             <TableCell>ID</TableCell>
                                             <TableCell>Title</TableCell>
-                                            <TableCell>Description</TableCell>
                                             <TableCell>Time</TableCell>
                                             <TableCell>Video</TableCell>
                                             <TableCell>Audio</TableCell>
                                             <TableCell className="text-center" width="150">Image</TableCell>
                                             <TableCell>PDF</TableCell>
+                                            <TableCell>Featured</TableCell>
                                             <TableCell>Action</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -98,10 +109,6 @@ console.log("posts" , posts)
                                                     </TableCell>
                                                     <TableCell>
                                                         <span>{post.title}</span>
-                                                    </TableCell>
-
-                                                    <TableCell>
-                                                        <span>{post.description}</span>
                                                     </TableCell>
 
                                                     <TableCell>
@@ -144,6 +151,35 @@ console.log("posts" , posts)
                                                                 View File
                                                             </Button>
                                                         ) : null}
+                                                    </TableCell>
+
+                                                    <TableCell className="text-center">
+                                                        {
+                                                            (post.is_featured == 0) ?
+                                                                (
+                                                                    <Button onClick={
+                                                                        e => {
+                                                                            markAsFeatured(post, 1);
+                                                                        }
+                                                                    }>
+                                                                        Mark as Featured
+                                                                    </Button>
+                                                                ) :
+                                                                (
+                                                                    <Button onClick={
+                                                                        e => {
+                                                                            markAsFeatured(post, 0);
+                                                                        }
+                                                                    }>
+                                                                        Remove from Featured
+                                                                    </Button>
+                                                                )
+                                                        }
+                                                          {/*<input type="checkbox" checked={post.is_featured == 1} onChange={*/}
+                                                          {/*    e => {*/}
+                                                          {/*        markAsFeatured(e, post.id);*/}
+                                                          {/*    }*/}
+                                                          {/*}/>*/}
                                                     </TableCell>
 
                                                     <TableCell width="200">

@@ -771,6 +771,7 @@ export class PostsController {
         }
 
         post.is_featured = updatePostDto.is_featured;
+        console.log(updatePostDto);
         await this.postRepository.save(post)
 
         return {

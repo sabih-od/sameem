@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {HYDRATE} from 'next-redux-wrapper';
 import {create, destroy, get} from '../../services/postService';
-import {show, update} from "../../services/postService";
+import {show, update, markAsFeatured as serviceMarkAsFeatured} from "../../services/postService";
 
 export const getPosts = createAsyncThunk(
     'posts/get',
@@ -35,6 +35,13 @@ export const updatePost = createAsyncThunk(
     'posts/update',
     async (payload, thunkAPI) => {
         return await update(payload)
+    }
+)
+
+export const markAsFeatured = createAsyncThunk(
+    'posts/update',
+    async (payload, thunkAPI) => {
+        return await serviceMarkAsFeatured(payload)
     }
 )
 

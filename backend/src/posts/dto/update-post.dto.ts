@@ -6,7 +6,6 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
     @ApiProperty({ example: [1, 2, 3] })
     category_ids: number[];
 
-    @IsNotEmpty()
     @ApiProperty({ example: 'Post title' })
     title: string;
 
