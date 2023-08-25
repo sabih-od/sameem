@@ -937,6 +937,16 @@ export class PostsController {
 
         favourite_posts = favourite_posts.filter((item) => item !== null && item !== undefined);
 
+        //sort by created_at
+        favourite_posts = favourite_posts.sort((a, b) => {
+            let keyA = a.created_at,
+                keyB = b.created_at;
+            // Compare the 2 dates
+            if (keyA > keyB) return -1;
+            if (keyA < keyB) return 1;
+            return 0;
+        });
+
         //translation work
         let language_id = lang ?? 1;
         favourite_posts = await Promise.all(
