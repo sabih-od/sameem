@@ -74,8 +74,10 @@ function Faqs(props) {
                                         <TableRow>
                                             <TableCell>ID</TableCell>
                                             <TableCell>Question</TableCell>
+                                            <TableCell>Question Arabic</TableCell>
                                             {/*<TableCell>Description</TableCell>*/}
                                             <TableCell>Answer</TableCell>
+                                            <TableCell>Answer Arabic</TableCell>
                                             <TableCell>Action</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -90,7 +92,13 @@ function Faqs(props) {
                                                         <span>{faq.question}</span>
                                                     </TableCell>
                                                     <TableCell>
+                                                        <span>{faq.question_ar}</span>
+                                                    </TableCell>
+                                                    <TableCell>
                                                         <span>{faq.answer}</span>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <span>{faq.answer_ar}</span>
                                                     </TableCell>
 
                                                     <TableCell width="200">

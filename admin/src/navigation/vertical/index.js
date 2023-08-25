@@ -54,6 +54,11 @@ const navigation = () => {
             icon: PeopleOutlinedIcon,
             path: '/quotations',
         },
+        {
+            title: 'FAQs',
+            icon: PeopleOutlinedIcon,
+            path: '/faqs',
+        },
         // ...categories.map(category => ({
         //     title: category.name,
         //     icon: BookIcon,

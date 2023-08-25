@@ -3,7 +3,7 @@ import {apiUrl, errorResponse, exceptionResponse, getToken, successResponse, url
 
 export const create = async (payload) => {
     try {
-        const response = await fetch(`${apiUrl()}/faq/ask-a-question`, {
+        const response = await fetch(`${apiUrl()}/faq`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

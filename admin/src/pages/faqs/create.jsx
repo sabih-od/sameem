@@ -28,7 +28,9 @@ function Create(props) {
 
     const [successMsg, setSuccessMessage] = useState(null)
     const [question, setQuestion] = useState('')
+    const [question_ar, setQuestionAr] = useState('')
     const [answer, setAnswer] = useState('')
+    const [answer_ar, setAnswerAr] = useState('')
     // const [email, setEmail] = useState('')
     // const [phone, setPhone] = useState('')
     // const [password, setPassword] = useState('')
@@ -52,7 +54,9 @@ function Create(props) {
 
         dispatch(addFaq({
             question: question,
+            question_ar: question_ar,
             answer: answer,
+            answer_ar: answer_ar,
         }))
     }
 
@@ -87,8 +91,15 @@ function Create(props) {
                                     <Stack direction='row' gap={5}>
                                         <TextField fullWidth label='Question' value={question}
                                                    onChange={e => setQuestion(e.target.value)}/>
+                                        <TextField fullWidth label='Question Arabic' value={question_ar}
+                                                   onChange={e => setQuestionAr(e.target.value)}/>
+                                    </Stack>
+                                    <Stack direction='row' gap={5}>
+
                                         <TextField fullWidth label='Answer' value={answer}
                                                    onChange={e => setAnswer(e.target.value)}/>
+                                        <TextField fullWidth label='Answer Arabic' value={answer_ar}
+                                                   onChange={e => setAnswerAr(e.target.value)}/>
                                     </Stack>
                                 </Grid>
 

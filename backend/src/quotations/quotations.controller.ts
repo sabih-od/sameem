@@ -120,14 +120,16 @@ export class QuotationsController {
             }
         }
 
-        createQuotationDto.created_at = Date.now().toString();
         let title_ar = createQuotationDto.title_ar
         let description_ar = createQuotationDto.description_ar
         let author_ar = createQuotationDto.author_ar
         delete createQuotationDto.title_ar;
         delete createQuotationDto.description_ar;
         delete createQuotationDto.author_ar;
+
+        createQuotationDto.created_at = Date.now().toString();
         let res = await this.quotationsService.create(createQuotationDto);
+
         createQuotationDto.title_ar = title_ar;
         createQuotationDto.description_ar = description_ar;
         createQuotationDto.author_ar = author_ar;

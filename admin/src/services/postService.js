@@ -77,8 +77,6 @@ export const create = async ({
 
         const data = await response.json();
 
-        console.log('datadata', data);
-
         if (data?.success === false) {
             return errorResponse(null, data?.message ?? 'Server Error')
         } else if (data?.statusCode === 400) {

@@ -30,7 +30,9 @@ function Faq(props) {
 
     const [successMsg, setSuccessMessage] = useState('')
     const [question, setQuestion] = useState('')
+    const [question_ar, setQuestionAr] = useState('')
     const [answer, setAnswer] = useState('')
+    const [answer_ar, setAnswerAr] = useState('')
 
     useEffect(() => {
         if (faqId) {
@@ -41,7 +43,9 @@ function Faq(props) {
     useEffect(() => {
         if (faq) {
             setQuestion(faq.question)
+            setQuestionAr(faq.question_ar)
             setAnswer(faq.answer ?? '')
+            setAnswerAr(faq.answer_ar ?? '')
         }
     }, [faq])
 
@@ -65,7 +69,9 @@ function Faq(props) {
         // if (!fileValidation()) return;
         let data = {
             question,
-            answer
+            question_ar,
+            answer,
+            answer_ar
         }
         dispatch(updateFaq({
             id: faqId,
@@ -121,8 +127,14 @@ function Faq(props) {
                                     <Stack direction='row' gap={5}>
                                         <TextField fullWidth label='Question' value={question}
                                                    onChange={e => setQuestion(e.target.value)}/>
+                                        <TextField fullWidth label='Question Arabic' value={question_ar}
+                                                   onChange={e => setQuestionAr(e.target.value)}/>
+                                    </Stack>
+                                    <Stack direction='row' gap={5}>
                                         <TextField fullWidth label='Answer' value={answer}
                                                    onChange={e => setAnswer(e.target.value)}/>
+                                        <TextField fullWidth label='Answer Arabic' value={answer_ar}
+                                                   onChange={e => setAnswerAr(e.target.value)}/>
                                     </Stack>
                                 </Grid>
 
