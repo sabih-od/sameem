@@ -965,6 +965,24 @@ export class PostsController {
         };
     }
 
+    @Get('favourites/post-ids')
+    async favouritePostIds (@Request() req) {
+        let user = await this.usersService.findOne(+req.user.id);
+
+        let favourite_posts;
+        if (user.favourite_posts == null) {
+            favourite_posts = [];
+        } else {
+            favourite_posts = JSON.parse(user.favourite_posts);
+        }
+
+        return {
+            success: true,
+            message: '',
+            data: favourite_posts
+        };
+    }
+
     @Post('translation/get')
     async getTranslation (@Body() getPostTranslationDto: GetPostTranslationDto) {
         let res = await this.translationsService.findOneWhere({

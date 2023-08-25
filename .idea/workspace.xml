@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/services/postService.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/services/postService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/store/slices/postsSlice.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/store/slices/postsSlice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/dto/update-post.dto.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +87,7 @@
       <workItem from="1692636932567" duration="7093000" />
       <workItem from="1692723129806" duration="2315000" />
       <workItem from="1692742935471" duration="2645000" />
-      <workItem from="1692810353122" duration="37039000" />
+      <workItem from="1692810353122" duration="38197000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -331,7 +327,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692916840907</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="featured post option in admin panel">
+      <created>1692924254994</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1692924254994</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -350,7 +353,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="workpspace in gitignore" />
     <MESSAGE value="faq apis" />
     <MESSAGE value="posts work" />
     <MESSAGE value="category/sub-category, post category work, menu apis" />
@@ -375,7 +377,8 @@
     <MESSAGE value="sync false" />
     <MESSAGE value="quotation module: (backend, admin)" />
     <MESSAGE value="translation in quotation module: (backend, admin)" />
-    <option name="LAST_COMMIT_MESSAGE" value="translation in quotation module: (backend, admin)" />
+    <MESSAGE value="featured post option in admin panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="featured post option in admin panel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
