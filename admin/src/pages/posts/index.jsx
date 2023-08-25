@@ -25,7 +25,6 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import {IconButton, Pagination, Stack} from "@mui/material";
 import {Pencil, Delete, Eye} from 'mdi-material-ui'
-import BasicModal from './detail'
 import { Switch } from '@mui/base';
 import {log} from "next/dist/server/typescript/utils";
 import Box from "@mui/material/Box";
