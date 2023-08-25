@@ -33,17 +33,17 @@ const AppBarContent = props => {
             <Menu />
           </IconButton>
         ) : null}
-        <TextField
-          size='small'
-          sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position='start'>
-                <Magnify fontSize='small' />
-              </InputAdornment>
-            )
-          }}
-        />
+        {/*<TextField*/}
+        {/*  size='small'*/}
+        {/*  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 4 } }}*/}
+        {/*  InputProps={{*/}
+        {/*    startAdornment: (*/}
+        {/*      <InputAdornment position='start'>*/}
+        {/*        <Magnify fontSize='small' />*/}
+        {/*      </InputAdornment>*/}
+        {/*    )*/}
+        {/*  }}*/}
+        {/*/>*/}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <ModeToggler settings={settings} saveSettings={saveSettings} />
