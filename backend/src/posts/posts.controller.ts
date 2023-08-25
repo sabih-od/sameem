@@ -82,6 +82,8 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
 @Controller('posts')
 export class PostsController {
     private readonly translated_columns: string[];
+    private readonly languages: string[];
+    private readonly lang_ids: {};
     constructor(
         private readonly postsService: PostsService,
         private readonly mediaService: MediaService,
@@ -95,6 +97,11 @@ export class PostsController {
         private userRepository: Repository<User>,
     ) {
         this.translated_columns = ['title', 'description'];
+        this.languages = ['en', 'ar'];
+        this.lang_ids = {
+            'en': 1,
+            'ar': 2,
+        };
     }
 
     @ApiConsumes('multipart/form-data')
@@ -152,36 +159,25 @@ export class PostsController {
             }
         }
 
+        let title_ar = createPostDto.title_ar
+        let description_ar = createPostDto.description_ar
+
+        delete createPostDto.title_ar;
+        delete createPostDto.description_ar;
+
         createPostDto.created_at = Date.now().toString();
         let res = await this.postsService.create(createPostDto);
 
+        createPostDto.title_ar = title_ar;
+        createPostDto.description_ar = description_ar;
+
         //translation work
         if (!res.error) {
-            let createTranslationDto = new CreateTranslationDto();
-            createTranslationDto.module = 'post';
-            createTranslationDto.module_id = res.id;
-            createTranslationDto.language_id = 1;
-            createTranslationDto.key = 'title';
-            createTranslationDto.value = createPostDto.title;
-            await this.translationsService.create(createTranslationDto);
+            await this.createTranslation('post', res.id, 1, 'title', createPostDto.title);
+            await this.createTranslation('post', res.id, 1, 'description', createPostDto.description);
 
-            createTranslationDto.key = 'description';
-            createTranslationDto.value = createPostDto.description;
-            await this.translationsService.create(createTranslationDto);
-
-            if (createPostDto.title_ar) {
-                createTranslationDto.language_id = 2;
-                createTranslationDto.key = 'title';
-                createTranslationDto.value = createPostDto.title_ar;
-                await this.translationsService.create(createTranslationDto);
-            }
-
-            if (createPostDto.description_ar) {
-                createTranslationDto.language_id = 2;
-                createTranslationDto.key = 'description';
-                createTranslationDto.value = createPostDto.description_ar;
-                await this.translationsService.create(createTranslationDto);
-            }
+            await this.createTranslation('post', res.id, 2, 'title', createPostDto.title_ar);
+            await this.createTranslation('post', res.id, 2, 'description', createPostDto.description_ar);
         }
 
         //attach categories
@@ -250,7 +246,6 @@ export class PostsController {
         let where_object = {
             where: {}
         };
-        let language_id = lang ?? 1;
 
         if (category_id) {
             let category = await this.categoryService.findOne(category_id);
@@ -275,25 +270,13 @@ export class PostsController {
         });
 
         //translation work
+        let language_id = lang ?? 1;
         if(res.data) {
-            res.data = await Promise.all(
-                res.data.map(async (post) => {
-                    for (const key of this.translated_columns) {
-                        let record = await this.translationsService.findOneWhere({
-                            where: {
-                                module: 'post',
-                                module_id: post.id,
-                                language_id: language_id,
-                                key: key,
-                            },
-                        });
+            //get preferred language
+            res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
-                        post[key] = record.value ?? post[key];
-                    }
-
-                    return post;
-                })
-            );
+            //get translated columns
+            res.data = await this.addTranslatedColumnsToArray(res.data);
         }
 
         return {
@@ -306,7 +289,6 @@ export class PostsController {
     @ApiHeader({ name: 'lang', required: false})
     @Get('get/featured-posts')
     async findAllFeatured(@Headers('lang') lang?: number) {
-        let language_id = lang ?? 1;
 
         let res = await this.postsService.findAll(1, 10, {
             relations: ['images', 'categories.children'],
@@ -319,25 +301,13 @@ export class PostsController {
         });
 
         //translation work
+        let language_id = lang ?? 1;
         if(res.data) {
-            res.data = await Promise.all(
-                res.data.map(async (post) => {
-                    for (const key of this.translated_columns) {
-                        let record = await this.translationsService.findOneWhere({
-                            where: {
-                                module: 'post',
-                                module_id: post.id,
-                                language_id: language_id,
-                                key: key,
-                            },
-                        });
+            //get preferred language
+            res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
-                        post[key] = record.value ?? post[key];
-                    }
-
-                    return post;
-                })
-            );
+            //get translated columns
+            res.data = await this.addTranslatedColumnsToArray(res.data);
         }
 
         return {
@@ -386,24 +356,10 @@ export class PostsController {
             relations: ['images', 'categories.children'],
             ...video_where_object
         });
-        videos = await Promise.all(
-            videos.map(async (post) => {
-                for (const key of this.translated_columns) {
-                    let record = await this.translationsService.findOneWhere({
-                        where: {
-                            module: 'post',
-                            module_id: post.id,
-                            language_id: language_id,
-                            key: key,
-                        },
-                    });
-
-                    post[key] = record.value ?? post[key];
-                }
-
-                return post;
-            })
-        );
+        //get preferred language
+        videos = await this.addPreferredTranslationToArray(videos, language_id);
+        //get translated columns
+        videos = await this.addTranslatedColumnsToArray(videos);
 
 
         audio_where_object.where['audio'] = !IsNull();
@@ -411,72 +367,30 @@ export class PostsController {
             relations: ['images', 'categories.children'],
             ...audio_where_object
         });
-        audios = await Promise.all(
-            audios.map(async (post) => {
-                for (const key of this.translated_columns) {
-                    let record = await this.translationsService.findOneWhere({
-                        where: {
-                            module: 'post',
-                            module_id: post.id,
-                            language_id: language_id,
-                            key: key,
-                        },
-                    });
-
-                    post[key] = record.value ?? post[key];
-                }
-
-                return post;
-            })
-        );
+        //get preferred language
+        audios = await this.addPreferredTranslationToArray(audios, language_id);
+        //get translated columns
+        audios = await this.addTranslatedColumnsToArray(audios);
 
         image_where_object.where['image'] = !IsNull();
         let images = await this.postsService.findAllNoPagination({
             relations: ['images', 'categories.children'],
             ...image_where_object
         });
-        images = await Promise.all(
-            images.map(async (post) => {
-                for (const key of this.translated_columns) {
-                    let record = await this.translationsService.findOneWhere({
-                        where: {
-                            module: 'post',
-                            module_id: post.id,
-                            language_id: language_id,
-                            key: key,
-                        },
-                    });
-
-                    post[key] = record.value ?? post[key];
-                }
-
-                return post;
-            })
-        );
+        //get preferred language
+        images = await this.addPreferredTranslationToArray(images, language_id);
+        //get translated columns
+        images = await this.addTranslatedColumnsToArray(images);
 
         pdf_where_object.where['pdf'] = !IsNull();
         let pdfs = await this.postsService.findAllNoPagination({
             relations: ['images', 'categories.children'],
             ...pdf_where_object
         });
-        pdfs = await Promise.all(
-            pdfs.map(async (post) => {
-                for (const key of this.translated_columns) {
-                    let record = await this.translationsService.findOneWhere({
-                        where: {
-                            module: 'post',
-                            module_id: post.id,
-                            language_id: language_id,
-                            key: key,
-                        },
-                    });
-
-                    post[key] = record.value ?? post[key];
-                }
-
-                return post;
-            })
-        );
+        //get preferred language
+        pdfs = await this.addPreferredTranslationToArray(pdfs, language_id);
+        //get translated columns
+        pdfs = await this.addTranslatedColumnsToArray(pdfs);
 
         return {
             success: true,
@@ -494,6 +408,17 @@ export class PostsController {
     @Get(':id')
     async findOne(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.postsService.findOne(+id);
+
+        //translation work
+        if (!res.error) {
+            let language_id = lang ?? 1;
+
+            //get preferred language translation
+            res = await this.addPreferredTranslation(res, language_id);
+
+            //add translated columns
+            res = await this.addTranslatedColumns(res);
+        }
 
         if (!res.error) {
             //translation work
@@ -548,27 +473,15 @@ export class PostsController {
             })
         );
 
+
         //translation work
+        let language_id = lang ?? 1;
         if(res.data) {
-            let language_id = lang ?? 1;
-            res.data = await Promise.all(
-                res.data.map(async (post) => {
-                    for (const key of this.translated_columns) {
-                        let record = await this.translationsService.findOneWhere({
-                            where: {
-                                module: 'post',
-                                module_id: post.id,
-                                language_id: language_id,
-                                key: key,
-                            },
-                        });
+            //get preferred language
+            res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
-                        post[key] = record.value ?? post[key];
-                    }
-
-                    return post;
-                })
-            );
+            //get translated columns
+            res.data = await this.addTranslatedColumnsToArray(res.data);
         }
 
         return {
@@ -651,76 +564,27 @@ export class PostsController {
             throw new BadRequestException(error.message);
         }
 
-        let newUpdatePostDto = updatePostDto;
-        delete newUpdatePostDto.images;
-        let res = await this.postsService.update(+id, newUpdatePostDto);
-        console.log(updatePostDto);
+        let title_ar = updatePostDto.title_ar
+        let description_ar = updatePostDto.description_ar
+        let images = updatePostDto.images;
+
+        delete updatePostDto.title_ar;
+        delete updatePostDto.description_ar;
+        delete updatePostDto.images;
+
+        let res = await this.postsService.update(+id, updatePostDto);
+
+        updatePostDto.title_ar = title_ar;
+        updatePostDto.description_ar = description_ar;
+        updatePostDto.images = images;
 
         //translation work
         if (!res.error) {
-            let title_en_tr_res = await this.translationsService.findOneWhere({
-                where: {
-                    module: 'post',
-                    module_id: res.id,
-                    language_id: 1,
-                    key: 'title'
-                },
-            });
+            await this.updateTranslation('post', res.id, 1, 'title', updatePostDto.title);
+            await this.updateTranslation('post', res.id, 1, 'description', updatePostDto.description);
 
-            if (!title_en_tr_res.error) {
-                let updateTranslationDto = new UpdateTranslationDto();
-                updateTranslationDto.value = updatePostDto.title;
-                await this.translationsService.update(title_en_tr_res.id, updateTranslationDto);
-            }
-
-            let description_en_tr_res = await this.translationsService.findOneWhere({
-                where: {
-                    module: 'post',
-                    module_id: res.id,
-                    language_id: 1,
-                    key: 'description'
-                },
-            });
-
-            if (!description_en_tr_res.error) {
-                let updateTranslationDto = new UpdateTranslationDto();
-                updateTranslationDto.value = updatePostDto.description;
-                await this.translationsService.update(description_en_tr_res.id, updateTranslationDto);
-            }
-
-            if (updatePostDto.title_ar) {
-                let title_ar_tr_res = await this.translationsService.findOneWhere({
-                    where: {
-                        module: 'post',
-                        module_id: res.id,
-                        language_id: 2,
-                        key: 'title'
-                    },
-                });
-
-                if (!title_ar_tr_res.error) {
-                    let updateTranslationDto = new UpdateTranslationDto();
-                    updateTranslationDto.value = updatePostDto.title_ar;
-                    await this.translationsService.update(title_ar_tr_res.id, updateTranslationDto);
-                }
-            }
-
-            if (updatePostDto.description_ar) {
-                let description_ar_tr_res = await this.translationsService.findOneWhere({
-                    where: {
-                        module: 'post',
-                        module_id: res.id,
-                        language_id: 2,
-                        key: 'description'
-                    },
-                });
-
-                if (!description_ar_tr_res.error) {
-                    let updateTranslationDto = new UpdateTranslationDto();
-                    updateTranslationDto.value = updatePostDto.description_ar;
-                    await this.translationsService.update(description_ar_tr_res.id, updateTranslationDto);
-                }
-            }
+            await this.updateTranslation('post', res.id, 2, 'title', updatePostDto.title_ar);
+            await this.updateTranslation('post', res.id, 2, 'description', updatePostDto.description_ar);
         }
 
         //if category in string
@@ -846,26 +710,13 @@ export class PostsController {
         let res = await this.postsService.findAllByCategory(+id,1, 1000);
 
         //translation work
+        let language_id = lang ?? 1;
         if(res.data) {
-            let language_id = lang ?? 1;
-            res.data = await Promise.all(
-                res.data.map(async (post) => {
-                    for (const key of this.translated_columns) {
-                        let record = await this.translationsService.findOneWhere({
-                            where: {
-                                module: 'post',
-                                module_id: post.id,
-                                language_id: language_id,
-                                key: key,
-                            },
-                        });
+            //get preferred language
+            res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
-                        post[key] = record.value ?? post[key];
-                    }
-
-                    return post;
-                })
-            );
+            //get translated columns
+            res.data = await this.addTranslatedColumnsToArray(res.data);
         }
 
         return {
@@ -949,24 +800,13 @@ export class PostsController {
 
         //translation work
         let language_id = lang ?? 1;
-        favourite_posts = await Promise.all(
-            favourite_posts.map(async (post) => {
-                for (const key of this.translated_columns) {
-                    let record = await this.translationsService.findOneWhere({
-                        where: {
-                            module: 'post',
-                            module_id: post.id,
-                            language_id: language_id,
-                            key: key,
-                        },
-                    });
+        if(favourite_posts) {
+            //get preferred language
+            favourite_posts = await this.addPreferredTranslationToArray(favourite_posts, language_id);
 
-                    post[key] = record.value ?? post[key];
-                }
-
-                return post;
-            })
-        );
+            //get translated columns
+            favourite_posts = await this.addTranslatedColumnsToArray(favourite_posts);
+        }
 
         return {
             success: true,
@@ -1009,5 +849,98 @@ export class PostsController {
             message: res.error ? res.error : '',
             data: res.error ? [] : res,
         }
+    }
+
+    async createTranslation (module: string, module_id: number, language_id: number, key: string, value: string) {
+        if (value == null) {
+            return null;
+        }
+
+        let createTranslationDto = new CreateTranslationDto();
+        createTranslationDto.module = module;
+        createTranslationDto.module_id = module_id;
+        createTranslationDto.language_id = language_id;
+        createTranslationDto.key = key;
+        createTranslationDto.value = value;
+        return await this.translationsService.create(createTranslationDto);
+    }
+
+    async updateTranslation (module: string, module_id: number, language_id: number, key: string, value: string) {
+        if (value == null) {
+            return null;
+        }
+
+        let res = await this.translationsService.findOneWhere({
+            where: {
+                module: module,
+                module_id: module_id,
+                language_id: language_id,
+                key: key
+            }
+        });
+
+        if (!res.error) {
+            let updateTranslationDto = new UpdateTranslationDto();
+            updateTranslationDto.value = value;
+            return await this.translationsService.update(res.id, updateTranslationDto);
+        } else {
+            return await this.createTranslation(module, module_id, language_id, key, value);
+        }
+    }
+
+    async addPreferredTranslation (record, language_id) {
+        for (const key of this.translated_columns) {
+            let res = await this.translationsService.findOneWhere({
+                where: {
+                    module: 'post',
+                    module_id: record.id,
+                    language_id: language_id,
+                    key: key,
+                },
+            });
+
+            record[key] = res.value ?? record[key];
+        }
+
+        return record;
+    }
+
+    async addPreferredTranslationToArray (array, language_id) {
+        return await Promise.all(
+            array.map(async (item) => {
+                //get preferred language translation
+                item = await this.addPreferredTranslation(item, language_id);
+                return item;
+            })
+        );
+    }
+
+    async addTranslatedColumns (record) {
+        for (const language of this.languages) {
+            for (const key of this.translated_columns) {
+                let res = await this.translationsService.findOneWhere({
+                    where: {
+                        module: 'post',
+                        module_id: record.id,
+                        language_id: this.lang_ids[language],
+                        key: key,
+                    },
+                });
+
+                record[key + '_' + language] = res.value ?? record[key];
+            }
+        }
+
+        return record;
+    }
+
+    async addTranslatedColumnsToArray (array) {
+        return await Promise.all(
+            array.map(async (item) => {
+                //add translated columns
+                item = await this.addTranslatedColumns(item);
+                return item;
+            })
+        );
     }
 }

@@ -24,12 +24,26 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import {IconButton, Pagination, Stack} from "@mui/material";
-import {Pencil, Delete} from 'mdi-material-ui'
+import {Pencil, Delete, Eye} from 'mdi-material-ui'
+import BasicModal from './detail'
 import { Switch } from '@mui/base';
 import {log} from "next/dist/server/typescript/utils";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
 //Additonal
 // import {deletePost} from "../../store/slices/postsSlice";
 // import {getPosts} from "../../store/slices/postsSlice";
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 function Posts(props) {
 
@@ -67,6 +81,13 @@ console.log("posts" , posts)
         dispatch(getPosts({page}))
     }, [page])
 
+    const [open, setOpen] = React.useState(false);
+    const [focused_post, setFocusedPost] = React.useState(null);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
+
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -91,11 +112,11 @@ console.log("posts" , posts)
                                         <TableRow>
                                             <TableCell>ID</TableCell>
                                             <TableCell>Title</TableCell>
-                                            <TableCell>Time</TableCell>
-                                            <TableCell>Video</TableCell>
-                                            <TableCell>Audio</TableCell>
-                                            <TableCell className="text-center" width="150">Image</TableCell>
-                                            <TableCell>PDF</TableCell>
+                                            <TableCell>Title Arabic</TableCell>
+                                            {/*<TableCell>Video</TableCell>*/}
+                                            {/*<TableCell>Audio</TableCell>*/}
+                                            {/*<TableCell className="text-center" width="150">Image</TableCell>*/}
+                                            {/*<TableCell>PDF</TableCell>*/}
                                             <TableCell>Featured</TableCell>
                                             <TableCell>Action</TableCell>
                                         </TableRow>
@@ -110,48 +131,47 @@ console.log("posts" , posts)
                                                     <TableCell>
                                                         <span>{post.title}</span>
                                                     </TableCell>
-
                                                     <TableCell>
-                                                        <span>{post.time}</span>
+                                                        <span>{post.title_ar}</span>
                                                     </TableCell>
 
-                                                    <TableCell>
-                                                        {post.video && (
-                                                            <video width="240" height="150" controls>
-                                                                <source src={post.video} type="video/mp4" />
-                                                                Your browser does not support the video tag.
-                                                            </video>
-                                                        )}
-                                                    </TableCell>
+                                                    {/*<TableCell>*/}
+                                                    {/*    {post.video && (*/}
+                                                    {/*        <video width="240" height="150" controls>*/}
+                                                    {/*            <source src={post.video} type="video/mp4" />*/}
+                                                    {/*            Your browser does not support the video tag.*/}
+                                                    {/*        </video>*/}
+                                                    {/*    )}*/}
+                                                    {/*</TableCell>*/}
 
-                                                    <TableCell>
-                                                        {post.audio && (
-                                                            <audio controls>
-                                                                <source src={post.audio} type="audio/mpeg" />
-                                                                Your browser does not support the audio element.
-                                                            </audio>
-                                                        )}
-                                                    </TableCell>
+                                                    {/*<TableCell>*/}
+                                                    {/*    {post.audio && (*/}
+                                                    {/*        <audio controls>*/}
+                                                    {/*            <source src={post.audio} type="audio/mpeg" />*/}
+                                                    {/*            Your browser does not support the audio element.*/}
+                                                    {/*        </audio>*/}
+                                                    {/*    )}*/}
+                                                    {/*</TableCell>*/}
 
-                                                    <TableCell className="text-center">
-                                                        {(post.image !== null && post.image !== 'null') ? (
-                                                            <Button tag='a' href={post.image} target="_blank"
-                                                                    layout="link"
-                                                                    size="small">
-                                                                View Image
-                                                            </Button>
-                                                        ) : null}
-                                                    </TableCell>
+                                                    {/*<TableCell className="text-center">*/}
+                                                    {/*    {(post.image !== null && post.image !== 'null') ? (*/}
+                                                    {/*        <Button tag='a' href={post.image} target="_blank"*/}
+                                                    {/*                layout="link"*/}
+                                                    {/*                size="small">*/}
+                                                    {/*            View Image*/}
+                                                    {/*        </Button>*/}
+                                                    {/*    ) : null}*/}
+                                                    {/*</TableCell>*/}
 
-                                                    <TableCell className="text-center">
-                                                        {(post.pdf !== null && post.pdf !== 'null') ? (
-                                                            <Button tag='a' href={post.pdf} target="_blank"
-                                                                    layout="link"
-                                                                    size="small">
-                                                                View File
-                                                            </Button>
-                                                        ) : null}
-                                                    </TableCell>
+                                                    {/*<TableCell className="text-center">*/}
+                                                    {/*    {(post.pdf !== null && post.pdf !== 'null') ? (*/}
+                                                    {/*        <Button tag='a' href={post.pdf} target="_blank"*/}
+                                                    {/*                layout="link"*/}
+                                                    {/*                size="small">*/}
+                                                    {/*            View File*/}
+                                                    {/*        </Button>*/}
+                                                    {/*    ) : null}*/}
+                                                    {/*</TableCell>*/}
 
                                                     <TableCell className="text-center">
                                                         {
@@ -199,6 +219,18 @@ console.log("posts" , posts)
                                                             sx={{marginLeft: 'auto'}}>
                                                             <Delete/>
                                                         </IconButton>
+
+                                                        {/*show button*/}
+                                                        <IconButton
+                                                            size="small"
+                                                            variant="outlined"
+                                                            onClick={e => {
+                                                                setFocusedPost(post);
+                                                                handleOpen();
+                                                            }}
+                                                            sx={{marginLeft: 'auto'}}>
+                                                            <Eye/>
+                                                        </IconButton>
                                                     </TableCell>
                                                 </TableRow>
                                             )
@@ -207,6 +239,100 @@ console.log("posts" , posts)
                                 </Table>
                             </TableContainer>
                         )}
+
+
+                        {/*Detail Modal*/}
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <TableContainer sx={{maxHeight: 440}}>
+                                    <Table stickyHeader aria-label='sticky table'>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>ID</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.id}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Title</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.title}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Title Arabic</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.title_ar}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Description</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.description}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Description Arabic</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.description_ar}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Video</TableCell>
+                                                <TableCell>
+                                                    {focused_post?.video && (
+                                                        <video width="240" height="150" controls>
+                                                            <source src={focused_post?.video} type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    )}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Audio</TableCell>
+                                                <TableCell>
+                                                    {focused_post?.audio && (
+                                                        <audio controls>
+                                                            <source src={focused_post?.audio} type="audio/mpeg" />
+                                                            Your browser does not support the audio element.
+                                                        </audio>
+                                                    )}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Image</TableCell>
+                                                <TableCell className="text-center">
+                                                    {(focused_post?.image !== null && focused_post?.image !== 'null') ? (
+                                                        <Button tag='a' href={focused_post?.image} target="_blank"
+                                                                layout="link"
+                                                                size="small">
+                                                            View Image
+                                                        </Button>
+                                                    ) : null}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>PDF</TableCell>
+                                                <TableCell className="text-center">
+                                                    {(focused_post?.pdf !== null && focused_post?.pdf !== 'null') ? (
+                                                        <Button tag='a' href={focused_post?.pdf} target="_blank"
+                                                                layout="link"
+                                                                size="small">
+                                                            View File
+                                                        </Button>
+                                                    ) : null}
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                    </Table>
+                                </TableContainer>
+                            </Box>
+                        </Modal>
 
                         <Stack direction='row' sx={{my: 4, display: (loading ? 'none' : '')}} justifyContent='center'>
                             <Pagination count={totalPages} onChange={onPageChange}/>

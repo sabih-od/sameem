@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/layouts/components/vertical/AppBarContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/layouts/components/vertical/AppBarContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/posts/posts.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +89,7 @@
       <workItem from="1692723129806" duration="2315000" />
       <workItem from="1692742935471" duration="2645000" />
       <workItem from="1692810353122" duration="38197000" />
-      <workItem from="1692984581443" duration="6898000" />
+      <workItem from="1692984581443" duration="13523000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -356,7 +357,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692993780891</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="hide search bar in admin panel">
+      <created>1692994682576</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1692994682576</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -375,7 +383,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="ask a question api" />
     <MESSAGE value="posts: screen wise api" />
     <MESSAGE value="category, posts translation work" />
     <MESSAGE value="add/remove post to favourites list api, favourites list api." />
@@ -400,7 +407,8 @@
     <MESSAGE value="posts: favourites/list: sort by created_at DESC" />
     <MESSAGE value="admin: exception on create post" />
     <MESSAGE value="(admin) FAQ section" />
-    <option name="LAST_COMMIT_MESSAGE" value="(admin) FAQ section" />
+    <MESSAGE value="hide search bar in admin panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="hide search bar in admin panel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
