@@ -61,7 +61,6 @@ export const create = async ({
         form.append('url', url)
         form.append('date', date)
         form.append('time', time)
-        form.append('content', content)
         form.append('image', image)
         form.append('video', video)
         form.append('audio', audio)
