@@ -53,7 +53,7 @@ function Posts(props) {
     const posts = useSelector(postsList)
     const total = useSelector(postTotal)
     const totalPages = useSelector(postTotalPages)
-console.log("posts" , posts)
+    console.log("posts" , posts)
     const [page, setPage] = useState(1)
 
     function onPageChange(e, p) {
@@ -80,6 +80,7 @@ console.log("posts" , posts)
         dispatch(getPosts({page}))
     }, [page])
 
+    //Detail Modal config
     const [open, setOpen] = React.useState(false);
     const [focused_post, setFocusedPost] = React.useState(null);
     const handleOpen = () => {
@@ -112,10 +113,6 @@ console.log("posts" , posts)
                                             <TableCell>ID</TableCell>
                                             <TableCell>Title</TableCell>
                                             <TableCell>Title Arabic</TableCell>
-                                            {/*<TableCell>Video</TableCell>*/}
-                                            {/*<TableCell>Audio</TableCell>*/}
-                                            {/*<TableCell className="text-center" width="150">Image</TableCell>*/}
-                                            {/*<TableCell>PDF</TableCell>*/}
                                             <TableCell>Featured</TableCell>
                                             <TableCell>Action</TableCell>
                                         </TableRow>
@@ -133,44 +130,6 @@ console.log("posts" , posts)
                                                     <TableCell>
                                                         <span>{post.title_ar}</span>
                                                     </TableCell>
-
-                                                    {/*<TableCell>*/}
-                                                    {/*    {post.video && (*/}
-                                                    {/*        <video width="240" height="150" controls>*/}
-                                                    {/*            <source src={post.video} type="video/mp4" />*/}
-                                                    {/*            Your browser does not support the video tag.*/}
-                                                    {/*        </video>*/}
-                                                    {/*    )}*/}
-                                                    {/*</TableCell>*/}
-
-                                                    {/*<TableCell>*/}
-                                                    {/*    {post.audio && (*/}
-                                                    {/*        <audio controls>*/}
-                                                    {/*            <source src={post.audio} type="audio/mpeg" />*/}
-                                                    {/*            Your browser does not support the audio element.*/}
-                                                    {/*        </audio>*/}
-                                                    {/*    )}*/}
-                                                    {/*</TableCell>*/}
-
-                                                    {/*<TableCell className="text-center">*/}
-                                                    {/*    {(post.image !== null && post.image !== 'null') ? (*/}
-                                                    {/*        <Button tag='a' href={post.image} target="_blank"*/}
-                                                    {/*                layout="link"*/}
-                                                    {/*                size="small">*/}
-                                                    {/*            View Image*/}
-                                                    {/*        </Button>*/}
-                                                    {/*    ) : null}*/}
-                                                    {/*</TableCell>*/}
-
-                                                    {/*<TableCell className="text-center">*/}
-                                                    {/*    {(post.pdf !== null && post.pdf !== 'null') ? (*/}
-                                                    {/*        <Button tag='a' href={post.pdf} target="_blank"*/}
-                                                    {/*                layout="link"*/}
-                                                    {/*                size="small">*/}
-                                                    {/*            View File*/}
-                                                    {/*        </Button>*/}
-                                                    {/*    ) : null}*/}
-                                                    {/*</TableCell>*/}
 
                                                     <TableCell className="text-center">
                                                         {

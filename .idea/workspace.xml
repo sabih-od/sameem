@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/src/pages/categoryPosts/[categoryId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categoryPosts/[categoryId].jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +89,7 @@
       <workItem from="1692723129806" duration="2315000" />
       <workItem from="1692742935471" duration="2645000" />
       <workItem from="1692810353122" duration="38197000" />
-      <workItem from="1692984581443" duration="13717000" />
+      <workItem from="1692984581443" duration="16679000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -369,7 +371,14 @@
       <option name="project" value="LOCAL" />
       <updated>1693001327131</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="(admin): posts; detail modal">
+      <created>1693001515985</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1693001515985</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

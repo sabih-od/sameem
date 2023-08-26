@@ -43,8 +43,20 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
-import {Delete, Pencil} from "mdi-material-ui";
+import {Delete, Eye, Pencil} from "mdi-material-ui";
 import {getPosts} from "../../store/slices/postsSlice";
+import Modal from "@mui/material/Modal";
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 function Category(props) {
     const {push, query} = useRouter()
@@ -141,6 +153,14 @@ function Category(props) {
     //     return _errors.length < 1
     // }
 
+    //Detail Modal config
+    const [open, setOpen] = React.useState(false);
+    const [focused_post, setFocusedPost] = React.useState(null);
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => setOpen(false);
+
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -165,12 +185,8 @@ function Category(props) {
                                         <TableRow>
                                             <TableCell>ID</TableCell>
                                             <TableCell>Title</TableCell>
-                                            <TableCell>Description</TableCell>
-                                            <TableCell>Time</TableCell>
-                                            <TableCell>Video</TableCell>
-                                            <TableCell>Audio</TableCell>
-                                            <TableCell className="text-center" width="150">Image</TableCell>
-                                            <TableCell>PDF</TableCell>
+                                            <TableCell>Title Arabic</TableCell>
+                                            <TableCell>Featured</TableCell>
                                             <TableCell>Action</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -188,47 +204,36 @@ function Category(props) {
                                                             <span>{post.title}</span>
                                                         </TableCell>
                                                         <TableCell>
-                                                            <span>{post.description}</span>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            <span>{post.time}</span>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {post.video && (
-                                                                <video width="240" height="150" controls>
-                                                                    <source src={post.video} type="video/mp4" />
-                                                                    Your browser does not support the video tag.
-                                                                </video>
-                                                            )}
-                                                        </TableCell>
-
-                                                        <TableCell>
-                                                            {post.audio && (
-                                                                <audio controls>
-                                                                    <source src={post.audio} type="audio/mpeg" />
-                                                                    Your browser does not support the audio element.
-                                                                </audio>
-                                                            )}
+                                                            <span>{post.title_ar}</span>
                                                         </TableCell>
 
                                                         <TableCell className="text-center">
-                                                            {(post.image !== null && post.image !== 'null') ? (
-                                                                <Button tag='a' href={post.image} target="_blank"
-                                                                        layout="link"
-                                                                        size="small">
-                                                                    View Image
-                                                                </Button>
-                                                            ) : null}
-                                                        </TableCell>
-
-                                                        <TableCell className="text-center">
-                                                            {(post.pdf !== null && post.pdf !== 'null') ? (
-                                                                <Button tag='a' href={post.pdf} target="_blank"
-                                                                        layout="link"
-                                                                        size="small">
-                                                                    View File
-                                                                </Button>
-                                                            ) : null}
+                                                            {
+                                                                (post.is_featured == 0) ?
+                                                                    (
+                                                                        <Button onClick={
+                                                                            e => {
+                                                                                markAsFeatured(post, 1);
+                                                                            }
+                                                                        }>
+                                                                            Mark as Featured
+                                                                        </Button>
+                                                                    ) :
+                                                                    (
+                                                                        <Button onClick={
+                                                                            e => {
+                                                                                markAsFeatured(post, 0);
+                                                                            }
+                                                                        }>
+                                                                            Remove from Featured
+                                                                        </Button>
+                                                                    )
+                                                            }
+                                                            {/*<input type="checkbox" checked={post.is_featured == 1} onChange={*/}
+                                                            {/*    e => {*/}
+                                                            {/*        markAsFeatured(e, post.id);*/}
+                                                            {/*    }*/}
+                                                            {/*}/>*/}
                                                         </TableCell>
 
                                                         <TableCell width="200">
@@ -248,6 +253,18 @@ function Category(props) {
                                                                 sx={{marginLeft: 'auto'}}>
                                                                 <Delete/>
                                                             </IconButton>
+
+                                                            {/*show button*/}
+                                                            <IconButton
+                                                                size="small"
+                                                                variant="outlined"
+                                                                onClick={e => {
+                                                                    setFocusedPost(post);
+                                                                    handleOpen();
+                                                                }}
+                                                                sx={{marginLeft: 'auto'}}>
+                                                                <Eye/>
+                                                            </IconButton>
                                                         </TableCell>
                                                     </TableRow>
                                                 );
@@ -262,6 +279,100 @@ function Category(props) {
                                 </Table>
                             </TableContainer>
                         )}
+
+
+                        {/*Detail Modal*/}
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <TableContainer sx={{maxHeight: 440}}>
+                                    <Table stickyHeader aria-label='sticky table'>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>ID</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.id}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Title</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.title}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Title Arabic</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.title_ar}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Description</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.description}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Description Arabic</TableCell>
+                                                <TableCell>
+                                                    <span>{focused_post?.description_ar}</span>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Video</TableCell>
+                                                <TableCell>
+                                                    {focused_post?.video && (
+                                                        <video width="240" height="150" controls>
+                                                            <source src={focused_post?.video} type="video/mp4" />
+                                                            Your browser does not support the video tag.
+                                                        </video>
+                                                    )}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Audio</TableCell>
+                                                <TableCell>
+                                                    {focused_post?.audio && (
+                                                        <audio controls>
+                                                            <source src={focused_post?.audio} type="audio/mpeg" />
+                                                            Your browser does not support the audio element.
+                                                        </audio>
+                                                    )}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>Image</TableCell>
+                                                <TableCell className="text-center">
+                                                    {(focused_post?.image !== null && focused_post?.image !== 'null') ? (
+                                                        <Button tag='a' href={focused_post?.image} target="_blank"
+                                                                layout="link"
+                                                                size="small">
+                                                            View Image
+                                                        </Button>
+                                                    ) : null}
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>PDF</TableCell>
+                                                <TableCell className="text-center">
+                                                    {(focused_post?.pdf !== null && focused_post?.pdf !== 'null') ? (
+                                                        <Button tag='a' href={focused_post?.pdf} target="_blank"
+                                                                layout="link"
+                                                                size="small">
+                                                            View File
+                                                        </Button>
+                                                    ) : null}
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                    </Table>
+                                </TableContainer>
+                            </Box>
+                        </Modal>
 
 
                     </Paper>
