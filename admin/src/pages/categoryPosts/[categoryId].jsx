@@ -44,7 +44,10 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import {Delete, Eye, Pencil} from "mdi-material-ui";
-import {getPosts} from "../../store/slices/postsSlice";
+import {
+    getPosts,
+    markAsFeatured as sliceMarkAsFeatured,
+} from '../../store/slices/postsSlice'
 import Modal from "@mui/material/Modal";
 const style = {
     position: 'absolute',
@@ -109,6 +112,17 @@ function Category(props) {
     useEffect(() => {
         dispatch(setSuccess(false))
     }, [success])
+
+
+
+    const markAsFeatured = async (post, value) => {
+        await dispatch(sliceMarkAsFeatured({
+            post_id: post.id,
+            is_featured: value
+        }))
+
+        dispatch(getCategoryPosts({id: categoryId}))
+    }
 
     // useEffect(() => {
     //     if (!loading && success) {

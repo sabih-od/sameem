@@ -7,7 +7,6 @@
     <list default="true" id="ccdff450-37eb-4a1d-8575-b1b086ad14f2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/src/pages/categoryPosts/[categoryId].jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/categoryPosts/[categoryId].jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/posts/index.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +88,7 @@
       <workItem from="1692723129806" duration="2315000" />
       <workItem from="1692742935471" duration="2645000" />
       <workItem from="1692810353122" duration="38197000" />
-      <workItem from="1692984581443" duration="16679000" />
+      <workItem from="1692984581443" duration="17361000" />
     </task>
     <task id="LOCAL-00001" summary="interface work.">
       <created>1690477276521</created>
@@ -378,7 +377,14 @@
       <option name="project" value="LOCAL" />
       <updated>1693001515985</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="(admin): categoryPosts; detail modal">
+      <created>1693008151275</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1693008151275</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -397,7 +403,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="category, posts translation work" />
     <MESSAGE value="add/remove post to favourites list api, favourites list api." />
     <MESSAGE value="add post search by title feature" />
     <MESSAGE value="(admin) Post, Category: Translation work" />
@@ -422,7 +427,8 @@
     <MESSAGE value="(admin) FAQ section" />
     <MESSAGE value="hide search bar in admin panel" />
     <MESSAGE value="(admin): posts; detail modal" />
-    <option name="LAST_COMMIT_MESSAGE" value="(admin): posts; detail modal" />
+    <MESSAGE value="(admin): categoryPosts; detail modal" />
+    <option name="LAST_COMMIT_MESSAGE" value="(admin): categoryPosts; detail modal" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
