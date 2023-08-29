@@ -180,6 +180,12 @@ export class PostsController {
             await this.createTranslation('post', res.id, 2, 'description', createPostDto.description_ar);
         }
 
+        //if category in string
+        if (createPostDto.category_ids.length > 0 && typeof createPostDto.category_ids[0] == 'string') {
+            let string = createPostDto.category_ids.toString();
+            createPostDto.category_ids = string.split(',').map(Number);
+        }
+
         //attach categories
         if (createPostDto.category_ids && createPostDto.category_ids.length > 0) {
             let post = await this.postRepository.findOne({
@@ -190,6 +196,7 @@ export class PostsController {
 
             post.categories = await Promise.all(
                 createPostDto.category_ids.map(async (category_id) => {
+                    console.log(category_id);
                     let category = await this.categoryService.findOne(+category_id);
 
                     if (!category.error) {

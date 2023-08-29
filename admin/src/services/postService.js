@@ -39,8 +39,8 @@ export const create = async ({
                                  description,
                                  description_ar,
                                  url,
-                                 date,
-                                 time,
+                                 // date,
+                                 // time,
                                  image,
                                  video,
                                  audio,
@@ -59,8 +59,8 @@ export const create = async ({
         form.append('description', description)
         form.append('description_ar', description_ar)
         form.append('url', url)
-        form.append('date', date)
-        form.append('time', time)
+        // form.append('date', date)
+        // form.append('time', time)
         form.append('image', image)
         form.append('video', video)
         form.append('audio', audio)
@@ -96,8 +96,8 @@ export const update = async ({
                                  description,
                                  description_ar,
                                  url,
-                                 date,
-                                 time,
+                                 // date,
+                                 // time,
                                  video,
                                  audio,
                                  image,
@@ -115,8 +115,8 @@ export const update = async ({
         form.append('description', description)
         form.append('description_ar', description_ar)
         form.append('url', url)
-        form.append('date', date)
-        form.append('time', time)
+        // form.append('date', date)
+        // form.append('time', time)
         form.append('image', image)
         form.append('video', video)
         form.append('audio', audio)

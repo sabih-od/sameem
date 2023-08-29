@@ -61,8 +61,8 @@ function Create(props) {
     const [description, setDescription] = useState('')
     const [description_ar, setDescriptionAr] = useState('')
     const [url, setUrl] = useState('')
-    const [date, setDate] = useState('')
-    const [time, setTime] = useState('')
+    // const [date, setDate] = useState('')
+    // const [time, setTime] = useState('')
     const [video, setVideo] = useState('')
     const [audio, setAudio] = useState('')
     const [image, setImage] = useState(null)
@@ -99,7 +99,8 @@ function Create(props) {
         if (!fileValidation()) return;
 
         dispatch(addPost({
-            category_ids , title, title_ar, description, description_ar, url , date , time , video , audio , image , pdf
+            // category_ids , title, title_ar, description, description_ar, url , date , time , video , audio , image , pdf
+            category_ids , title, title_ar, description, description_ar, url , video , audio , image , pdf
         }))
 
     }
@@ -188,34 +189,34 @@ function Create(props) {
                                                onChange={e => setUrl(e.target.value)}/>
                                 </Grid>
 
-                                <Grid item xs={12} sx={{mt: 5}}>
-                                    <TextField fullWidth label='Date '
-                                               type="text"
-                                               onFocus={e => {
-                                                   e.target.type = 'date'
-                                               }}
-                                               onBlur={e => {
-                                                   e.target.type = 'text'
-                                               }}
-                                               value={date}
-                                               onChange={e => setDate(e.target.value)}/>
-                                </Grid>
+                                {/*<Grid item xs={12} sx={{mt: 5}}>*/}
+                                {/*    <TextField fullWidth label='Date '*/}
+                                {/*               type="text"*/}
+                                {/*               onFocus={e => {*/}
+                                {/*                   e.target.type = 'date'*/}
+                                {/*               }}*/}
+                                {/*               onBlur={e => {*/}
+                                {/*                   e.target.type = 'text'*/}
+                                {/*               }}*/}
+                                {/*               value={date}*/}
+                                {/*               onChange={e => setDate(e.target.value)}/>*/}
+                                {/*</Grid>*/}
 
-                                <Grid item xs={12} sx={{ mt: 5 }}>
-                                    <TextField
-                                        fullWidth
-                                        label='Time'
-                                        type="text"
-                                        onFocus={e => {
-                                            e.target.type = 'time'; // Change type to 'time' on focus
-                                        }}
-                                        onBlur={e => {
-                                            e.target.type = 'text'; // Change type back to 'text' on blur
-                                        }}
-                                        value={time}
-                                        onChange={e => setTime(e.target.value)}
-                                    />
-                                </Grid>
+                                {/*<Grid item xs={12} sx={{ mt: 5 }}>*/}
+                                {/*    <TextField*/}
+                                {/*        fullWidth*/}
+                                {/*        label='Time'*/}
+                                {/*        type="text"*/}
+                                {/*        onFocus={e => {*/}
+                                {/*            e.target.type = 'time'; // Change type to 'time' on focus*/}
+                                {/*        }}*/}
+                                {/*        onBlur={e => {*/}
+                                {/*            e.target.type = 'text'; // Change type back to 'text' on blur*/}
+                                {/*        }}*/}
+                                {/*        value={time}*/}
+                                {/*        onChange={e => setTime(e.target.value)}*/}
+                                {/*    />*/}
+                                {/*</Grid>*/}
 
                                 <Grid item xs={12} sx={{mt: 5}}>
                                     <Stack direction="row" gap={2}>
