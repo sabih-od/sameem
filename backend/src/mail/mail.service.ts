@@ -28,11 +28,13 @@ export class MailService {
             let res = await transporter.sendMail(mailOptions);
             console.log('res', res);
             // console.log('Email sent successfully');
-            return 'Email sent successfully';
+            // return 'Email sent successfully';
+            return true;
         } catch (error) {
             // console.error('Error sending email:', error);
             console.log('error', error);
-            return 'Error sending email:';
+            // return 'Error sending email:';
+            return false;
         }
     }
 }

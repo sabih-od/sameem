@@ -58,17 +58,23 @@ export class FaqController {
 
     @Post('ask-a-question')
     async askAQuestion(@Body() createFaqDto: CreateFaqDto) {
-        createFaqDto.created_at = Date.now().toString();
-        let res = await this.faqService.create(createFaqDto);
+        // createFaqDto.created_at = Date.now().toString();
+        // let res = await this.faqService.create(createFaqDto);
 
 
         let mailService = new MailService();
-        await mailService.sendEmail('sameem-admin@mailinator.com', 'Question', createFaqDto.question);
+        let mailRes = await mailService.sendEmail('sameem-admin@mailinator.com', 'Question', createFaqDto.question);
+
+        // return {
+        //     success: !res.error,
+        //     message: res.error ? res.error : 'Question submitted successfully!',
+        //     data: res.error ? [] : res,
+        // }
 
         return {
-            success: !res.error,
-            message: res.error ? res.error : 'Question submitted successfully!',
-            data: res.error ? [] : res,
+            success: mailRes,
+            message: mailRes ? 'Question submitted successfully!' : 'Something went wrong.',
+            data: [],
         }
     }
 
