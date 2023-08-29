@@ -181,7 +181,7 @@ export class PostsController {
         }
 
         //if category in string
-        if (createPostDto.category_ids.length > 0 && typeof createPostDto.category_ids[0] == 'string') {
+        if (createPostDto.category_ids && typeof createPostDto.category_ids[0] == 'string' && createPostDto.category_ids.length > 0) {
             let string = createPostDto.category_ids.toString();
             createPostDto.category_ids = string.split(',').map(Number);
         }
@@ -595,7 +595,7 @@ export class PostsController {
         }
 
         //if category in string
-        if (updatePostDto.category_ids.length > 0 && typeof updatePostDto.category_ids[0] == 'string') {
+        if (updatePostDto.category_ids && typeof updatePostDto.category_ids[0] == 'string' && updatePostDto.category_ids.length > 0) {
             let string = updatePostDto.category_ids.toString();
             updatePostDto.category_ids = string.split(',').map(Number);
         }
