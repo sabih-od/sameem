@@ -115,7 +115,31 @@ export const get = async (page = 1, limit = 15) => {
     }
 }
 
-export const getMenu = async (page = 1, limit = 30) => {
+export const getAllCategory = async (page = 1, limit = 1000) => {
+    try {
+        const response = await fetch(urlWithParams(`${apiUrl()}/categories`, {
+            page, limit
+        }), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data?.success === false) {
+            return errorResponse(null, data?.message ?? 'Server Error')
+        }
+
+        return successResponse(data)
+    } catch (e) {
+        return exceptionResponse()
+    }
+}
+
+export const getMenu = async (page = 1, limit = 1000) => {
     try {
         const response = await fetch(urlWithParams(`${apiUrl()}/categories/get-menu`, {
             page, limit
@@ -128,7 +152,7 @@ export const getMenu = async (page = 1, limit = 30) => {
         });
 
         const data = await response.json();
-        console.log('getMenu', data)
+        // console.log('getMenu', data)
 
         if (data?.success === false) {
             return errorResponse(null, data?.message ?? 'Server Error')

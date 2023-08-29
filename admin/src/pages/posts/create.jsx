@@ -15,9 +15,13 @@ import {
     setSuccess, setErrors
 } from '../../store/slices/postsSlice'
 
+// import {
+//     getCategories,
+//     categories as categoriesList,
+// } from '../../store/slices/categoriesSlice';
 import {
-    getCategories,
-    categories as categoriesList,
+    getAllCategories,
+    allCategories as categoriesList,
 } from '../../store/slices/categoriesSlice'
 
 import {useRouter} from "next/navigation";
@@ -55,7 +59,6 @@ function Create(props) {
     const [category_ids, setCategoryId] = useState([]);
 
 
-
     const [title, setTitle] = useState('')
     const [title_ar, setTitleAr] = useState('')
     const [description, setDescription] = useState('')
@@ -70,13 +73,15 @@ function Create(props) {
 
     const [page, setPage] = useState(1)
 
+
     const handleCategoryChange = (event) => {
         setCategoryId(event.target.value);
     };
     // const [file, setFile] = useState(null)
 
     useEffect(() => {
-        dispatch(getCategories({page}))
+
+        dispatch(getAllCategories({page}))
     }, [page])
 
     useEffect(() => {
@@ -153,11 +158,11 @@ function Create(props) {
                                     <FormControl fullWidth required>
                                         <InputLabel>Select Category</InputLabel>
                                         <Select
-                                            multiple // This allows selecting multiple categories
+                                            multiple
                                             value={category_ids}
                                             onChange={handleCategoryChange}
                                         >
-                                            {categories.map((category) => (
+                                            {categories.length > 0 && categories.map((category) => (
                                                 <MenuItem key={category.id} value={category.id}>
                                                     {category.name}
                                                 </MenuItem>
@@ -174,7 +179,7 @@ function Create(props) {
                                     <TextField fullWidth label='Title Arabic' value={title_ar}
                                                onChange={e => setTitleAr(e.target.value)}/>
                                 </Grid>
-<br/>
+                                <br/>
                                 <Grid item xs={12}>
                                     <TextField fullWidth label='Description' value={description}
                                                onChange={e => setDescription(e.target.value)}/>

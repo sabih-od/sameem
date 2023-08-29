@@ -1,11 +1,18 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {HYDRATE} from 'next-redux-wrapper';
-import {create, destroy, get} from '../../services/categoryService';
+import {create, destroy, get, getAllCategory} from '../../services/categoryService';
 
 export const getCategories = createAsyncThunk(
     'categories/get',
     async ({page = 1}, thunkAPI) => {
         return await get(page)
+    }
+)
+
+export const getAllCategories = createAsyncThunk(
+    'categories/get',
+    async ({page = 1}, thunkAPI) => {
+        return await getAllCategory(page)
     }
 )
 
@@ -72,6 +79,16 @@ export const categoriesSlice = createSlice({
             categoriesSlice.caseReducers.setCategoriesFetched(state, {data, message})
         })
 
+        builder.addCase(getAllCategories.pending, (state, action) => {
+            state.loading = true
+            state.errors = null
+        })
+        builder.addCase(getAllCategories.fulfilled, (state, action) => {
+            const {data, message} = action.payload
+
+            categoriesSlice.caseReducers.setCategoriesFetched(state, {data, message})
+        })
+
         builder.addCase(addCategory.pending, (state, action) => {
             state.loading = true
             state.success = false
@@ -102,6 +119,7 @@ export const categoriesSlice = createSlice({
 
 export const {setSuccess, setErrors} = categoriesSlice.actions;
 export const categories = (state) => state.categories.categories;
+export const allCategories = (state) => state.categories.categories;
 export const loading = (state) => state.categories.loading;
 export const total = (state) => state.categories.total;
 export const totalPages = (state) => state.categories.totalPages;
