@@ -10,7 +10,7 @@ export const getCategories = createAsyncThunk(
 )
 
 export const getAllCategories = createAsyncThunk(
-    'categories/get',
+    'categories/all/get',
     async ({page = 1}, thunkAPI) => {
         return await getAllCategory(page)
     }
