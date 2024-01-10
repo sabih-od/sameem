@@ -23,6 +23,7 @@ export class AuthService {
 
     async signIn(signInDto: SigninDto): Promise<any> {
         const user = await this.usersService.findOneByEmail(signInDto.email);
+        console.log(user);
 
         if (user.error) {
             return user;
