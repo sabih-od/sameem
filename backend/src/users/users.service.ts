@@ -71,7 +71,7 @@ export class UsersService {
     }
 
     async findOneByEmail(email: string, args?: Object): Promise<any> {
-        try {
+        // try {
             const user = await this.userRepository.findOneOrFail({
                 where: {
                     email: email,
@@ -80,13 +80,13 @@ export class UsersService {
             });
 
             return user;
-        } catch (error) {
-            if (error instanceof EntityNotFoundError) {
-                return {
-                    error: 'User Not Found'
-                };
-            }
-        }
+        // } catch (error) {
+        //     if (error instanceof EntityNotFoundError) {
+        //         return {
+        //             error: 'User Not Found'
+        //         };
+        //     }
+        // }
     }
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
