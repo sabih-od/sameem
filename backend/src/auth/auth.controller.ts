@@ -46,6 +46,7 @@ export class AuthController {
     @Post('login')
     async signIn(@Body() signInDto: SigninDto) {
         let res = await this.authService.signIn(signInDto);
+        console.log(res);
 
         return {
             success: !res.error,
