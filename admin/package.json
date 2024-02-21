@@ -42,7 +42,9 @@
     "react-popper": "^2.2.5",
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.15.0",
-    "redux": "^4.2.1"
+    "redux": "^4.2.1",
+    "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.7.4"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
