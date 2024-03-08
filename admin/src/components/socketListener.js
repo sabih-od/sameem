@@ -1,136 +1,94 @@
-// components/SocketListener.js
-
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
-import SimplePeer from 'simple-peer';
+import { user } from 'src/store/slices/authSlice';
+// import SimplePeer from 'simple-peer';
+// const peer = new SimplePeer({ initiator: false, trickle: false, config: { iceServers } });
 
-
-const socket = io('http://localhost:3011'); // Initialize Socket.IO client
+const socket = io('http://localhost:3011');
+const iceServers = [
+    { urls: 'stun:stun.services.mozilla.com' },
+    { urls: 'stun:stun.l.google.com:19302' }
+];
 
 const SocketListener = () => {
-  const [me, setMe] = useState('')
-  const [stream, setStream] = useState()
-  const [receivingCall, setReceivingCall] = useState(false)
-  const [caller, setCaller] = useState()
-  const [callerSignal, setCallerSignal] = useState()
-  const [callAccepted, setCallAccepted] = useState(false)
-  const [idToCall, setIdToCall] = useState()
-  const [callEnded, setCallEnded] = useState(false)
-  const [name, setName] = useState()
+    const [localStream, setLocalStream] = useState(null);
+    // for streaming through canvas
+    const localCanvasRef = useRef();
+    const localCanvasContextRef = useRef();
+    const localVideoRef = useRef();
 
-  const myVideo = useRef()
-  const userVideo = useRef()
-  const connectionRef = useRef()
 
-  useEffect(() => {
-    console.log('navigator.mediaDevices', navigator.mediaDevices)
-    navigator.mediaDevices.getUserMedia({video: true, audio: true})
-    .then((stream) => {
-      setStream(stream)
-      myVideo.current.srcObject = stream
-    })
 
-    // set me user id
-    socket.on('me', (id) => {
-      setMe(id)
-    });
+    const [peer, setPeer] = useState(null)
+    const [peerId, setPeerId] = useState(null);
+    const [remotePeerIdValue, setRemotePeerIdValue] = useState('');
+    const peerInstance = useRef();
+    const currentUserVideoRef = useRef();
+    const remoteVideoRef = useRef();
+    
+    useEffect(() => {
+        const initializePeer = async () => {
+            const Peer = (await import('peerjs')).default;
+            const _peer = new Peer(undefined, {
+                config: {
+                    'iceServers': [
+                        {
+                            'urls': [
+                                'stun:stun.l.google.com:19302',
+                                'stun:stun1.l.google.com:19302',
+                                'stun:stun2.l.google.com:19302'
+                            ]
+                        }
+                    ]
+                }
+            });
+          setPeer(_peer);
+        };
+        initializePeer();
+    }, []);
 
-    socket.on('callUser', (data) => {
-      setReceivingCall(true)
-      setCaller(data.from)
-      setName(data.name)
-      setCallerSignal(data.signal)
-    });
+    useEffect(() => {
+        if (!peer) return;
 
-    // Listening to the 'test' event emitted from the server
-    socket.on('test', (data) => {
-      console.log('Received test event:', data);
-      // Handle the emitted data here
-    });
+        peer.on('open', function(id) {
+            setPeerId(id);
+        });
 
-    return () => {
-      socket.disconnect(); // Clean up the socket connection
-    };
-  }, []);
+        peer.on('call', function(call) {
+            console.log("cal rec", call)
+            const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-  const callUser = (id) => {
-    const peer = new SimplePeer({
-      initiator: true,
-      trickle: false,
-      stream: stream
-    })
+            getUserMedia({ video: true, audio: true }, function(mediaStream) {
+                
+                console.log("cal answser", mediaStream)
+                call.answer();
 
-    peer.on('signal', (data) => {
-      socket.emit('callUser', {
-        userToCall: id,
-        signalData: data,
-        from: me,
-        name: name
-      })
-    })
+            }, function(error) {
+                console.log('error', error)
+            });
+        });
 
-    peer.on('stream', (stream) => {
-      userVideo.current.srcObject = stream
-    })
+        peerInstance.current = peer;
 
-    socket.on('callAccepted', (signal) => {
-      setCallAccepted(true)
-      peer.signal(signal)
-    })
+        return () => {
+            peer.off('open');
+            peer.off('call');
+        };
+    }, [peer]);
+    
+    return (
+        <div className='container'>
+            <h4>My Peer Id: <input type='text' value={peerId} disabled/> </h4>
 
-    connectionRef.current = peer
-  }
+            <div>
+                <video ref={currentUserVideoRef} autoPlay={true} muted={true}/>
+            </div>
 
-  const answerCall = () => {
-    setCallAccepted(true)
-
-    const peer = new SimplePeer({
-      initiator: false,
-      trickle: false,
-      stream: stream
-    })
-
-    peer.on('signal', (data) => {
-      socket.emit('answerCall', {signal: data, to: caller})
-    })
-  }
-
-  const leaveCall = () => {
-    setCallEnded(true)
-    connectionRef.current.destroy()
-  }
-
-  return (
-    <div className='container'>
-      <div className='video-container'>
-        <div className='video'>
-          {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: '300px' }}/>}
+            <div>
+                <video ref={remoteVideoRef} autoPlay={true} muted={true}/>
+            </div>
         </div>
-        <div className='video'>
-          {(callAccepted || !callEnded) ? 
-            <video playsInline muted ref={userVideo} autoPlay style={{ width: '300px' }}/>:
-            null
-          }
-        </div>
-      </div>
-
-      <div className='myId'>
-        <input type='text' value={name} onChange={(e) => setName(e.target.value)} placeholder='Name'/>
-        <input type='text' value={me} disabled placeholder='Me'/>
-        <input type='text' value={idToCall} onChange={(e) => setIdToCall(e.target.value)} placeholder='IdToCall'/>
-      </div>
-
-      <div className='call-button'>
-        {
-          callAccepted && !callEnded ?
-            <button type='button' onClick={() => leaveCall()}>Leave Call</button>
-          :
-            <button type='button' onClick={() => callUser(idToCall)}>Call</button>
-        }
-        {idToCall}
-      </div>
-    </div>
-  );
+    );
 };
 
 export default SocketListener;

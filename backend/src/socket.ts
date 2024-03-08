@@ -1,22 +1,34 @@
-// socket.ts
+import * as http from 'http';
+import * as https from 'https';
+const { Server } = require("socket.io")
 
-import { Server } from 'socket.io';
-import { createServer } from 'http';
+export function useSocketIoServer(server = null) {
+  
+  const io = new Server(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST'],
+      allowedHeaders: ['Content-Type'],
+      credentials: true,
+    },
+  });
+  
+  io.on('connection', socket => {
+    console.log('me', socket.id)
 
-// Create an HTTP server
-const server = createServer();
+    socket.emit('me', socket.id);
+  
+    socket.on('disconnect', () => {
+      socket.broadcast.emit('callEnded')
+    });
+  
+    socket.on('callUser', (data) => {
+      io.to(data.userToCall).emit('callUser', {signal: data.signalData, from: data.from, name: data.name})
+    })
+  
+    socket.on('answerCall', (data) => io.to(data.to).emit('callAccepted', data.signal))
+  });
 
-// Initialize Socket.IO server
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3014",
-    methods: ["GET", "POST"]
-  }
-});
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-});
-
-// Export both the server and io instances
-export { server, io };
+  return io;
+}

@@ -11,7 +11,8 @@ import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 //socket.io deps
 import * as express from 'express';
 import * as cors from 'cors';
-
+const { ExpressPeerServer } = require('peer');
+import { useSocketIoServer } from './socket';
 // const httpsOptions = {
 //     key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
 //     cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
@@ -19,12 +20,12 @@ import * as cors from 'cors';
 
 const app = express();
 
+app.use(cors());
 // const server = https.createServer(httpsOptions, app);
 const server = http.createServer(app);
+
+// Socket io configuration
 const { Server } = require("socket.io");
-
-app.use(cors());
-
 const io = new Server(server, {
     cors: {
         origin: '*',
@@ -34,23 +35,48 @@ const io = new Server(server, {
     },
 });
 
-io.on('connection', socket => {
-  socket.emit('me', socket.id); // my socket id
+// io.on('connection', socket => {
+//   console.log('a user connected');
 
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('callEnded')
-  });
+//   socket.on('disconnect', () => {
+//     console.log('user disconnected');
+//   });
 
-  socket.on('callUser', (data) => {
-    io.to(data.userToCall).emit('callUser', {signal: data.signalData, from: data.from, name: data.name})
-  })
+//   socket.on('stream', function(data) {
+//     socket.broadcast.emit('stream', data)
+//   })
 
-  socket.on('answerCall', (data) => io.to(data.to).emit('callAccepted', data.signal))
-});
 
-server.listen(process.env.SOCKET_IO_PORT, () => {
+
+//   socket.on('offer', (data) => {
+//     console.log('Received offer:', data);
+//     // Handle offer data, you can broadcast it to other clients or process it as needed
+//     socket.broadcast.emit('offer', data); // Broadcasting offer to other clients
+//   });
+
+//   socket.on('answer', (data) => {
+//     console.log('Received answer:', data);
+//     // Handle answer data, you can broadcast it to other clients or process it as needed
+//     socket.broadcast.emit('answer', data); // Broadcasting answer to other clients
+//   });
+
+//   socket.on('ice-candidate', (data) => {
+//     console.log('Received ICE candidate:', data);
+//     // Handle ICE candidate data, you can broadcast it to other clients or process it as needed
+//     socket.broadcast.emit('ice-candidate', data); // Broadcasting ICE candidate to other clients
+//   });
+// });
+const _server = server.listen(process.env.SOCKET_IO_PORT, () => {
     console.log('socket io server listening on *:' + process.env.SOCKET_IO_PORT);
 });
+
+const peerServer = ExpressPeerServer(_server, {
+  debug: true
+});
+console.log('---------------peerServer', peerServer)
+app.use('/peerjs', peerServer);
+peerServer.on('connection', (client) => { console.log('client connected');});
+peerServer.on('disconnect', (client) => { console.log('client disconnected');});
 
 export const socketIoServer = io;
 
