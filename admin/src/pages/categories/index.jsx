@@ -23,7 +23,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import {IconButton, Pagination, Stack} from "@mui/material";
 import {Pencil, Delete} from 'mdi-material-ui'
-import SocketListener from '../../components/socketListener';
+// import ShareStreaming from '../../components/shareStreaming';
 
 function Categories(props) {
 
@@ -64,7 +64,7 @@ function Categories(props) {
 
     return (
         <Grid container spacing={6}>
-            <SocketListener />
+            {/* <ShareStreaming /> */}
             <Grid item xs={12}>
                 <Stack direction="row">
                     <Typography variant='h5'>

@@ -35,18 +35,24 @@ const io = new Server(server, {
     },
 });
 
-// io.on('connection', socket => {
+io.on('connection', socket => {
 //   console.log('a user connected');
 
 //   socket.on('disconnect', () => {
 //     console.log('user disconnected');
 //   });
 
-//   socket.on('stream', function(data) {
-//     socket.broadcast.emit('stream', data)
-//   })
+  socket.on('stream', function(data) {
+    socket.broadcast.emit('stream', data)
+  })
 
+  socket.on('stream-status', function(data) {
+    socket.broadcast.emit('stream-status', data)
+  })
 
+  socket.on('stream-client-request', function(data) {
+    socket.broadcast.emit('stream-client-request', data)
+  })
 
 //   socket.on('offer', (data) => {
 //     console.log('Received offer:', data);
@@ -65,7 +71,7 @@ const io = new Server(server, {
 //     // Handle ICE candidate data, you can broadcast it to other clients or process it as needed
 //     socket.broadcast.emit('ice-candidate', data); // Broadcasting ICE candidate to other clients
 //   });
-// });
+});
 const _server = server.listen(process.env.SOCKET_IO_PORT, () => {
     console.log('socket io server listening on *:' + process.env.SOCKET_IO_PORT);
 });

@@ -1,23 +1,16 @@
-import { createContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
-// const peer = new SimplePeer({ initiator: false, trickle: false, config: { iceServers } });
 
 const socket = io('http://localhost:3011');
-const iceServers = [
-    { urls: 'stun:stun.services.mozilla.com' },
-    { urls: 'stun:stun.l.google.com:19302' }
-];
 
-const SocketListener = () => {
+const ShareStreaming = () => {
     const [localStream, setLocalStream] = useState(null);
     // for streaming through canvas
     const localCanvasRef = useRef();
     const localCanvasContextRef = useRef();
     const localVideoRef = useRef();
-
-
 
     const [peer, setPeer] = useState(null)
     const [peerId, setPeerId] = useState(null);
@@ -25,11 +18,26 @@ const SocketListener = () => {
     const peerInstance = useRef();
     const currentUserVideoRef = useRef();
     const remoteVideoRef = useRef();
+
+    const startStreaming = (clientPeerId = null) => {
+        const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        
+        getUserMedia({ video: true, audio: true }, function(mediaStream) {
+            const call = peerInstance.current.call(clientPeerId ?? remotePeerIdValue, mediaStream);
+
+            call.on('stream', function(remoteStream) {
+              remoteVideoRef.current.srcObject = remoteStream;
+              remoteVideoRef.current.play();
+            });
+        }, function(error) {
+          console.log('error', error)
+        });
+    };
     
     useEffect(() => {
         const initializePeer = async () => {
             const Peer = (await import('peerjs')).default;
-            const _peer = new Peer(undefined, {
+            await setPeer(new Peer(undefined, {
                 config: {
                     'iceServers': [
                         {
@@ -41,10 +49,14 @@ const SocketListener = () => {
                         }
                     ]
                 }
-            });
-          setPeer(_peer);
+            }));
         };
         initializePeer();
+
+        socket.on('stream', ClientPeerId => {
+            startStreaming(ClientPeerId)
+            console.log('ClientPeerId', ClientPeerId)
+        })
     }, []);
 
     useEffect(() => {
@@ -54,41 +66,39 @@ const SocketListener = () => {
             setPeerId(id);
         });
 
-        peer.on('call', function(call) {
-            console.log("cal rec", call)
-            const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        // peer.on('call', function(call) {
+        //     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-            getUserMedia({ video: true, audio: true }, function(mediaStream) {
-                
-                console.log("cal answser", mediaStream)
-                call.answer();
+        //     getUserMedia({ video: true, audio: true }, function(mediaStream) {
+        //         call.answer();
 
-            }, function(error) {
-                console.log('error', error)
-            });
-        });
+        //     }, function(error) {
+        //         console.log('error', error)
+        //     });
+        // });
 
         peerInstance.current = peer;
 
         return () => {
             peer.off('open');
-            peer.off('call');
+            // peer.off('call');
         };
     }, [peer]);
     
     return (
         <div className='container'>
             <h4>My Peer Id: <input type='text' value={peerId} disabled/> </h4>
+            {/* <input type='text' value={remotePeerIdValue} onChange={e => setRemotePeerIdValue(e.target.value)}/>
+            <button onClick={startStreaming}>Call</button> */}
 
             <div>
-                <video ref={currentUserVideoRef} autoPlay={true} muted={true}/>
+              <video ref={currentUserVideoRef} autoPlay={true} muted={true}/>
             </div>
-
             <div>
-                <video ref={remoteVideoRef} autoPlay={true} muted={true}/>
+              <video ref={remoteVideoRef} autoPlay={true} muted={true}/>
             </div>
         </div>
     );
 };
 
-export default SocketListener;
+export default ShareStreaming;
