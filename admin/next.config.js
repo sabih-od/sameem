@@ -1,4 +1,5 @@
 const path = require('path')
+// const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
     output: 'export',
@@ -23,4 +24,5 @@ module.exports = {
 
         return config;
     },
+    // assetPrefix: isProd ? (process.env.NEXT_PUBLIC_APP_URL+'/sameem/admin') : undefined,
 }

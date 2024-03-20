@@ -9,6 +9,7 @@ import Collapse from '@mui/material/Collapse';
 import BookIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ContactIcon from '@mui/icons-material/ContactPhoneOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
+import { LiveTv } from '@mui/icons-material';
 import PostIcon from '@mui/icons-material/DynamicFeedOutlined';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -59,6 +60,11 @@ const navigation = () => {
             icon: PeopleOutlinedIcon,
             path: '/faqs',
         },
+        {
+            title: 'Stream',
+            icon: LiveTv,
+            path: '/stream',
+        }
         // ...categories.map(category => ({
         //     title: category.name,
         //     icon: BookIcon,

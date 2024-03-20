@@ -357,4 +357,9 @@ export class AuthController {
             data: []
         };
     }
+
+    @Get('socketio/me')
+    async socketioMe() {
+        
+    }
 }
