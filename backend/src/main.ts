@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from "fs";
 import * as path from 'path';
-// import * as https from 'https';
+import * as https from 'https';
 import * as http from 'http';
 import {ValidationPipe} from "@nestjs/common";
 import {join} from "path";
@@ -13,16 +13,16 @@ import * as express from 'express';
 import * as cors from 'cors';
 const { ExpressPeerServer } = require('peer');
 import { useSocketIoServer } from './socket';
-// const httpsOptions = {
-//     key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
-//     cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
-// };
+const httpsOptions = {
+    key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
+    cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
+};
 
 const app = express();
 
 app.use(cors());
-// const server = https.createServer(httpsOptions, app);
-const server = http.createServer(app);
+const server = https.createServer(httpsOptions, app);
+// const server = http.createServer(app);
 
 // Socket io configuration
 const { Server } = require("socket.io");
@@ -125,7 +125,7 @@ async function bootstrap() {
   await app.listen(process.env.PORT);
 
   // Socket.IO server initialization
-  socketIoServer.attach(app.getHttpServer());
+  // socketIoServer.attach(app.getHttpServer());
   console.log('Socket.IO server initialized');
 }
 bootstrap();
