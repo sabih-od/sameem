@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
 
-const socket = io('http://localhost:3011');
+const socket = io('https://service.demowebsitelinks.com:3011');
 
 const ShareStreaming = () => {
     const [localStream, setLocalStream] = useState(null);
