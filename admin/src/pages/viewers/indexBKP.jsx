@@ -4,7 +4,7 @@ import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
 // const peer = new SimplePeer({ initiator: false, trickle: false, config: { iceServers } });
 
-const socket = io('http://localhost:3011');
+const socket = io('https://service.demowebsitelinks.com:3011');
 
 const Streaming = () => {
     const [localStream, setLocalStream] = useState(null);

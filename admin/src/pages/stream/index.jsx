@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
 
-const socket = io('http://localhost:3011');
+const socket = io('https://service.demowebsitelinks.com:3011');
 
 const styles = {
     streamTitle: {
@@ -90,10 +90,16 @@ const Stream = () => {
         console.log('localStream', localStream)
 
         if(localStream) {
-            socket.emit('stream-client-request', 'Accept')
+            socket.emit('stream-client-request', {
+                clientPeerId: clientPeerId,
+                message: 'Accept'
+            })
             peerInstance.current.call(clientPeerId ?? remotePeerIdValue, localStream);
         }
-        else socket.emit('stream-client-request', 'Reject')
+        else socket.emit('stream-client-request', {
+                clientPeerId: clientPeerId,
+                message: 'Reject'
+            })
 
         // if(window.location.pathname === '/stream/') {
         //     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
