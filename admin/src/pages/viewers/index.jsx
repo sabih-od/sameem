@@ -113,7 +113,7 @@ const Viewers = () => {
               <video ref={currentUserVideoRef} autoPlay={true} muted={true}/>
             </div>
             <div>
-              <video ref={remoteVideoRef} autoPlay={true} muted={true}/>
+              <video ref={remoteVideoRef} autoPlay={true}/>
             </div>
         </div>
     );
