@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 import {apiUrl, getToken} from "../services/global";
@@ -15,7 +16,11 @@ function AuthMiddleware({children}) {
             return;
         const checkAuthentication = async () => {
             const token = getToken()
-            if (token) {
+            console.log('router.pathname =>', router.pathname)
+            if(router.pathname == '/viewers'){
+                await router.push('/viewers')
+            } 
+            else if (token) {
                 const {data} = await authUser(token, apiUrl())
                 if (!data) {
                     Cookie.remove('token')
@@ -39,5 +44,3 @@ function AuthMiddleware({children}) {
 
     return children;
 }
-
-export default AuthMiddleware;

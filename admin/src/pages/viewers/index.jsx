@@ -106,7 +106,7 @@ const Viewers = () => {
             {/* <input type='text' value={remotePeerIdValue} onChange={e => setRemotePeerIdValue(e.target.value)}/> */}
             {/* <button onClick={call}>Call</button> */}
 
-            <button onClick={() => socket.emit('stream', peerId)}>Join</button>
+            <button onClick={() => socket.emit('stream', peerId)} className='buttonclass'>Join Stream</button>
             <div id="videoContainer"></div>
 
             <div>

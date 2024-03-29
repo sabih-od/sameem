@@ -22,3 +22,12 @@ code:not([class*='language-']):after {
 code[class*='language-'] {
   padding: 0;
 }
+
+
+.buttonclass
+{
+  border: 0;
+  padding: 10px 30px;
+  color: #fff;
+  background: #000;
+}
