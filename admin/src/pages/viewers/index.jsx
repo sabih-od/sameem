@@ -5,7 +5,7 @@ import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
 // const peer = new SimplePeer({ initiator: false, trickle: false, config: { iceServers } });
 
-const socket = io(process.env.NEXT_PUBLIC_API_URL);
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
 const Viewers = () => {
     const [peer, setPeer] = useState(null)
