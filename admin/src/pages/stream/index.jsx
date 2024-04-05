@@ -126,18 +126,24 @@ const Stream = () => {
     useEffect(() => {
         const initializePeer = async () => {
             const Peer = (await import('peerjs')).default;
+            // await setPeer(new Peer(undefined, {
+            //     config: {
+            //         'iceServers': [
+            //             {
+            //                 'urls': [
+            //                     'stun:stun.l.google.com:19302',
+            //                     'stun:stun1.l.google.com:19302',
+            //                     'stun:stun2.l.google.com:19302'
+            //                 ]
+            //             }
+            //         ]
+            //     }
+            // }));
+
             await setPeer(new Peer(undefined, {
-                config: {
-                    'iceServers': [
-                        {
-                            'urls': [
-                                'stun:stun.l.google.com:19302',
-                                'stun:stun1.l.google.com:19302',
-                                'stun:stun2.l.google.com:19302'
-                            ]
-                        }
-                    ]
-                }
+                host: "localhost",
+                port: 3014,
+                path: "/peerjs",
             }));
         };
         initializePeer();

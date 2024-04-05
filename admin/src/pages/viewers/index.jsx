@@ -27,18 +27,23 @@ const Viewers = () => {
     useEffect(() => {
         const initializePeer = async () => {
             const Peer = (await import('peerjs')).default;
+            // await setPeer(new Peer(undefined, {
+            //     config: {
+            //         'iceServers': [
+            //             {
+            //                 'urls': [
+            //                     'stun:stun.l.google.com:19302',
+            //                     'stun:stun1.l.google.com:19302',
+            //                     'stun:stun2.l.google.com:19302'
+            //                 ]
+            //             }
+            //         ]
+            //     }
+            // }));
             await setPeer(new Peer(undefined, {
-                config: {
-                    'iceServers': [
-                        {
-                            'urls': [
-                                'stun:stun.l.google.com:19302',
-                                'stun:stun1.l.google.com:19302',
-                                'stun:stun2.l.google.com:19302'
-                            ]
-                        }
-                    ]
-                }
+                host: "localhost",
+                port: 3014,
+                path: "/peerjs",
             }));
         };
         initializePeer();
@@ -64,15 +69,6 @@ const Viewers = () => {
             call.on('stream', function(remoteStream) {
                 remoteVideoRef.current.srcObject = remoteStream;
             });
-
-            // const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-            // getUserMedia({ video: true, audio: true }, function(mediaStream) {
-            //     call.answer();
-
-            // }, function(error) {
-            //     console.log('error', error)
-            // });
         });
 
         return () => {
