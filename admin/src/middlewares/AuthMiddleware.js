@@ -12,6 +12,9 @@ function AuthMiddleware({ children }) {
     useEffect(() => {
         if (router.pathname === lastUrl)
             return;
+
+        
+
         const checkAuthentication = async () => {
             const token = getToken();
             if (token) {
@@ -22,8 +25,10 @@ function AuthMiddleware({ children }) {
                 } else if (router.pathname === '/login') {
                     await router.push('/categories');
                 }
-            } else if (!token && router.pathname !== '/login') {
-                await router.push('/login');
+            } 
+            else {
+                if (router.pathname === '/viewers') await router.push('/viewers');
+                else await router.push('/login');
             }
 
             setLastUrl(router.pathname);

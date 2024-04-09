@@ -8,20 +8,25 @@ import { user } from 'src/store/slices/authSlice';
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
 const Viewers = () => {
-    const [peer, setPeer] = useState(null)
+    const [peer, setPeer] = useState(null);
     const [peerId, setPeerId] = useState(null);
+    const [streamBtn, setStreamBtn] = useState(false);
     const [remotePeerIdValue, setRemotePeerIdValue] = useState('');
     const peerInstance = useRef();
     const currentUserVideoRef = useRef();
     const remoteVideoRef = useRef();
 
+    const conditionalStyle = {
+        display: streamBtn ? 'block' : 'none',
+    };
+
     const streamStatusFunc = (message) => {
-        alert(message)
+        console.log(message)
         if(message === 'Disconnect') remoteVideoRef.current.srcObject = null;
     }
 
     const streamClientRequestFunc = ({clientPeerId, message}) => {
-        if(clientPeerId === peerId) alert(message)
+        if(clientPeerId === peerId) if(message === 'Accept') setStreamBtn(true)
     }
     
     useEffect(() => {
@@ -41,19 +46,12 @@ const Viewers = () => {
             //     }
             // }));
             await setPeer(new Peer(undefined, {
-                host: "localhost",
+                host: process.env.NEXT_PUBLIC_HOST,
                 port: 3014,
                 path: "/peerjs",
             }));
         };
         initializePeer();
-
-        socket.on('stream-client-request', streamClientRequestFunc)
-        socket.on('stream-status', streamStatusFunc)
-        return () => {
-            socket.off('stream-client-request');
-            socket.off('stream-status', streamStatusFunc);
-        };
     }, []);
 
 
@@ -67,17 +65,25 @@ const Viewers = () => {
         peer.on('call', function(call) {
             call.answer()
             call.on('stream', function(remoteStream) {
-                remoteVideoRef.current.srcObject = remoteStream;
+                if(streamBtn) remoteVideoRef.current.srcObject = remoteStream;
             });
         });
-
+        
         return () => {
             peer.off('open');
             peer.off('call');
         };
-    }, [peer]);
+    }, [peer, streamBtn]);
 
-    
+    useEffect(() => {
+        socket.on('stream-client-request', streamClientRequestFunc)
+        socket.on('stream-status', streamStatusFunc)
+        socket.emit('stream', peerId)
+        return () => {
+            socket.off('stream-client-request', streamClientRequestFunc);
+            socket.off('stream-status', streamStatusFunc);
+        }
+    }, [peerId])
 
     // const call = () => {
     //     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -98,11 +104,12 @@ const Viewers = () => {
 
     return (
         <div className='container'>
-            {/* <h4>My Peer Id: <input type='text' value={peerId} disabled/> </h4> */}
+            {/* <h4>My Peer Id: <input style={{width:'100%'}} type='text' value={peerId} disabled/> </h4> */}
             {/* <input type='text' value={remotePeerIdValue} onChange={e => setRemotePeerIdValue(e.target.value)}/> */}
             {/* <button onClick={call}>Call</button> */}
 
-            <button onClick={() => socket.emit('stream', peerId)} className='buttonclass'>Join Stream</button>
+            <button onClick={() => socket.emit('stream', peerId)} className='buttonclass' style={conditionalStyle}>Join Stream</button>
+
             <div id="videoContainer"></div>
 
             <div>

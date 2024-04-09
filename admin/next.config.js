@@ -5,10 +5,10 @@ module.exports = {
     output: 'export',
     trailingSlash: true,
     reactStrictMode: false,
-    // experimental: {
-    //   esmExternals: false,
-    //   jsconfigPaths: true // enables it for both jsconfig.json and tsconfig.json
-    // },
+    experimental: {
+      esmExternals: false,
+      jsconfigPaths: true // enables it for both jsconfig.json and tsconfig.json
+    },
     publicRuntimeConfig: {
         apiUrl: process.env.NEXT_PUBLIC_API_URL || 'https://reverendsameembalius.com:3013',
     },

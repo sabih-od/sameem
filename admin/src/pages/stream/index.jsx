@@ -141,7 +141,7 @@ const Stream = () => {
             // }));
 
             await setPeer(new Peer(undefined, {
-                host: "localhost",
+                host: process.env.NEXT_PUBLIC_HOST,
                 port: 3014,
                 path: "/peerjs",
             }));
