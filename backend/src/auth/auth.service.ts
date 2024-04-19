@@ -11,6 +11,7 @@ import {generateOTP} from "../helpers/helper";
 import {MailService} from "../mail/mail.service";
 import {SubmitOTPDto} from "./dto/submit-otp.dto";
 import {UpdateUserDto} from "../users/dto/update-user.dto";
+import {FCMTokenDto} from "./dto/fcm-token.dto";
 
 @Injectable()
 export class AuthService {
@@ -200,6 +201,24 @@ export class AuthService {
             if (error instanceof EntityNotFoundError) {
                 return {
                     error: 'No user with the provided email was found.'
+                };
+            }
+        }
+    }
+
+    async fcmTokenCreate(FCMTokenDto: FCMTokenDto, user_id: number): Promise<any> {
+        try {
+            const result = await this.userRepository.update(user_id, {
+                fcm_token: FCMTokenDto.token
+            });
+
+            if(result) return 'An OTP was sent to your email';
+
+            return 'Something went wrong!';
+        } catch (error) {
+            if (error instanceof EntityNotFoundError) {
+                return {
+                    error: 'Server Error!'
                 };
             }
         }
