@@ -31,6 +31,7 @@ import {socketIoServer} from "../main";
 import {BlockUserDto} from "./dto/block-user.dto";
 import {Repository} from "typeorm";
 import {User} from "../users/entities/user.entity";
+import {FCMTokenDto} from "./dto/fcm-token.dto";
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -332,14 +333,10 @@ export class AuthController {
                 title: 'Test Notification',
                 body: 'Test Body',
             },
-            // topic: 'test', // The topic to which the notification will be sent
-            tokens: ['cK-GQIkDT065HxEaeydpBr:APA91bHZuskTSOaPArpLkRCU3D4iNYtEnRNZsZN-lA2aaEXGwtvbUIMrAN1u0qeOntdRWXVjgbxuE6rt40RBSfbzo21sBMwFCL6KhR7U8vZVHuK_KeMKTP9N6GQqz_O21va2ZvwzeXw6'], // The topic to which the notification will be sent
+            tokens: ['fweFoukD8TUZEBnzIRSJHn:APA91bF9OCiyv6mQaHyFB7MhXnR53_ZB_IiCvnWBucyKKVr758oidSu4bD4BogAvUWGbua9-tcd4Ekr1tB1pNy3qaCCvA6Z1PK9MJA5Xcuy48NlnKMnewm3CrT_8klih9eoJb42Ysbkm'],
         };
 
-        // let response = await firebaseAdmin.messaging().send(message);
         let response = await firebaseAdmin.messaging().sendMulticast(message);
-
-        console.log(response);
 
         return response;
     }
@@ -358,8 +355,29 @@ export class AuthController {
         };
     }
 
-    @Get('socketio/me')
-    async socketioMe() {
+    @UseGuards(AuthGuard)
+    @Post('fcm-token')
+    @ApiBearerAuth()
+    async fcmTokenUpdate(@Request() req, @Body() FCMTokenDto: FCMTokenDto) {
+        const response = await this.authService.fcmTokenUpdate(FCMTokenDto, req.user.id);
         
+        return {
+            success: true,
+            message: 'Token update successfully!',
+            data: response
+        };
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('fcm-stream-init')
+    @ApiBearerAuth()
+    async fcmStreamInit() {
+        const response = await this.authService.fcmStreamInit();
+
+        return {
+            success: true,
+            message: 'FCM Stream Init',
+            data: response
+        };
     }
 }

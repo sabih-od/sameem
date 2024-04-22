@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
+import { urlWithParams, getToken, apiUrl } from '../../services/global';
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
@@ -61,12 +62,23 @@ const Stream = () => {
     const start = () => {
         if (!localStream) {
             const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        
-            getUserMedia({ video: true, audio: true }, function(mediaStream) {
+            getUserMedia({ video: true, audio: true }, async function(mediaStream) {
                 currentUserVideoRef.current.srcObject = mediaStream
                 // collectStreams(mediaStream)
                 setLocalStream(mediaStream)
                 socket.emit('stream-status', 'Connect')
+
+                try {
+                    await fetch(urlWithParams(`${apiUrl()}/auth/fcm-stream-init`, {}), {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${getToken()}`
+                        }
+                    });
+                } catch (e) {
+                    
+                }
             }, function(error) {
                 console.log('error', error)
             });
