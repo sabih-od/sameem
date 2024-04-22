@@ -4,14 +4,14 @@ const express = require('express');
 const https = require('https');
 const { ExpressPeerServer } = require('peer');
 
-// const httpsOptions = {
-//     key: fs.readFileSync(path.join(__dirname, '', '/src/ssl/key.txt').replace('dist', 'src')),
-//     cert: fs.readFileSync(path.join(__dirname, '', '/src/ssl/cert.txt').replace('dist', 'src')),
-// };
+const httpsOptions = {
+    key: fs.readFileSync(path.join(__dirname, '', '/src/ssl/key.txt').replace('dist', 'src')),
+    cert: fs.readFileSync(path.join(__dirname, '', '/src/ssl/cert.txt').replace('dist', 'src')),
+};
 
 const app = express();
-const server = require('http').createServer(app);
-// const server = https.createServer(httpsOptions, app);
+// const server = require('http').createServer(app);
+const server = https.createServer(httpsOptions, app);
 
 const peerServer = ExpressPeerServer(server, {
     debug: true,
