@@ -12,6 +12,7 @@ import {MailService} from "../mail/mail.service";
 import {SubmitOTPDto} from "./dto/submit-otp.dto";
 import {UpdateUserDto} from "../users/dto/update-user.dto";
 import {FCMTokenDto} from "./dto/fcm-token.dto";
+import { firebaseAdmin } from '../firebase/firebase-admin';
 
 @Injectable()
 export class AuthService {
@@ -206,20 +207,40 @@ export class AuthService {
         }
     }
 
-    async fcmTokenCreate(FCMTokenDto: FCMTokenDto, user_id: number): Promise<any> {
+    async fcmTokenUpdate(FCMTokenDto: FCMTokenDto, user_id: number): Promise<any> {
         try {
             const result = await this.userRepository.update(user_id, {
                 fcm_token: FCMTokenDto.token
             });
 
-            if(result) return 'An OTP was sent to your email';
-
-            return 'Something went wrong!';
+            return result;
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
-                return {
-                    error: 'Server Error!'
-                };
+                return error;
+            }
+        }
+    }
+
+    async fcmStreamInit() : Promise<any> {
+        try {
+            const message = {
+                notification: {
+                    title: 'Live Streaming!',
+                    body: '"Currently, the admin is live."',
+                },
+                tokens: [],
+            };
+
+            const user = await this.usersService.getAllFCMTokens();
+            
+            await user.forEach(async data => {
+                await message.tokens.push(data);
+            });
+
+            return await firebaseAdmin.messaging().sendMulticast(message);
+        } catch (error) {
+            if (error instanceof EntityNotFoundError) {
+                return error;
             }
         }
     }

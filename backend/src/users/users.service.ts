@@ -122,4 +122,9 @@ export class UsersService {
 
         return await this.userRepository.delete(id);
     }
+
+    async getAllFCMTokens(): Promise<string[]> {
+        const users = await this.userRepository.find({ select: ['fcm_token'], where: { fcm_token: Not('') } });
+        return users.map(user => user.fcm_token);
+    }
 }

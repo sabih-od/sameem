@@ -15,15 +15,20 @@ firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage((payload) => {
-    console.log('Received background message ', payload);
+const broadcast = new BroadcastChannel('background-message');
 
-    // Customize notification here
-    const notificationTitle = 'Background Message Title';
-    const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/firebase-logo.png'
-    };
+messaging.onBackgroundMessage(message => {
+    broadcast.postMessage(message);
+})
 
-    self.registration.showNotification(notificationTitle, notificationOptions);
-});
+// messaging.onBackgroundMessage((payload) => {
+//     console.log('Received background message ', payload);
+
+//     const notificationTitle = 'Super message';
+//     const notificationOptions = {
+//         body: 'This is a dummy content.',
+//         icon: '/firebase-logo.png'
+//     };
+
+//     self.registration.showNotification(notificationTitle, notificationOptions);
+// });

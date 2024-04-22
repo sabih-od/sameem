@@ -333,14 +333,10 @@ export class AuthController {
                 title: 'Test Notification',
                 body: 'Test Body',
             },
-            // topic: 'test', // The topic to which the notification will be sent
-            tokens: ['fweFoukD8TUZEBnzIRSJHn:APA91bF9OCiyv6mQaHyFB7MhXnR53_ZB_IiCvnWBucyKKVr758oidSu4bD4BogAvUWGbua9-tcd4Ekr1tB1pNy3qaCCvA6Z1PK9MJA5Xcuy48NlnKMnewm3CrT_8klih9eoJb42Ysbkm'], // The topic to which the notification will be sent
+            tokens: ['fweFoukD8TUZEBnzIRSJHn:APA91bF9OCiyv6mQaHyFB7MhXnR53_ZB_IiCvnWBucyKKVr758oidSu4bD4BogAvUWGbua9-tcd4Ekr1tB1pNy3qaCCvA6Z1PK9MJA5Xcuy48NlnKMnewm3CrT_8klih9eoJb42Ysbkm'],
         };
 
-        // let response = await firebaseAdmin.messaging().send(message);
         let response = await firebaseAdmin.messaging().sendMulticast(message);
-
-        console.log(response);
 
         return response;
     }
@@ -359,22 +355,29 @@ export class AuthController {
         };
     }
 
-    @Get('socketio/me')
-    async socketioMe() {
-        
-    }
-
     @UseGuards(AuthGuard)
     @Post('fcm-token')
     @ApiBearerAuth()
-    async fcmTokenCreate(@Request() req, @Body() FCMTokenDto: FCMTokenDto) {
-        let res = await this.authService.fcmTokenCreate(FCMTokenDto, req.user.id);
-    
+    async fcmTokenUpdate(@Request() req, @Body() FCMTokenDto: FCMTokenDto) {
+        const response = await this.authService.fcmTokenUpdate(FCMTokenDto, req.user.id);
+        
         return {
             success: true,
             message: 'Token update successfully!',
-            data: []
+            data: response
         };
     }
-    
+
+    @UseGuards(AuthGuard)
+    @Get('fcm-stream-init')
+    @ApiBearerAuth()
+    async fcmStreamInit() {
+        const response = await this.authService.fcmStreamInit();
+
+        return {
+            success: true,
+            message: 'FCM Stream Init',
+            data: response
+        };
+    }
 }
