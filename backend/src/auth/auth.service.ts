@@ -24,30 +24,36 @@ export class AuthService {
     ) {}
 
     async signIn(signInDto: SigninDto): Promise<any> {
-        const user = await this.usersService.findOneByEmail(signInDto.email);
+        try {
+            const user = await this.usersService.findOneByEmail(signInDto.email);
 
-        if (user.error) {
-            return user;
-        }
+            if (user.error) {
+                return user;
+            }
 
-        if (user.blocked_at && user.blocked_at != "") {
+            if (user.blocked_at && user.blocked_at != "") {
+                return {
+                    error: 'Your account has been blocked.'
+                }
+            }
+
+            if (!await bcrypt.compare(signInDto.password, user?.password)) {
+                return {
+                    error: 'Unauthorized'
+                };
+            }
+            const { password, ...result } = user;
+            const payload = { sub: user.id, ...user};
+
             return {
-                error: 'Your account has been blocked.'
+                ...payload,
+                access_token: await this.jwtService.signAsync(payload),
+            };
+        } catch (error) {
+            return {
+                error: error
             }
         }
-
-        if (!await bcrypt.compare(signInDto.password, user?.password)) {
-            return {
-                error: 'Unauthorized'
-            };
-        }
-        const { password, ...result } = user;
-        const payload = { sub: user.id, ...user};
-
-        return {
-            ...payload,
-            access_token: await this.jwtService.signAsync(payload),
-        };
     }
 
     async signup(signUpDto: CreateUserDto): Promise<any> {
