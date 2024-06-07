@@ -8,7 +8,7 @@
     "dev": "next dev -p 3014",
     "build": "next build",
     "dev:static": "serve ./out -p 3014",
-    "start": "next start -p 3014",
+    "start": "next build && npx serve@latest out",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx}\""
@@ -22,7 +22,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.13.7",
     "@popperjs/core": "^2.11.2",
-    "@reduxjs/toolkit": "^1.9.5",
+    "@reduxjs/toolkit": "^1.9.5", 
     "apexcharts-clevision": "3.28.5",
     "babel-eslint": "^10.1.0",
     "clsx": "^1.1.1",

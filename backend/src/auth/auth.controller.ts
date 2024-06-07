@@ -372,6 +372,7 @@ export class AuthController {
     @Get('fcm-stream-init')
     @ApiBearerAuth()
     async fcmStreamInit() {
+        
         const response = await this.authService.fcmStreamInit();
 
         return {
