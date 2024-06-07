@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
+import { Repository } from 'typeorm';
+import { CreateStreamDto } from './dto/create-strem.dto';
+import { Stream } from './entities/stream.entity';
 
 @Injectable()
 export class GoogleAuthService {
   private oauth2Client: any;
 
-  constructor() {
+  constructor(
+    @Inject('STREAM_REPOSITORY') private streamRepository: Repository<Stream>
+  ) {
     const { google } = require('googleapis');
     this.oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
@@ -14,7 +19,7 @@ export class GoogleAuthService {
     );
   }
 
-  setCredentials(accessToken: string, refreshToken: string) {
+  async setCredentials(accessToken: string, refreshToken: string) {
     this.oauth2Client.setCredentials({ access_token: accessToken, refresh_token: refreshToken });
   }
 
@@ -23,7 +28,7 @@ export class GoogleAuthService {
   }
 
   async startBroadcast() {
-  
+
     const youtube = google.youtube({
       version: 'v3',
       auth: this.oauth2Client,
@@ -86,15 +91,25 @@ export class GoogleAuthService {
     });
 
     setTimeout(() => {
-      youtube.liveBroadcasts.transition({
+      const liveVideo = youtube.liveBroadcasts.transition({
         part: ['snippet,status'],
         broadcastStatus: 'live',
         id: broadcastId,
       });
     }, 10000);
 
+    const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const streamUrl = `${liveStreamsInsertResponse.data.cdn.ingestionInfo.ingestionAddress}/${liveStreamsInsertResponse.data.cdn.ingestionInfo.streamName}`;
+    const stream = new Stream();
+    stream.auth_token = this.oauth2Client.credentials.access_token;
+    stream.stream_url = streamUrl,
+    stream.stream_sharing_url = `https://studio.youtube.com/video/${broadcastId}`
+    stream.broad_cast_id = broadcastId
+    stream.created_at = currentDate
+    await this.streamRepository.save(stream);
+
     return { broadcastId, data: liveStreamsInsertResponse.data.cdn.ingestionInfo };
   }
 
-  
+
 }

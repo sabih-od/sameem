@@ -5,17 +5,20 @@ import { multerConfig } from './multer.config';
 
 @Controller('stream')
 export class StreamController {
-  constructor(private readonly streamService: StreamService) {}
+  constructor(private readonly streamService: StreamService) { }
 
   @Post('upload-video')
   @UseInterceptors(FileInterceptor('video', multerConfig))
-  async uploadVideo(@UploadedFile() file, @Req() req, @Res() res, @Query('broadcastId') broadcastId: string, @Body('streamUrl') streamUrl: string) {
-    if (!streamUrl) {
-      console.error('Stream URL is missing in the request body');
-      return res.status(400).send('Stream URL is required');
-    }
+  async uploadVideo(@UploadedFile() file, @Req() req, @Res() res,
+    //  @Query('broadcastId') broadcastId: string, @Body('streamUrl') streamUrl: string
+  ) {
+    // if (!streamUrl) {
+    // console.error('Stream URL is missing in the request body');
+    // return res.status(400).send('Stream URL is required');
+    // }
     const videoChunk = file.path;
-    await this.streamService.handleVideoUpload(streamUrl, videoChunk, broadcastId);
+    // await this.streamService.handleVideoUpload(streamUrl, videoChunk, broadcastId);
+    await this.streamService.handleVideoUpload(videoChunk);
     return res.sendStatus(200);
   }
 }
