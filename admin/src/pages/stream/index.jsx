@@ -57,9 +57,7 @@ const Stream = () => {
     const remoteVideoRef = useRef();
     const [broadcastId, setBroadcastId] = useState('');
 
-    // const collectStreams = (mediaStream) => {
-    //     setLocalStreamArr(prevState => [...prevState, mediaStream]);
-    // };
+    
 
     const start = async () => {
         try {
@@ -94,36 +92,11 @@ const Stream = () => {
             console.error('Error starting broadcast:', error);
         }
 
-        // if (!localStream) {
-        //     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        //     getUserMedia({ video: true, audio: true }, async function (mediaStream) {
-        //         currentUserVideoRef.current.srcObject = mediaStream
-        //         // collectStreams(mediaStream)
-        //         setLocalStream(mediaStream)
-        //         socket.emit('stream-status', 'Connect')
-
-        //         try {
-        //             await fetch(urlWithParams(`${apiUrl()}/auth/fcm-stream-init`, {}), {
-        //                 method: 'GET',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     'Authorization': `Bearer ${getToken()}`
-        //                 }
-        //             });
-        //         } catch (e) {
-
-        //         }
-        //     }, function (error) {
-        //         console.log('error', error)
-        //     });
-        // }
+  
     }
 
     const end = () => {
-        // localStreamArr.forEach((data) => {
-        //     data.getTracks().forEach(track => track.stop());
-        //     if (data) data.getTracks().forEach(track => track.stop());
-        // })
+   
 
         if (localStream) localStream.getTracks().forEach(track => track.stop());
         if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
@@ -147,26 +120,7 @@ const Stream = () => {
             message: 'Reject'
         })
 
-        // if(window.location.pathname === '/stream/') {
-        //     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-        //     getUserMedia({ video: true, audio: true }, function(mediaStream) {
-        //         socket.emit('stream-status', 'accept')
-
-        //         collectStreams(mediaStream)
-        //         peerInstance.current.call(clientPeerId ?? remotePeerIdValue, mediaStream);
-
-        //         // const call = peerInstance.current.call(clientPeerId ?? remotePeerIdValue, mediaStream);
-        //         // call.on('stream', function(remoteStream) {
-        //         //   remoteVideoRef.current.srcObject = remoteStream;
-        //         //   remoteVideoRef.current.play();
-        //         // });
-        //     }, function(error) {
-        //       console.log('error', error)
-        //     });
-        // } else {
-        //     socket.emit('stream-status', 'reject')
-        // }
+       
     };
 
     useEffect(() => {
@@ -200,31 +154,7 @@ const Stream = () => {
         };
     }, [localStream])
 
-    // useEffect(() => {
-    //     if (!peer) return;
-
-    //     peer.on('open', function (id) {
-    //         setPeerId(id);
-    //     });
-
-    //     peer.on('call', function(call) {
-    //         const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-    //         getUserMedia({ video: true, audio: true }, function(mediaStream) {
-    //             call.answer();
-
-    //         }, function(error) {
-    //             console.log('error', error)
-    //         });
-    //     });
-
-    //     peerInstance.current = peer;
-
-    //     return () => {
-    //         peer.off('open');
-    //         // peer.off('call');
-    //     };
-    // }, [peer]);
+   
 
 
   const handleGoogleAuth = async () => {
