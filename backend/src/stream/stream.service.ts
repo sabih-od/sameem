@@ -57,4 +57,11 @@ export class StreamService {
 
     fs.createReadStream(videoChunk).pipe(this.ffmpegProcess.stdin, { end: false });
   }
+
+  async stopBroadcast() {
+    if (this.ffmpegProcess) {
+      this.ffmpegProcess.kill('SIGINT'); // Gracefully stop ffmpeg process
+      this.ffmpegProcess = null;
+    }
+  }
 }
