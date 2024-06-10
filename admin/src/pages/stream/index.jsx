@@ -95,13 +95,24 @@ const Stream = () => {
   
     }
 
-    const end = () => {
+    const end = async () => {
    
 
-        if (localStream) localStream.getTracks().forEach(track => track.stop());
-        if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
-        setLocalStream(null)
-        socket.emit('stream-status', 'Disconnect')
+        if (window.mediaRecorder) {
+            window.mediaRecorder.stop(); // Stop recording
+        }
+        try {
+            await fetch(`${apiUrl()}/stream/stop-broadcast`, {
+                method: 'POST',
+            });
+        } catch (error) {
+            console.error('Error stopping broadcast:', error);
+        }
+
+        // if (localStream) localStream.getTracks().forEach(track => track.stop());
+        // if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
+        // setLocalStream(null)
+        // socket.emit('stream-status', 'Disconnect')
     }
 
 
@@ -191,7 +202,7 @@ const Stream = () => {
             }}
           ></video>
             </div>
-            <button style={styles.startStreamingBtn} onClick={handleGoogleAuth}>Authenticate</button>
+            {/* <button style={styles.startStreamingBtn} onClick={handleGoogleAuth}>Authenticate</button> */}
 
             <div style={styles.streamingBtnGroup}>
                 <button style={styles.startStreamingBtn} onClick={start}>Start Streaming</button>
