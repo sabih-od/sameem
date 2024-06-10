@@ -61,12 +61,13 @@ const Stream = () => {
 
     const start = async () => {
         try {
-            const startBroadcastResponse = await fetch(`${apiUrl()}/auth/start-broadcast`, {
-                method: 'POST',
-            });
-            const startBroadcastData = await startBroadcastResponse.json();
-            setBroadcastId(startBroadcastData.broadcastId);
-            const streamUrl = startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
+            // const startBroadcastResponse = await fetch(`${apiUrl()}/auth/start-broadcast`, {
+            //     method: 'POST',
+            // });
+            // const startBroadcastData = await startBroadcastResponse.json();
+            // setBroadcastId(startBroadcastData.broadcastId);
+            // const streamUrl = 'baloch'; 
+            // startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
             const mediaRecorder = new MediaRecorder(mediaStream, {
                 mimeType: 'video/webm',
                 videoBitsPerSecond: 3 * 1024 * 1024,
@@ -75,10 +76,9 @@ const Stream = () => {
                 if (event.data.size > 0) {
                     const formData = new FormData();
                     formData.append('video', event.data);
-                    formData.append('streamUrl', streamUrl);
                     console.log(streamUrl);
                     try {
-                        await fetch(`${apiUrl()}/stream/upload-video?broadcastId=${startBroadcastData.broadcastId}`, {
+                        await fetch(`${apiUrl()}/stream/upload-video`, {
                             method: 'POST',
                             body: formData,
                         });
@@ -87,7 +87,7 @@ const Stream = () => {
                     }
                 }
             };
-            mediaRecorder.start(1000); // Record a chunk every 1 second
+            mediaRecorder.start(1000);
         } catch (error) {
             console.error('Error starting broadcast:', error);
         }
@@ -95,13 +95,22 @@ const Stream = () => {
   
     }
 
-    const end = () => {
-   
+    const end =  async () => {
+        if (window.mediaRecorder) {
+            window.mediaRecorder.stop(); // Stop recording
+        }
+        try {
+            await fetch(`${apiUrl()}/stream/stop-broadcast`, {
+                method: 'POST',
+            });
+        } catch (error) {
+            console.error('Error stopping broadcast:', error);
+        }
 
-        if (localStream) localStream.getTracks().forEach(track => track.stop());
-        if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
-        setLocalStream(null)
-        socket.emit('stream-status', 'Disconnect')
+        // if (localStream) localStream.getTracks().forEach(track => track.stop());
+        // if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
+        // setLocalStream(null)
+        // socket.emit('stream-status', 'Disconnect')
     }
 
 
@@ -191,7 +200,7 @@ const Stream = () => {
             }}
           ></video>
             </div>
-            <button style={styles.startStreamingBtn} onClick={handleGoogleAuth}>Authenticate</button>
+            {/* <button style={styles.startStreamingBtn} onClick={handleGoogleAuth}>Authenticate</button> */}
 
             <div style={styles.streamingBtnGroup}>
                 <button style={styles.startStreamingBtn} onClick={start}>Start Streaming</button>

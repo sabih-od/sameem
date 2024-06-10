@@ -21,4 +21,10 @@ export class StreamController {
     await this.streamService.handleVideoUpload(videoChunk);
     return res.sendStatus(200);
   }
+
+  @Post('stop-broadcast')
+  async stopBroadcast(@Res() res) {
+    await this.streamService.stopBroadcast();
+    return res.sendStatus(200);
+  }
 }
