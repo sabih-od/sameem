@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { StreamService } from './stream.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from './multer.config';
@@ -28,5 +28,11 @@ export class StreamController {
     await this.streamService.stopBroadcast();
     return res.sendStatus(200);
   }
+
+  @Get('get-live-stream')
+  async getLiveStream() {
+    return this.streamService.getLiveStream();
+  }
+
 
 }
