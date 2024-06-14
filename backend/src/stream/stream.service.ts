@@ -70,7 +70,6 @@ export class StreamService {
         const response = await axios.get(apiUrl);
         const data = response.data;
         const liveEvent = (data as any)?.items?.[0];
-        console.log('liveEvent', liveEvent);
     
         if (!liveEvent) {
           return false;
@@ -78,7 +77,7 @@ export class StreamService {
     
         const videoId = liveEvent.id.videoId;
         if (videoId) {
-          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          const embedUrl = 'https://www.youtube.com/embed/' + videoId +'?autoplay=1';
           return embedUrl;
         } else {
           return data;
