@@ -4,7 +4,7 @@ import * as path from 'path';
 import { spawn } from 'child_process';
 import { Repository } from 'typeorm';
 import { Stream } from 'src/google-auth/entities/stream.entity';
-
+import axios from 'axios';
 
 @Injectable()
 export class StreamService {
@@ -63,33 +63,30 @@ export class StreamService {
       this.ffmpegProcess = null;
     }
   }
-  async getLiveStream(): Promise<string> {
-    const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${process.env.YOUTUBE_API_KEY}&channel_id=${process.env.YOUTUBE_CHANNEL_ID}&maxResults=1&order=date`;
-
-    try {
-      const response = await fetch(apiUrl);
-
-      if (!response.ok) {
-        throw new Error(`YouTube API error: ${response.status}`);
+  async getLiveStream(): Promise<any> {
+      const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${process.env.YOUTUBE_API_KEY}&channel_id=${process.env.YOUTUBE_CHANNEL_ID}&maxResults=1&order=date`;
+    
+      try {
+        const response = await axios.get(apiUrl);
+        const data = response.data;
+        const liveEvent = (data as any)?.items?.[0];
+        console.log('liveEvent', liveEvent);
+    
+        if (!liveEvent) {
+          return false;
+        }
+    
+        const videoId = liveEvent.id.videoId;
+        if (videoId) {
+          const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          return embedUrl;
+        } else {
+          return data;
+        }
+      } catch (error) {
+        throw new Error(`Error in fetching live event: ${error.message}`);
       }
-
-      const data = await response.json();
-      const liveEvent = data.items[0];
-      if (!liveEvent) {
-        return 'Sorry, no live event found';
-      }
-
-      const videoId = liveEvent.id.videoId;
-      if (videoId) {
-        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-
-        return embedUrl;
-      } else {
-        return response.json()
-      }
-    } catch (error) {
-      throw new Error(`Error in fetching live event: ${error.message}`);
     }
-  }
+
 
 }
