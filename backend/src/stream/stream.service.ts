@@ -4,7 +4,7 @@ import * as path from 'path';
 import { spawn } from 'child_process';
 import { Repository } from 'typeorm';
 import { Stream } from 'src/google-auth/entities/stream.entity';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 @Injectable()
 export class StreamService {
@@ -63,33 +63,42 @@ export class StreamService {
       this.ffmpegProcess = null;
     }
   }
-  async getLiveStream(): Promise<any> {
+  async getLiveStream(): Promise<string | false> {
     const latestStream = await this.streamRepository
       .createQueryBuilder('stream')
       .orderBy('stream.id', 'DESC')
       .getOne();
+  
+    if (!latestStream) {
+      throw new Error('No latest stream found.');
+    }
+  
     const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${latestStream.youtube_api_key}&channel_id=${latestStream.youtube_channel_id}&maxResults=1&order=date`;
-
+  
     try {
-      const response = await axios.get(apiUrl);
+      const response: AxiosResponse<any> = await axios.get(apiUrl);
+  
+      // Logging the entire response for debugging
+      console.log(response);
+  
+      // Accessing the data property
       const data: any = response.data;
-      const liveEvent = (data as any)?.items?.[0];
-
+      const liveEvent = data?.items?.[0];
+  
       if (!liveEvent) {
         return false;
       }
-
+  
       const videoId = liveEvent.id.videoId;
       if (videoId) {
-        const embedUrl = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
         return embedUrl;
       } else {
-        return data;
+        return false;
       }
     } catch (error) {
       throw new Error(`Error in fetching live event: ${error.message}`);
     }
   }
-
 
 }
