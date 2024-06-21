@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Query, Req, Res, UploadedFile, UseIntercep
 import { StreamService } from './stream.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from './multer.config';
+import { response } from 'express';
 
 @Controller('stream')
 export class StreamController {
@@ -18,15 +19,15 @@ export class StreamController {
     // }
     const videoChunk = file.path;
     // await this.streamService.handleVideoUpload(streamUrl, videoChunk, broadcastId);
-    await this.streamService.handleVideoUpload(videoChunk);
-    return res.sendStatus(200);
+    const resposne = await this.streamService.handleVideoUpload(videoChunk);
+    return resposne;
   }
 
 
   @Post('stop-broadcast')
   async stopBroadcast(@Res() res) {
-    await this.streamService.stopBroadcast();
-    return res.sendStatus(200);
+    const response = await this.streamService.stopBroadcast();
+    return response;
   }
 
   @Get('get-live-stream')
