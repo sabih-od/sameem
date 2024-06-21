@@ -68,7 +68,7 @@ export class StreamService {
     
       try {
         const response = await axios.get(apiUrl);
-        const data = response.data;
+        const data: any = response.data;
         const liveEvent = (data as any)?.items?.[0];
     
         if (!liveEvent) {
