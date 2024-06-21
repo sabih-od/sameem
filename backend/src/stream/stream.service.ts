@@ -20,6 +20,7 @@ export class StreamService {
       .createQueryBuilder('stream')
       .orderBy('stream.id', 'DESC')
       .getOne();
+
     const chunkPath = path.join(__dirname, 'uploads', `${latestStream.broad_cast_id}.webm`);
 
     if (!this.ffmpegProcess) {
@@ -61,6 +62,9 @@ export class StreamService {
     if (this.ffmpegProcess) {
       this.ffmpegProcess.kill('SIGINT'); // Gracefully stop ffmpeg process
       this.ffmpegProcess = null;
+      return 'The Streaming is stopped';
+    } else {
+      return 'Some Thing went wrong';
     }
   }
   async getLiveStream(): Promise<string | false> {
@@ -68,24 +72,24 @@ export class StreamService {
       .createQueryBuilder('stream')
       .orderBy('stream.id', 'DESC')
       .getOne();
-  
+
     if (!latestStream) {
       throw new Error('No latest stream found.');
     }
-  
+
     const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${latestStream.youtube_api_key}&channel_id=${latestStream.youtube_channel_id}&maxResults=1&order=date`;
-  
+
     try {
       const response: AxiosResponse<any> = await axios.get(apiUrl);
-  
+
       // Accessing the data property
       const data: any = response.data;
       const liveEvent = data?.items?.[0];
-  
+
       if (!liveEvent) {
         return false;
       }
-  
+
       const videoId = liveEvent.id.videoId;
       if (videoId) {
         const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;

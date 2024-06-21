@@ -3,6 +3,8 @@ import io from 'socket.io-client';
 import { user } from 'src/store/slices/authSlice';
 // import SimplePeer from 'simple-peer';
 import { urlWithParams, getToken, apiUrl } from '../../services/global';
+import { Alert, AlertTitle, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
@@ -43,6 +45,8 @@ const Stream = () => {
     const [localStream, setLocalStream] = useState(null);
     const [localStreamArr, setLocalStreamArr] = useState([]);
     const [mediaStream, setMediaStream] = useState(null);
+    const mediaRecorderRef = useRef(null);
+    const [successMsg, setSuccessMessage] = useState(null)
 
     // for streaming through canvas
     const localCanvasRef = useRef();
@@ -57,7 +61,7 @@ const Stream = () => {
     const remoteVideoRef = useRef();
     const [broadcastId, setBroadcastId] = useState('');
 
-    
+
 
     const start = async () => {
         try {
@@ -67,7 +71,9 @@ const Stream = () => {
             // const startBroadcastData = await startBroadcastResponse.json();
             // setBroadcastId(startBroadcastData.broadcastId);
             // const streamUrl = startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
-            const mediaRecorder = new MediaRecorder(mediaStream, {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            setMediaStream(stream);
+            const mediaRecorder = new MediaRecorder(stream, {
                 mimeType: 'video/webm',
                 videoBitsPerSecond: 3 * 1024 * 1024,
             });
@@ -87,20 +93,27 @@ const Stream = () => {
                     }
                 }
             };
+            setSuccessMessage('Streaming have started!')
             mediaRecorder.start(1000); // Record a chunk every 1 second
         } catch (error) {
             console.error('Error starting broadcast:', error);
         }
 
-  
+
     }
 
     const end = async () => {
-   
 
-        if (window.mediaRecorder) {
-            window.mediaRecorder.stop(); // Stop recording
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop(); // Stop recording
         }
+
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+            setSuccessMessage('Streaming have stopped!')
+            setMediaStream(null);
+        }
+
         try {
             await fetch(`${apiUrl()}/stream/stop-broadcast`, {
                 method: 'POST',
@@ -108,7 +121,6 @@ const Stream = () => {
         } catch (error) {
             console.error('Error stopping broadcast:', error);
         }
-
         // if (localStream) localStream.getTracks().forEach(track => track.stop());
         // if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
         // setLocalStream(null)
@@ -116,66 +128,66 @@ const Stream = () => {
     }
 
 
-    const clientCome = (clientPeerId = null, localStream = null) => {
-        console.log('localStream', localStream)
+    // const clientCome = (clientPeerId = null, localStream = null) => {
+    //     console.log('localStream', localStream)
 
-        if (localStream) {
-            socket.emit('stream-client-request', {
-                clientPeerId: clientPeerId,
-                message: 'Accept'
-            })
-            peerInstance.current.call(clientPeerId ?? remotePeerIdValue, localStream);
+    //     if (localStream) {
+    //         socket.emit('stream-client-request', {
+    //             clientPeerId: clientPeerId,
+    //             message: 'Accept'
+    //         })
+    //         peerInstance.current.call(clientPeerId ?? remotePeerIdValue, localStream);
+    //     }
+    //     else socket.emit('stream-client-request', {
+    //         clientPeerId: clientPeerId,
+    //         message: 'Reject'
+    //     })
+
+
+    // };
+
+    // useEffect(() => {
+    //     const getMediaStream = async () => {
+    //         try {
+    //             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    //             setMediaStream(stream);
+    //         } catch (error) {
+    //             console.error('Error accessing media devices:', error);
+    //         }
+    //     };
+
+    //     getMediaStream();
+
+    //     return () => {
+    //         if (mediaStream) {
+    //             mediaStream.getTracks().forEach(track => track.stop());
+    //         }
+    //     };
+    // }, []);
+
+    // useEffect(() => {
+    //     const handleStreamEvent = (ClientPeerId) => {
+    //         clientCome(ClientPeerId, localStream);
+    //     };
+
+    //     socket.on('stream', handleStreamEvent);
+
+    //     return () => {
+    //         socket.off('stream', handleStreamEvent);
+    //     };
+    // }, [localStream])
+
+
+
+
+    const handleGoogleAuth = async () => {
+        try {
+            // Redirect user to backend for Google OAuth2 authentication
+            window.location.href = 'http://localhost:4000/auth/google';
+        } catch (error) {
+            console.error('Error with Google authentication:', error);
         }
-        else socket.emit('stream-client-request', {
-            clientPeerId: clientPeerId,
-            message: 'Reject'
-        })
-
-       
     };
-
-    useEffect(() => {
-        const getMediaStream = async () => {
-          try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            setMediaStream(stream);
-          } catch (error) {
-            console.error('Error accessing media devices:', error);
-          }
-        };
-    
-        getMediaStream();
-    
-        return () => {
-          if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
-          }
-        };
-      }, []);
-
-    useEffect(() => {
-        const handleStreamEvent = (ClientPeerId) => {
-            clientCome(ClientPeerId, localStream);
-        };
-
-        socket.on('stream', handleStreamEvent);
-
-        return () => {
-            socket.off('stream', handleStreamEvent);
-        };
-    }, [localStream])
-
-   
-
-
-  const handleGoogleAuth = async () => {
-    try {
-      // Redirect user to backend for Google OAuth2 authentication
-      window.location.href = 'http://localhost:4000/auth/google';
-    } catch (error) {
-      console.error('Error with Google authentication:', error);
-    }
-  };
     useEffect(() => {
         if (window.location.href.includes('http://localhost:4000/auth/google/callback')) {
             // Perform any necessary actions after authentication (e.g., fetch user data)
@@ -185,22 +197,37 @@ const Stream = () => {
     }, [])
 
     return (
+
         <div style={{ textAlign: 'center' }}>
+            {successMsg ? (
+                <Alert severity="success" sx={{ mb: 4 }}>
+                    <AlertTitle>Success</AlertTitle>
+                    <Box component='strong' sx={{ display: 'block' }}>{successMsg}</Box>
+                </Alert>
+            ) : null}
+            {/* {errors && errors.length > 0 ? (
+                <Alert severity="error" sx={{ mb: 4 }}>
+                    <AlertTitle>Errors</AlertTitle>
+                    {errors.map((item, ind) => (
+                        <Box component='strong' sx={{ display: 'block' }} key={ind}>{item}</Box>
+                    ))}
+                </Alert>
+            ) : null} */}
             <h1 style={styles.streamTitle}>
                 <input type='text' value={peerId} disabled />
             </h1>
             <div style={styles.streamerVideo}>
-            <video
-            width="560"
-            height="315"
-            autoPlay
-            controls
-            ref={videoRef => {
-              if (videoRef && mediaStream) {
-                videoRef.srcObject = mediaStream;
-              }
-            }}
-          ></video>
+                <video
+                    width="560"
+                    height="315"
+                    autoPlay
+                    controls
+                    ref={videoRef => {
+                        if (videoRef && mediaStream) {
+                            videoRef.srcObject = mediaStream;
+                        }
+                    }}
+                ></video>
             </div>
             {/* <button style={styles.startStreamingBtn} onClick={handleGoogleAuth}>Authenticate</button> */}
 
@@ -214,7 +241,7 @@ const Stream = () => {
 
 
             <div>
-                <video ref={remoteVideoRef} autoPlay={true} muted={true} />
+                {/* <video ref={remoteVideoRef} autoPlay={true} muted={true} /> */}
             </div>
         </div>
     );
