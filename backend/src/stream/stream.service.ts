@@ -78,9 +78,6 @@ export class StreamService {
     try {
       const response: AxiosResponse<any> = await axios.get(apiUrl);
   
-      // Logging the entire response for debugging
-      console.log(response);
-  
       // Accessing the data property
       const data: any = response.data;
       const liveEvent = data?.items?.[0];
