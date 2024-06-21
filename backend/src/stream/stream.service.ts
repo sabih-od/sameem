@@ -64,28 +64,32 @@ export class StreamService {
     }
   }
   async getLiveStream(): Promise<any> {
-      const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${process.env.YOUTUBE_API_KEY}&channel_id=${process.env.YOUTUBE_CHANNEL_ID}&maxResults=1&order=date`;
-    
-      try {
-        const response = await axios.get(apiUrl);
-        const data: any = response.data;
-        const liveEvent = (data as any)?.items?.[0];
-    
-        if (!liveEvent) {
-          return false;
-        }
-    
-        const videoId = liveEvent.id.videoId;
-        if (videoId) {
-          const embedUrl = 'https://www.youtube.com/embed/' + videoId +'?autoplay=1';
-          return embedUrl;
-        } else {
-          return data;
-        }
-      } catch (error) {
-        throw new Error(`Error in fetching live event: ${error.message}`);
+    const latestStream = await this.streamRepository
+      .createQueryBuilder('stream')
+      .orderBy('stream.id', 'DESC')
+      .getOne();
+    const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${latestStream.youtube_api_key}&channel_id=${latestStream.youtube_channel_id}&maxResults=1&order=date`;
+
+    try {
+      const response = await axios.get(apiUrl);
+      const data: any = response.data;
+      const liveEvent = (data as any)?.items?.[0];
+
+      if (!liveEvent) {
+        return false;
       }
+
+      const videoId = liveEvent.id.videoId;
+      if (videoId) {
+        const embedUrl = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        return embedUrl;
+      } else {
+        return data;
+      }
+    } catch (error) {
+      throw new Error(`Error in fetching live event: ${error.message}`);
     }
+  }
 
 
 }

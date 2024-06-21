@@ -24,5 +24,11 @@ export class Stream {
   created_at: string;
 
   @Column({ type: 'int', nullable: true })
-  broad_cast_id: string
+  broad_cast_id: string;
+
+  @Column({ length: 255, nullable: true })
+  youtube_api_key: string;
+
+  @Column({ length: 255, nullable: true })
+  youtube_channel_id: string;
 }
