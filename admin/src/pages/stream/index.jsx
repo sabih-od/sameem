@@ -61,12 +61,12 @@ const Stream = () => {
 
     const start = async () => {
         try {
-            const startBroadcastResponse = await fetch(`${apiUrl()}/auth/start-broadcast`, {
-                method: 'POST',
-            });
-            const startBroadcastData = await startBroadcastResponse.json();
-            setBroadcastId(startBroadcastData.broadcastId);
-            const streamUrl = startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
+            // const startBroadcastResponse = await fetch(`${apiUrl()}/auth/start-broadcast`, {
+            //     method: 'POST',
+            // });
+            // const startBroadcastData = await startBroadcastResponse.json();
+            // setBroadcastId(startBroadcastData.broadcastId);
+            // const streamUrl = startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
             const mediaRecorder = new MediaRecorder(mediaStream, {
                 mimeType: 'video/webm',
                 videoBitsPerSecond: 3 * 1024 * 1024,
@@ -75,10 +75,10 @@ const Stream = () => {
                 if (event.data.size > 0) {
                     const formData = new FormData();
                     formData.append('video', event.data);
-                    formData.append('streamUrl', streamUrl);
-                    console.log(streamUrl);
                     try {
-                        await fetch(`${apiUrl()}/stream/upload-video?broadcastId=${startBroadcastData.broadcastId}`, {
+                        await fetch(`${apiUrl()}/stream/upload-video
+                        `, {
+                            // ?broadcastId=${startBroadcastData.broadcastId}
                             method: 'POST',
                             body: formData,
                         });
