@@ -156,8 +156,8 @@ export class AuthService {
 
             let mailService = new MailService();
             let html = "Dear "+ (user.first_name + ' ' + user.last_name) +",<br/><br/>Thank you for using our service! Please find your One-Time Password (OTP) below:<br/><br/>OTP: "+ generated_otp +"<br/><br/>Please use this OTP to complete your action or verification. This code is valid for a single use and will expire in an hour.<br/><br/>If you did not request this OTP, please ignore this email. Your account and information are safe.<br/><br/>Thank you,<br/>Texas Christian Ashram.";
-            await mailService.sendEmail(user.email, 'OTP', html);
-
+          await mailService.sendEmail(user.email, 'OTP', html);
+            
             return 'An OTP was sent to your email';
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
