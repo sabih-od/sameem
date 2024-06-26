@@ -191,11 +191,10 @@ export class AuthController {
         }
     }
 
-    @UseGuards(AuthGuard)
     @Post('reset-password')
     @ApiBearerAuth()
     async resetPassword(@Request() req, @Body() resetPasswordDto: ResetPasswordDto) {
-        let user = await this.authService.getUserByEmail(req.user.email);
+        let user = await this.authService.getUserByEmail(resetPasswordDto.email);
 
         let updateUserDto = new UpdateUserDto();
         updateUserDto.password = resetPasswordDto.password
