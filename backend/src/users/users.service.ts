@@ -1,8 +1,8 @@
-import {Injectable, Inject, Catch} from '@nestjs/common';
-import {CreateUserDto} from './dto/create-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {Repository, EntityNotFoundError, QueryFailedError, Not} from 'typeorm';
-import {User} from './entities/user.entity';
+import { Injectable, Inject, Catch, ConflictException } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Repository, EntityNotFoundError, QueryFailedError, Not } from 'typeorm';
+import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -24,6 +24,7 @@ export class UsersService {
 
             return await this.findOne(user.id);
         } catch (error) {
+            
             if (error instanceof QueryFailedError) {
                 return {
                     error: error['sqlMessage']
@@ -32,9 +33,9 @@ export class UsersService {
         }
     }
 
-    async findAll(page: number = 1, limit: number = 10, query_object: {} = {order: {created_at: 'DESC'}}): Promise<any> {
+    async findAll(page: number = 1, limit: number = 10, query_object: {} = { order: { created_at: 'DESC' } }): Promise<any> {
         const [data, total] = await this.userRepository.findAndCount({
-            where: {role_id: Not(1)},
+            where: { role_id: Not(1) },
             skip: (page - 1) * limit,
             take: limit,
             ...query_object
@@ -127,4 +128,7 @@ export class UsersService {
         const users = await this.userRepository.find({ select: ['fcm_token'], where: { fcm_token: Not('') } });
         return users.map(user => user.fcm_token);
     }
+    async userByEmail(email: string): Promise<User> {
+        return await this.userRepository.findOne({ where: { email } });;
+      }
 }
