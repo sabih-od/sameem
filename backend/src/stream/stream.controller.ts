@@ -10,7 +10,7 @@ export class StreamController {
 
   @Post('upload-video')
   @UseInterceptors(FileInterceptor('video', new UploadService().getUploadConfig()))
-  async uploadVideo(@UploadedFile() file:Express.Multer.File
+  uploadVideo(@UploadedFile() file:Express.Multer.File
     //  @Query('broadcastId') broadcastId: string, @Body('streamUrl') streamUrl: string
   ) {
     // if (!streamUrl) {
@@ -23,7 +23,7 @@ export class StreamController {
     // console.log('Video Chunk',videoChunk);
     
     // await this.streamService.handleVideoUpload(streamUrl, videoChunk, broadcastId);
-    const resposne = await this.streamService.handleVideoUpload(videoChunk);
+    const resposne =  this.streamService.handleVideoUpload(videoChunk);
     return resposne;
   }
 
