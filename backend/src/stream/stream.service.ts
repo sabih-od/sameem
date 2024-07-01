@@ -20,9 +20,6 @@ export class StreamService {
       .createQueryBuilder('stream')
       .orderBy('stream.id', 'DESC')
       .getOne();
-
-    const chunkPath = path.join(__dirname, 'uploads', `${latestStream.broad_cast_id}.webm`);
-
     if (!this.ffmpegProcess) {
       this.ffmpegProcess = spawn('ffmpeg', [
         '-re',
@@ -42,15 +39,15 @@ export class StreamService {
       ]);
 
       this.ffmpegProcess.stdin.on('error', (e) => {
-        // console.error('FFmpeg stdin error:', e);
+        console.error('FFmpeg stdin error:', e);
       });
 
       this.ffmpegProcess.stderr.on('data', (data) => {
-        // console.error('FFmpeg stderr:', data.toString());
+        console.error('FFmpeg stderr:', data.toString());
       });
 
       this.ffmpegProcess.on('close', (code) => {
-        // console.log(`FFmpeg process closed with code ${code}`);
+        console.log(`FFmpeg process closed with code ${code}`);
         this.ffmpegProcess = null;
       });
     }
