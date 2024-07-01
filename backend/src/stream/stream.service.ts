@@ -13,49 +13,47 @@ export class StreamService {
     @Inject('STREAM_REPOSITORY')
     private readonly streamRepository: Repository<Stream>,
   ) { }
-  handleVideoUpload(videoChunk: string) {
-    this.getStreamUrl().then((latestStream: string | false) => {
-      console.log("Stream =======  ", latestStream);
-  
-      if (!this.ffmpegProcess && typeof latestStream === 'string') {
-        this.ffmpegProcess = spawn('ffmpeg', [
-          '-re',
-          '-f', 'webm',
-          '-i', 'pipe:0',
-          '-c:v', 'libx264',
-          '-preset', 'ultrafast',
-          '-b:v', '3000k',
-          '-maxrate', '1000k',
-          '-bufsize', '2500k',
-          '-c:a', 'aac',
-          '-ar', '44100',
-          '-b:a', '128k',
-          '-f', 'flv',
-          latestStream // Use the resolved stream URL
-        ]);
-  
-        this.ffmpegProcess.stdin.on('error', (e) => {
-          console.error('FFmpeg stdin error:', e);
-        });
-  
-        this.ffmpegProcess.stderr.on('data', (data) => {
-          console.error('FFmpeg stderr:', data.toString());
-        });
-  
-        this.ffmpegProcess.on('close', (code) => {
-          console.log(`FFmpeg process closed with code ${code}`);
-          this.ffmpegProcess = null;
-        });
-  
-        fs.createReadStream(videoChunk).pipe(this.ffmpegProcess.stdin, { end: false });
-      } else {
-        console.error('Unable to start ffmpeg process. Stream URL is invalid.');
-      }
-    }).catch((error) => {
-      console.error('Error fetching stream URL:', error);
-    });
+  async handleVideoUpload(
+    videoChunk: string
+  ) {
+    const latestStream = await this.streamRepository
+      .createQueryBuilder('stream')
+      .orderBy('stream.id', 'DESC')
+      .getOne();
+    if (!this.ffmpegProcess) {
+      this.ffmpegProcess = spawn('ffmpeg', [
+        '-re',
+        '-f', 'webm',
+        '-i', 'pipe:0',
+        '-c:v', 'libx264',
+        '-preset', 'ultrafast',
+        '-b:v', '3000k',
+        '-maxrate', '1000k',
+        '-bufsize', '2500k',
+        '-c:a', 'aac',
+        '-ar', '44100',
+        '-b:a', '128k',
+        '-f', 'flv',
+
+        latestStream.stream_url
+      ]);
+
+      this.ffmpegProcess.stdin.on('error', (e) => {
+        console.error('FFmpeg stdin error:', e);
+      });
+
+      this.ffmpegProcess.stderr.on('data', (data) => {
+        console.error('FFmpeg stderr:', data.toString());
+      });
+
+      this.ffmpegProcess.on('close', (code) => {
+        console.log(`FFmpeg process closed with code ${code}`);
+        this.ffmpegProcess = null;
+      });
+    }
+
+    fs.createReadStream(videoChunk).pipe(this.ffmpegProcess.stdin, { end: false });
   }
-  
 
   async stopBroadcast() {
     if (this.ffmpegProcess) {
@@ -101,13 +99,11 @@ export class StreamService {
     }
   }
 
-  async getStreamUrl(): Promise<string | false> {
+  async getStreamUrl(streamUrl: string) {
     const stream = await this.streamRepository
       .createQueryBuilder('stream')
       .orderBy('stream.id', 'DESC')
       .getOne();
-      console.log(stream.stream_url);
-      
     return stream.stream_url
   }
 
