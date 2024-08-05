@@ -99,7 +99,7 @@ export class StreamService {
     }
   }
 
-  async getStreamUrl(streamUrl: string) {
+  async getStreamUrl() {
     const stream = await this.streamRepository
       .createQueryBuilder('stream')
       .orderBy('stream.id', 'DESC')
