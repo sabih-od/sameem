@@ -10,7 +10,7 @@ import { UploadService } from "./multer.config";
     imports:[DatabaseModule],
     controllers: [StreamController],
     providers: [StreamService,GoogleAuthService,...streamProviders,UploadService],
-    exports:[...streamProviders]
+    exports:[...streamProviders,StreamService]
 })
 
 export class StreamModule { }
