@@ -4,7 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { spawn, ChildProcess } from 'child_process';
 import { StreamService } from 'src/stream/stream.service';
 
-@WebSocketGateway({ cors: { origin: '*' } })
+@WebSocketGateway({ cors: { origin: 'https://reverendsameembalius.com' } })
 export class StreamGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('Stream Gateway');

@@ -6,7 +6,7 @@ import { urlWithParams, getToken, apiUrl } from '../../services/global';
 import { Alert, AlertTitle, Stack } from "@mui/material";
 import Box from "@mui/material/Box";
 
-const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
+const socket = io(process.env.NEXT_PUBLIC_API_URL);
 
 const styles = {
     streamTitle: {
