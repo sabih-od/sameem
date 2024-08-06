@@ -71,7 +71,7 @@ const Stream = () => {
             // const startBroadcastData = await startBroadcastResponse.json();
             // setBroadcastId(startBroadcastData.broadcastId);
             // const streamUrl = startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             setMediaStream(stream);
             const mediaRecorder = new MediaRecorder(stream, {
                 mimeType: 'video/webm',
@@ -79,18 +79,7 @@ const Stream = () => {
             });
             mediaRecorder.ondataavailable = async (event) => {
                 if (event.data.size > 0) {
-                    const formData = new FormData();
-                    formData.append('video', event.data);
-                    try {
-                        await fetch(`${apiUrl()}/stream/upload-video
-                        `, {
-                            // ?broadcastId=${startBroadcastData.broadcastId}
-                            method: 'POST',
-                            body: formData,
-                        });
-                    } catch (error) {
-                        console.error('Error uploading video chunk:', error);
-                    }
+                    socket.emit('youtubeStream', event.data);
                 }
             };
             setSuccessMessage('Streaming have started!')
@@ -114,13 +103,7 @@ const Stream = () => {
             setMediaStream(null);
         }
 
-        try {
-            await fetch(`${apiUrl()}/stream/stop-broadcast`, {
-                method: 'POST',
-            });
-        } catch (error) {
-            console.error('Error stopping broadcast:', error);
-        }
+        socket.emit('stopStreaming');
         // if (localStream) localStream.getTracks().forEach(track => track.stop());
         // if (currentUserVideoRef.current) currentUserVideoRef.current.srcObject = null;
         // setLocalStream(null)
