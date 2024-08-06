@@ -20,6 +20,7 @@ import { UserPostHistoriesModule } from './user_post_histories/user_post_histori
 import { QuotationsModule } from './quotations/quotations.module';
 import { StreamModule } from './stream/stream.module';
 import { GoogelAuthModule } from './google-auth/google-auth.module';
+import { StreamGateway } from './gateway/stream.gateway';
 
 @Module({
     imports: [
@@ -43,7 +44,7 @@ import { GoogelAuthModule } from './google-auth/google-auth.module';
         GoogelAuthModule
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [AppService, StreamGateway],
 })
 export class AppModule {
     configure(consumer: MiddlewareConsumer) {
