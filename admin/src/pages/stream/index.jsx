@@ -82,7 +82,7 @@ const Stream = () => {
                     socket.emit('youtubeStream', event.data);
                 }
             };
-            setSuccessMessage('Streaming have started!')
+            setSuccessMessage('Streaming Started!')
             mediaRecorder.start(1000); // Record a chunk every 1 second
         } catch (error) {
             console.error('Error starting broadcast:', error);
@@ -99,7 +99,7 @@ const Stream = () => {
 
         if (mediaStream) {
             mediaStream.getTracks().forEach(track => track.stop());
-            setSuccessMessage('Streaming have stopped!')
+            setSuccessMessage('Streaming Stopped!')
             setMediaStream(null);
         }
 
