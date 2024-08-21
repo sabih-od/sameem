@@ -21,6 +21,8 @@ import { QuotationsModule } from './quotations/quotations.module';
 import { StreamModule } from './stream/stream.module';
 import { GoogelAuthModule } from './google-auth/google-auth.module';
 import { StreamGateway } from './gateway/stream.gateway';
+import { PaymentModule } from './payment/payment.module';
+import { SubscriptionModule } from './subscriptions/subscription.module';
 
 @Module({
     imports: [
@@ -41,7 +43,9 @@ import { StreamGateway } from './gateway/stream.gateway';
         UserPostHistoriesModule,
         QuotationsModule,
         StreamModule,
-        GoogelAuthModule
+        GoogelAuthModule,
+        PaymentModule,
+        SubscriptionModule
     ],
     controllers: [AppController],
     providers: [AppService, StreamGateway],
