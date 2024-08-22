@@ -41,8 +41,7 @@ function subscription(props) {
 
     useEffect(() => {
         if (subscription) {
-            console.log("Subscription ",subscription);
-            
+
             setName(subscription.name)
             setPrice(subscription.price)
             setDescription(subscription.description ?? '')
@@ -55,9 +54,9 @@ function subscription(props) {
 
     useEffect(() => {
         if (!loading && success) {
-            setSuccessMessage('subscription updated successfully!')
+            setSuccessMessage('Package updated successfully!')
             setTimeout(() => {
-                push('/subscription').then((r) => 'success');
+                push('/packages').then((r) => 'success');
             }, 500)
         }
     }, [success, loading])
@@ -71,6 +70,9 @@ function subscription(props) {
             name,
             price,
             description,
+        }
+        if(data.price){
+            data.price = Number(data.price)
         }
         dispatch(updatesubscription({
             id: subscriptionId,
@@ -99,7 +101,7 @@ function subscription(props) {
         <Grid container spacing={6}>
             <Grid item xs={12}>
                 <Typography variant='h5'>
-                    Edit subscription
+                    Edit Package
                 </Typography>
             </Grid>
 
@@ -122,15 +124,15 @@ function subscription(props) {
                         ) : ''}
                         <form onSubmit={handleSubmit}>
                             <Grid container>
-                                <Grid item  xs={12}>
+                                <Grid item xs={12}>
                                     <Stack margin={10} direction='row' gap={5}>
-                                        <TextField fullWidth label='Subscription Name' value={name}
+                                        <TextField fullWidth label='Package Name' value={name}
                                             onChange={e => setName(e.target.value)} />
-                                        <TextField fullWidth label='Subscription Price' value={price}
+                                        <TextField fullWidth label='Package Price' value={price}
                                             onChange={e => setPrice(e.target.value)} />
                                     </Stack>
                                     <Stack margin={10} direction='row' gap={5}>
-                                        <TextField fullWidth label='Subscription Description' value={description}
+                                        <TextField fullWidth label='Package Description' value={description}
                                             onChange={e => setDescription(e.target.value)} />
 
                                     </Stack>

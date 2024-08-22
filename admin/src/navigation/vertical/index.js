@@ -67,9 +67,9 @@ const navigation = () => {
         },
 
         {
-            title: 'Subscriptions',
+            title: 'packages',
             icon: Inventory,
-            path: '/subscriptions',
+            path: '/packages',
         }
         // ...categories.map(category => ({
         //     title: category.name,
