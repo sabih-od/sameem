@@ -28,6 +28,10 @@ import {categoryMenusSlice} from "./slices/categoryMenusSlice";
 import {categorySlice} from "./slices/categorySlice";
 import {faqsSlice} from "./slices/faqsSlice";
 import {faqSlice} from "./slices/faqSlice";
+
+import {subscriptionsSlice} from "./slices/subscriptionsSlice"
+import {subscriptionSlice} from "./slices/subscrtiptionSlice"
+
 import {userSlice} from "./slices/userSlice";
 import {groupRequestsSlice} from "./slices/groupRequestsSlice";
 import {speakersSlice} from "./slices/speakersSlice";
@@ -67,6 +71,8 @@ const makeStore = () =>
 
             [faqsSlice.name]: faqsSlice.reducer,
             [faqSlice.name]: faqSlice.reducer,
+            [subscriptionsSlice.name]: subscriptionsSlice.reducer,
+            [subscriptionSlice.name]: subscriptionSlice.reducer,
             [speakersSlice.name]: speakersSlice.reducer,
             [speakerSlice.name]: speakerSlice.reducer,
             [groupRequestsSlice.name]: groupRequestsSlice.reducer,
