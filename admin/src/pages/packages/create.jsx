@@ -40,9 +40,9 @@ function Create(props) {
 
     useEffect(() => {
         if (!loading && success) {
-            setSuccessMessage('subscriptions added successfully!')
+            setSuccessMessage('Package added successfully!')
             setTimeout(() => {
-                push('/subscriptions')
+                push('/packages')
             }, 500)
         }
     }, [success, loading])
@@ -62,7 +62,7 @@ function Create(props) {
         <Grid container spacing={6}>
             <Grid item xs={12}>
                 <Typography variant='h5'>
-                    Create subscriptions
+                    Create Package
                 </Typography>
             </Grid>
 
@@ -87,16 +87,16 @@ function Create(props) {
                             <Grid row>
                                 <Grid item xs={12}>
                                     <Stack direction='row' margin={10} gap={5}>
-                                        <TextField fullWidth label='Subscription Name' value={name}
+                                        <TextField fullWidth label='Package Name' value={name}
                                             onChange={e => setName(e.target.value)} />
-                                              <TextField fullWidth label='Subscription Prcie' value={price}
+                                              <TextField fullWidth label='Package Prcie' value={price}
                                             onChange={e => setPrice(e.target.value)} />
                                            
 
                                     </Stack>
                                     <Stack direction='row'  margin={10} gap={5}>
 
-                                    <TextField  fullWidth label='Subscription Description' value={description}
+                                    <TextField  fullWidth label='Package Description' value={description}
                                             onChange={e => setDescription(e.target.value)} />
 
                                     </Stack>
