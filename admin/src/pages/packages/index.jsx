@@ -152,7 +152,7 @@ function Subscriptions(props) {
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure? you wan't to delete the package
+                        Confirm delete ?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
