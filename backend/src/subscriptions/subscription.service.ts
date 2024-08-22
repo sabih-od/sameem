@@ -27,7 +27,22 @@ export class SubscriptionService {
         }
     }
 
-    async findAll() {
+    async findAll(page: number = 1, limit: number = 10): Promise<any> {
+
+        let [data, total] = await this.subscriptionRepository.findAndCount({
+            skip: (page - 1) * limit,
+            take: limit,
+        });
+
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            data,
+            total,
+            currentPage: page,
+            totalPages,
+        };
+
         return this.subscriptionRepository.find();
     }
 

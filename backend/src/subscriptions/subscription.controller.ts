@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { ApiHeader, ApiQuery } from '@nestjs/swagger';
 
 
 @Controller('subscriptions')
@@ -20,8 +21,11 @@ export class SubscriptionController {
     }
 
     @Get()
-    async findAll() {
-        let res = await this.subscriptionService.findAll();
+    @ApiQuery({ name: 'page', required: false })
+    @ApiQuery({ name: 'limit', required: false })
+    @ApiHeader({ name: 'lang', required: false })
+    async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Headers('lang') lang?: number) {
+        let res = await this.subscriptionService.findAll(page, limit);
         return {
             success: true,
             message: '',
