@@ -27,7 +27,6 @@ export const create = async (payload) => {
 
 export const update = async ({id, ...payload}) => {
     try {
-        console.log(payload);
         const response = await fetch(`${apiUrl()}/subscriptions/${id}`, {
             method: 'POST',
             headers: {

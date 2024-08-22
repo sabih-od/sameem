@@ -13,11 +13,12 @@ export class PaymentService {
 
     async createCharge(createPaymentDto: CreatePaymentDto) {
         try {
-            return await this.stripe.charges.create({
-                amount: createPaymentDto.amount * 100,
-                currency: createPaymentDto.currency,
-                source: 'tok_visa',
-                description: 'Sample Charge',
+            return await this.stripe.subscriptions.create({
+                customer: createPaymentDto.customer_id,
+                items: [
+                    { price: createPaymentDto.price_id }
+                ],
+                expand: ['latest_invoice.payment_intent'],
             });
         } catch (error) {
             console.error('Error creating charge:', error);

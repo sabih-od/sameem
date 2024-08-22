@@ -21,8 +21,9 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
-import { IconButton, Pagination, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { Pencil, Delete } from 'mdi-material-ui';
+import { IconButton, Pagination, Stack, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Checkbox } from "@mui/material";
+import { Pencil, Delete, WindowMinimize, Navigation } from 'mdi-material-ui';
+import { updatesubscription } from '../../store/slices/subscrtiptionSlice';
 
 function Subscriptions(props) {
     const dispatch = useDispatch();
@@ -59,7 +60,18 @@ function Subscriptions(props) {
     useEffect(() => {
         dispatch(getsubscriptions({ page }));
     }, [page]);
+    const handleCheckboxChange = async (event, subscriptionId) => {
+        const is_active = event.target.checked ? 1 : 0;
 
+        let data = {
+            is_active
+        }
+        dispatch(updatesubscription({
+            id: subscriptionId,
+            ...data
+        }))
+        window.location.reload()
+    }
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -108,25 +120,13 @@ function Subscriptions(props) {
                                                     <span>{subscription.description}</span>
                                                 </TableCell>
                                                 <TableCell width="200">
-                                                    <IconButton
-                                                        size="small"
-                                                        variant="outlined"
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            push(`/packages/${subscription.id}`);
-                                                        }}
-                                                        sx={{ marginLeft: 'auto' }}
-                                                    >
-                                                        <Pencil />
-                                                    </IconButton>
-                                                    <IconButton
-                                                        size="small"
-                                                        variant="outlined"
-                                                        onClick={() => handleOpen(subscription.id)}
-                                                        sx={{ marginLeft: 'auto' }}
-                                                    >
-                                                        <Delete />
-                                                    </IconButton>
+                                                    <Checkbox
+                                                        fullWidth
+                                                        label="Package Description"
+                                                        checked={subscription.is_active === 1}
+                                                        onChange={(event) => handleCheckboxChange(event, subscription.id)}
+
+                                                    />
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -141,29 +141,53 @@ function Subscriptions(props) {
                 </Card>
             </Grid>
 
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"Are you sure you want to delete this record?"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Confirm delete ?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleConfirmDelete} autoFocus>
-                        Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+
         </Grid>
     );
 }
 
 export default Subscriptions;
+//update and delete button
+{/* <IconButton
+size="small"
+variant="outlined"
+onClick={(e) => {
+    e.preventDefault();
+    push(`/packages/${subscription.id}`);
+}}
+sx={{ marginLeft: 'auto' }}
+>
+<Pencil />
+</IconButton>
+<IconButton
+size="small"
+variant="outlined"
+onClick={() => handleOpen(subscription.id)}
+sx={{ marginLeft: 'auto' }}
+>
+<Delete />
+</IconButton>  */}
+
+
+// delete dialog
+{/* <Dialog
+open={open}
+onClose={handleClose}
+aria-labelledby="alert-dialog-title"
+aria-describedby="alert-dialog-description"
+>
+<DialogTitle id="alert-dialog-title">
+    {"Are you sure you want to delete this record?"}
+</DialogTitle>
+<DialogContent>
+    <DialogContentText id="alert-dialog-description">
+        Confirm delete ?
+    </DialogContentText>
+</DialogContent>
+<DialogActions>
+    <Button onClick={handleClose}>No</Button>
+    <Button onClick={handleConfirmDelete} autoFocus>
+        Yes
+    </Button>
+</DialogActions>
+</Dialog> */}

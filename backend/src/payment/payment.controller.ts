@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post} from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 
@@ -10,7 +10,7 @@ export class PaymentController {
 
     @Post()
     async payment(@Body() createPaymentDto: CreatePaymentDto) {
-        console.log('Data =======',createPaymentDto);
+        
         return await this.paymentService.createCharge(createPaymentDto)
     }
 

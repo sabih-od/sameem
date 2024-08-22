@@ -33,8 +33,21 @@ export class SubscriptionController {
         }
     }
 
+
+    @Get('/get-subscriptions')
+    async getAll() {
+        let res = await this.subscriptionService.getfindAll();
+        return {
+            success: true,
+            message: '',
+            ...res
+        }
+    }
+
     @Get(':id')
     async findOne(@Param('id') id: number) {
+        console.log("Find");
+        
         let res = await this.subscriptionService.findOne(+id);
 
         return {
@@ -43,6 +56,52 @@ export class SubscriptionController {
             data: res.error ? [] : res,
         }
     }
+
+    // @Post(':id')
+    // async update(
+    //     @Param('id') id: number,
+    //     @Body() updateSubscriptionDto: UpdateSubscriptionDto,
+    // ) {
+
+    //     let subscription = await this.subscriptionService.findOne(+id);
+    //     if (subscription.error) {
+    //         return {
+    //             success: false,
+    //             message: subscription.error,
+    //             data: [],
+    //         }
+    //     }
+    //     let res = await this.subscriptionService.update(+id, updateSubscriptionDto);
+
+    //     return {
+    //         success: !res.error,
+    //         message: res.error ? res.error : 'Subscription updated successfully!',
+    //         data: res.error ? [] : res,
+    //     }
+    // }
+
+    // @Delete(':id')
+    // async remove(@Param('id') id: string) {
+    //     let find = await this.subscriptionService.findOne(+id);
+    //     console.log("Delete", find)
+
+    //     if (find.error) {
+    //         return {
+    //             success: false,
+    //             message: find.error,
+    //             data: [],
+    //         }
+    //     }
+
+    //     let res = await this.subscriptionService.remove(+id);
+
+    //     return {
+    //         success: !res.error,
+    //         message: res.error ? res.error : 'Subscription deleted successfully!',
+    //         data: res.error ? [] : res,
+    //     }
+    // }
+
 
     @Post(':id')
     async update(
@@ -67,25 +126,10 @@ export class SubscriptionController {
         }
     }
 
-    @Delete(':id')
-    async remove(@Param('id') id: string) {
-        let find = await this.subscriptionService.findOne(+id);
-        console.log("Delete", find)
 
-        if (find.error) {
-            return {
-                success: false,
-                message: find.error,
-                data: [],
-            }
-        }
 
-        let res = await this.subscriptionService.remove(+id);
+  
 
-        return {
-            success: !res.error,
-            message: res.error ? res.error : 'Subscription deleted successfully!',
-            data: res.error ? [] : res,
-        }
-    }
+
+
 }

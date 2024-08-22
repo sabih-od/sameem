@@ -16,4 +16,17 @@ export class CreateSubscriptionDto {
     @ApiProperty({ example: 'This is a basic plan' })
     @IsString()
     description?: string;
+
+    @IsOptional()
+    @ApiProperty({ example: 'This is a basic plan' })
+    @IsString()
+    priceId?: string;
+
+
+    @IsOptional()
+    @ApiProperty({ example: 'This is a basic plan' })
+    @IsString()
+    productId?: string;
+
 }
+

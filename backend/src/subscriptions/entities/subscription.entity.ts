@@ -19,4 +19,15 @@ export class Subscription {
 
   @UpdateDateColumn()
   updated_at: string;
+
+  @Column({ type: 'text', nullable: true })
+  priceId?: string;
+
+  @Column({ type: 'text', nullable: true })
+  productId?: string;
+
+  @Column({ type: 'tinyint', nullable: true, default: 1 })
+  is_active?: number;
+
+
 }
