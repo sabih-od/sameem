@@ -29,7 +29,7 @@ function Create(props) {
     const [successMsg, setSuccessMessage] = useState(null)
     const [name, setName] = useState('')
 
-    const [price, setPrice] = useState(0)
+    const [price, setPrice] = useState()
     const [description, setDescription] = useState('')
 
 
