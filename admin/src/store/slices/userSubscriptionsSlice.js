@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {HYDRATE} from 'next-redux-wrapper';
-import {create, destroy, get} from '../../services/userSubscriptionsService';
+import {get} from '../../services/userSubscriptionsService';
 
 export const getUserSubscriptions = createAsyncThunk(
     'user-subscriptions/get',
@@ -15,13 +15,13 @@ const initialState = {
     success: false,
     loading: false,
     errors: null,
-    subscriptions: [],
+    usersubscriptions: [],
     total: 0,
     totalPages: 0,
 };
 
 export const UserSubscriptionsSlice = createSlice({
-    name: 'subscriptions',
+    name: 'usersubscriptions',
     initialState,
     reducers: {
         setSuccess: (state, {payload}) => {
@@ -31,7 +31,7 @@ export const UserSubscriptionsSlice = createSlice({
             state.errors = payload
         },
         setsubscriptionsFetched: (state, {data, message}) => {
-            state.subscriptions = data?.data ?? []
+            state.usersubscriptions = data?.data ?? []
             state.total = data?.total ?? 0
             state.totalPages = data?.totalPages ?? 0
 
@@ -42,7 +42,7 @@ export const UserSubscriptionsSlice = createSlice({
             [HYDRATE]: (state, action) => {
                 return {
                     ...state,
-                    ...action.payload.subscriptions,
+                    ...action.payload.usersubscriptions,
                 };
             },
         },
@@ -62,10 +62,10 @@ export const UserSubscriptionsSlice = createSlice({
 });
 
 export const {setSuccess, setErrors} = UserSubscriptionsSlice.actions;
-export const userSubscriptions = (state) => state.subscriptions.subscriptions;
-export const loading = (state) => state.subscriptions.loading;
-export const total = (state) => state.subscriptions.total;
-export const totalPages = (state) => state.subscriptions.totalPages;
-export const errors = (state) => state.subscriptions.errors;
-export const success = (state) => state.subscriptions.success;
+export const userSubscriptions = (state) => state.usersubscriptions.usersubscriptions;
+export const loading = (state) => state.usersubscriptions.loading;
+export const total = (state) => state.usersubscriptions.total;
+export const totalPages = (state) => state.usersubscriptions.totalPages;
+export const errors = (state) => state.usersubscriptions.errors;
+export const success = (state) => state.usersubscriptions.success;
 export default UserSubscriptionsSlice.reducer;

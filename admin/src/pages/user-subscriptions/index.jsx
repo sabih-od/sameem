@@ -79,7 +79,8 @@ function UserSubscriptions(props) {
                                         <TableRow>
                                             <TableCell>ID</TableCell>
                                             <TableCell>User Name</TableCell>
-                                            <TableCell>User Email</TableCell>
+                                            <TableCell>Package Name</TableCell>
+                                            <TableCell>Package Amount</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -89,7 +90,10 @@ function UserSubscriptions(props) {
                                                     <span>{subscription.id}</span>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <span>{subscription.user_id}</span>
+                                                    <span>{subscription.user_name}</span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <span>{subscription.package_name}</span>
                                                 </TableCell>
                                                 <TableCell>
                                                     <span>{subscription.subscription_price}</span>

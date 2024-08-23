@@ -1,6 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { EntityNotFoundError, QueryFailedError, Repository } from 'typeorm';
 import { UserSubscription } from './entities/user-subscriptions.entity';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entities/user.entity';
 
 
 @Injectable()
@@ -9,33 +11,54 @@ export class UserSubscriptionService {
     constructor(
         @Inject('USER_SUBSCRIPTION_REPOSITORY')
         private readonly subscriptionRepository: Repository<UserSubscription>,
+        @Inject('USER_REPOSITORY')
+        private readonly userRepository: Repository<User>,
+
     ) {
 
     }
 
-    async create(id: number, customer_id: string, subscriptionId: string, price: number): Promise<any> {
-       
+    async create(id: number, customer_id: string, subscriptionId: string, price: number, name: string): Promise<any> {
 
-            const userSubscription = new UserSubscription();
-            userSubscription.user_id = id;
-            userSubscription.customer_id = customer_id;
-            userSubscription.subscription_id = subscriptionId;
-            userSubscription.subscription_price = price;
-            await this.subscriptionRepository.save(userSubscription);
 
-            return await this.findOne(userSubscription.id);
+        const userSubscription = new UserSubscription();
+        userSubscription.user_id = id;
+        userSubscription.customer_id = customer_id;
+        userSubscription.subscription_id = subscriptionId;
+        userSubscription.subscription_price = price;
+        userSubscription.package_name = name
+        await this.subscriptionRepository.save(userSubscription);
+
+        return await this.findOne(userSubscription.id);
 
     }
 
     async findAll(page: number = 1, limit: number = 10): Promise<any> {
 
         let [data, total] = await this.subscriptionRepository.findAndCount({
+            where:{
+                is_active:1
+            },
             skip: (page - 1) * limit,
             take: limit,
         });
 
         const totalPages = Math.ceil(total / limit);
+        const userIds = data.map(subscription => subscription.user_id);
 
+        const users = await this.userRepository.findByIds(userIds); 
+
+        const userMap = {};
+        users.forEach(user => {
+            userMap[user.id] = `${user.first_name} ${user.last_name}`; 
+        });
+
+        data = data.map(subscription => {
+            return {
+                ...subscription,
+                user_name: userMap[subscription.user_id],
+            };
+        });
         return {
             data,
             total,

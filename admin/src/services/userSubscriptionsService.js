@@ -63,7 +63,6 @@ export const get = async (page = 1, limit = 15) => {
         });
 
         const data = await response.json();
-console.log("Api Data", data);
 
         if (data?.success === false) {
             return errorResponse(null, data?.message ?? 'Server Error')
