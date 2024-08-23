@@ -16,4 +16,10 @@ export class UserSubscription {
 
     @Column('decimal', { precision: 10, scale: 2 })
     subscription_price: number;
+
+    @Column()
+    package_name: string;
+
+    @Column()
+    is_active: number;
 }

@@ -24,7 +24,7 @@ export class UsersService {
 
             return await this.findOne(user.id);
         } catch (error) {
-            
+
             if (error instanceof QueryFailedError) {
                 return {
                     error: error['sqlMessage']
@@ -130,5 +130,26 @@ export class UsersService {
     }
     async userByEmail(email: string): Promise<User> {
         return await this.userRepository.findOne({ where: { email } });;
-      }
+    }
+
+
+    async find(id: number): Promise<any> {
+        try {
+            const user = await this.userRepository.findOneOrFail({
+                where: {
+                    id: id
+                }
+            });
+            return user;
+        } catch (error) {
+            if (error instanceof EntityNotFoundError) {
+                return {
+                    error: 'User Not Found'
+                };
+            }
+        }
+    }
+
+    
+
 }

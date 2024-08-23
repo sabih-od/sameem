@@ -13,7 +13,7 @@ export class PaymentService {
     constructor(
         @Inject('SUBSCRIPTION_REPOSITORY')
         private readonly subscriptionRepository: Repository<Subscription>,
-        private readonly userSubscriptionService: UserSubscriptionService
+        private readonly userSubscriptionService: UserSubscriptionService,
     ) {
         this.stripe = new Stripe(process.env.STRIPE_API_KEY, {
         });
@@ -21,11 +21,13 @@ export class PaymentService {
 
     async createCharge(id: number, createPaymentDto: CreatePaymentDto): Promise<any> {
         try {
-            const price = this.subscriptionRepository.findOneOrFail({
+            const price = await this.subscriptionRepository.findOneOrFail({
                 where: {
                     id: id
                 }
             });
+
+
             const customer = await this.stripe.customers.create({
                 email: createPaymentDto.email,
                 payment_method: createPaymentDto.payment_method,
@@ -42,7 +44,7 @@ export class PaymentService {
                 ],
                 expand: ['latest_invoice.payment_intent'],
             });
-            const newSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, (await price).price)
+            const newSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
             return newSubscription
         } catch (error) {
 
