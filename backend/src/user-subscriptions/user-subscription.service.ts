@@ -36,8 +36,8 @@ export class UserSubscriptionService {
     async findAll(page: number = 1, limit: number = 10): Promise<any> {
 
         let [data, total] = await this.subscriptionRepository.findAndCount({
-            where:{
-                is_active:1
+            where: {
+                is_active: 1
             },
             skip: (page - 1) * limit,
             take: limit,
@@ -46,11 +46,11 @@ export class UserSubscriptionService {
         const totalPages = Math.ceil(total / limit);
         const userIds = data.map(subscription => subscription.user_id);
 
-        const users = await this.userRepository.findByIds(userIds); 
+        const users = await this.userRepository.findByIds(userIds);
 
         const userMap = {};
         users.forEach(user => {
-            userMap[user.id] = `${user.first_name} ${user.last_name}`; 
+            userMap[user.id] = `${user.first_name} ${user.last_name}`;
         });
 
         data = data.map(subscription => {
@@ -78,12 +78,29 @@ export class UserSubscriptionService {
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
                 return {
+                    error: 'Record Not Found'
+                };
+            }
+        }
+    }
+    async findBySubscriptionID(SubscriptionId: string): Promise<any> {
+        try {
+            const subscription = await this.subscriptionRepository.findOneOrFail({
+                where: {
+                    subscription_id: SubscriptionId
+                }
+            });
+
+            await this.subscriptionRepository.update({ subscription_id: subscription.subscription_id }, { is_active: 0 })
+            return subscription.subscription_id;
+        } catch (error) {
+            if (error instanceof EntityNotFoundError) {
+                return {
                     error: 'Subscription Not Found'
                 };
             }
         }
     }
-
     // async update(id: number, updateSubscriptionDto: UpdateSubscriptionDto): Promise<any> {
     //     try {
     //         const subscription = await this.findOne(id);

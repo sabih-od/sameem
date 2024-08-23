@@ -12,7 +12,7 @@ export class PaymentController {
     ) { }
 
     @Post(':id')
-    async update(
+    async subscriptionCreate(
         @Param('id') id: number,
         @Body() createPaymentDto: CreatePaymentDto
     ) {
@@ -36,11 +36,26 @@ export class PaymentController {
         }
 
 
-        let res = await this.paymentService.createCharge(+id, createPaymentDto);
+        let res = await this.paymentService.createSubscription(+id, createPaymentDto);
 
         return {
             success: !res.error,
-            message: res.error ? res.error : 'Payment  successfully!',
+            message: res.error ? res.error : 'Subscription Create successfully!',
+            data: res.error ? [] : res,
+        }
+    }
+
+
+    @Post('cancel/:id')
+    async subscriptionUpdate(
+        @Param('id') id: string,
+    ) {
+
+        let res = await this.paymentService.cancelSubscription(id);
+
+        return {
+            success: !res.error,
+            message: res.error ? res.error : 'Subscription Cancel  successfully!',
             data: res.error ? [] : res,
         }
     }

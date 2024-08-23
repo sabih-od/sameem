@@ -19,7 +19,7 @@ export class PaymentService {
         });
     }
 
-    async createCharge(id: number, createPaymentDto: CreatePaymentDto): Promise<any> {
+    async createSubscription(id: number, createPaymentDto: CreatePaymentDto): Promise<any> {
         try {
             const price = await this.subscriptionRepository.findOneOrFail({
                 where: {
@@ -72,4 +72,28 @@ export class PaymentService {
             }
         }
     }
+
+    async cancelSubscription(subscriptionId: string): Promise<any> {
+
+
+        try {
+
+            const findBySubscriptionID = await this.userSubscriptionService.findBySubscriptionID(subscriptionId)
+
+
+            const canceledSubscription = await this.stripe.subscriptions.cancel(findBySubscriptionID);
+
+            return canceledSubscription
+        }
+        catch (error) {
+            if (error instanceof QueryFailedError) {
+                return {
+                    error: error['sqlMessage']
+                };
+            }
+        }
+
+    }
+
+
 }
