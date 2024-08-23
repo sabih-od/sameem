@@ -1,10 +1,12 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers } from '@nestjs/common';
+import { UserSubscriptionService } from './user-subscription.service';
+import { ApiHeader, ApiQuery } from '@nestjs/swagger';
 
 
 
 @Controller('user-subscription')
 export class UserSubscriptionController {
-    // constructor(private readonly subscriptionService: SubscriptionService) { }
+    constructor(private readonly subscriptionService: UserSubscriptionService) { }
 
     // @Post()
     // async create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
@@ -17,18 +19,18 @@ export class UserSubscriptionController {
     //     }
     // }
 
-    // @Get()
-    // @ApiQuery({ name: 'page', required: false })
-    // @ApiQuery({ name: 'limit', required: false })
-    // @ApiHeader({ name: 'lang', required: false })
-    // async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Headers('lang') lang?: number) {
-    //     let res = await this.subscriptionService.findAll(page, limit);
-    //     return {
-    //         success: true,
-    //         message: '',
-    //         ...res
-    //     }
-    // }
+    @Get()
+    @ApiQuery({ name: 'page', required: false })
+    @ApiQuery({ name: 'limit', required: false })
+    @ApiHeader({ name: 'lang', required: false })
+    async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Headers('lang') lang?: number) {
+        let res = await this.subscriptionService.findAll(page, limit);
+        return {
+            success: true,
+            message: '',
+            ...res
+        }
+    }
 
 
     // @Get('/get-subscriptions')

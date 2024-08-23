@@ -23,6 +23,7 @@ import { GoogelAuthModule } from './google-auth/google-auth.module';
 import { StreamGateway } from './gateway/stream.gateway';
 import { PaymentModule } from './payment/payment.module';
 import { SubscriptionModule } from './subscriptions/subscription.module';
+import { UserSubscriptionModule } from './user-subscriptions/user-subscription.module';
 
 @Module({
     imports: [
@@ -45,7 +46,8 @@ import { SubscriptionModule } from './subscriptions/subscription.module';
         StreamModule,
         GoogelAuthModule,
         PaymentModule,
-        SubscriptionModule
+        SubscriptionModule,
+        UserSubscriptionModule
     ],
     controllers: [AppController],
     providers: [AppService, StreamGateway],

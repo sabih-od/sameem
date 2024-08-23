@@ -42,23 +42,13 @@ export class PaymentService {
                 ],
                 expand: ['latest_invoice.payment_intent'],
             });
-
-            await this.userSubscriptionService.create(1, customer.id, subscription.id, (await price).price)
+            const newSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, (await price).price)
+            return newSubscription
         } catch (error) {
-            if (error instanceof Error && 'type' in error) {
-                return {
-                    error: {
-                        type: (error as any).type,
-                        message: error.message
-                    }
-                };
-            } else if (error instanceof QueryFailedError) {
+
+            if (error instanceof QueryFailedError) {
                 return {
                     error: error['sqlMessage']
-                };
-            } else {
-                return {
-                    error: 'An unexpected error occurred'
                 };
             }
         }

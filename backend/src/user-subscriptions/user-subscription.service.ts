@@ -14,7 +14,7 @@ export class UserSubscriptionService {
     }
 
     async create(id: number, customer_id: string, subscriptionId: string, price: number): Promise<any> {
-        try {
+       
 
             const userSubscription = new UserSubscription();
             userSubscription.user_id = id;
@@ -24,13 +24,7 @@ export class UserSubscriptionService {
             await this.subscriptionRepository.save(userSubscription);
 
             return await this.findOne(userSubscription.id);
-        } catch (error) {
-            if (error instanceof QueryFailedError) {
-                return {
-                    error: error['sqlMessage']
-                };
-            }
-        }
+
     }
 
     async findAll(page: number = 1, limit: number = 10): Promise<any> {

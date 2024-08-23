@@ -5,12 +5,13 @@ import { PaymentController } from "./payment.controller";
 import { PaymentService } from "./payment.service";
 import { SubscriptionService } from "src/subscriptions/subscription.service";
 import { subscriptionProviders } from "src/subscriptions/subscription.provider";
+import { UserSubscriptionService } from "src/user-subscriptions/user-subscription.service";
 import { userSubscriptionProviders } from "src/user-subscriptions/user-subscription.provider";
 
 @Module({
     imports: [DatabaseModule],
     controllers: [PaymentController],
-    providers: [PaymentService, SubscriptionService, ...subscriptionProviders,...userSubscriptionProviders],
+    providers: [PaymentService, SubscriptionService, UserSubscriptionService,...subscriptionProviders,...userSubscriptionProviders],
     exports: [PaymentService],
 })
 
