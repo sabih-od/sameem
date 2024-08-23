@@ -30,6 +30,7 @@ import {faqsSlice} from "./slices/faqsSlice";
 import {faqSlice} from "./slices/faqSlice";
 
 import {subscriptionsSlice} from "./slices/subscriptionsSlice"
+import {UserSubscriptionsSlice} from "./slices/userSubscriptionsSlice"
 import {subscriptionSlice} from "./slices/subscrtiptionSlice"
 
 import {userSlice} from "./slices/userSlice";
@@ -72,6 +73,7 @@ const makeStore = () =>
             [faqsSlice.name]: faqsSlice.reducer,
             [faqSlice.name]: faqSlice.reducer,
             [subscriptionsSlice.name]: subscriptionsSlice.reducer,
+            [UserSubscriptionsSlice.name]: UserSubscriptionsSlice.reducer,
             [subscriptionSlice.name]: subscriptionSlice.reducer,
             [speakersSlice.name]: speakersSlice.reducer,
             [speakerSlice.name]: speakerSlice.reducer,
