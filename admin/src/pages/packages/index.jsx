@@ -101,7 +101,7 @@ function Subscriptions(props) {
                                             <TableCell>Package Name</TableCell>
                                             <TableCell>Package Price</TableCell>
                                             <TableCell>Package Description</TableCell>
-                                            <TableCell>Action</TableCell>
+                                            <TableCell>Activate / DeActivat</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -119,7 +119,7 @@ function Subscriptions(props) {
                                                 <TableCell>
                                                     <span>{subscription.description}</span>
                                                 </TableCell>
-                                                <TableCell width="200">
+                                                <TableCell width="200" align='center'>
                                                     <Checkbox
                                                         fullWidth
                                                         label="Package Description"

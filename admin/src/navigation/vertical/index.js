@@ -9,7 +9,7 @@ import Collapse from '@mui/material/Collapse';
 import BookIcon from '@mui/icons-material/AutoStoriesOutlined';
 import ContactIcon from '@mui/icons-material/ContactPhoneOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
-import { Inventory, LiveTv, } from '@mui/icons-material';
+import { Inventory, LiveTv, Subscriptions, } from '@mui/icons-material';
 import PostIcon from '@mui/icons-material/DynamicFeedOutlined';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -67,9 +67,14 @@ const navigation = () => {
         },
 
         {
-            title: 'packages',
+            title: 'Packages',
             icon: Inventory,
             path: '/packages',
+        },
+        {
+            title: 'Subscriptions',
+            icon: Subscriptions,
+            path: '/user-subscriptions',
         }
         // ...categories.map(category => ({
         //     title: category.name,
