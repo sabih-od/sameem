@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 // export class UpdateSubscriptionDto extends PartialType(CreateSubscriptionDto) { }
 export class UpdateSubscriptionDto  {
     @IsNotEmpty()
-    @ApiProperty({ example: 29.99 })
+    @ApiProperty({ example: 1 })
     @IsNumber()
     is_active: number;
  }
