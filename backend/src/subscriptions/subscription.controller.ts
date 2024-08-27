@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers } from 
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { ApiHeader, ApiQuery } from '@nestjs/swagger';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Subscription')
 @Controller('subscriptions')
 export class SubscriptionController {
     constructor(private readonly subscriptionService: SubscriptionService) { }

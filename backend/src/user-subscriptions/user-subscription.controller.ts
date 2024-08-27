@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers } from '@nestjs/common';
 import { UserSubscriptionService } from './user-subscription.service';
-import { ApiHeader, ApiQuery } from '@nestjs/swagger';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 
-
+@ApiTags('User Subscription')
 @Controller('user-subscription')
 export class UserSubscriptionController {
     constructor(private readonly subscriptionService: UserSubscriptionService) { }

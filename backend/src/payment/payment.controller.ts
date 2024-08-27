@@ -2,8 +2,9 @@ import { Body, Controller, Param, Post } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UsersService } from 'src/users/users.service';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Payment')
 @Controller('payment')
 export class PaymentController {
 
