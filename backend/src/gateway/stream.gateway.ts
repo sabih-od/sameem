@@ -4,7 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { spawn, ChildProcess } from 'child_process';
 import { StreamService } from 'src/stream/stream.service';
 
-@WebSocketGateway({ cors: { origin: 'https://reverendsameembalius.com' } })
+@WebSocketGateway({ cors: { origin: '*' } })
 export class StreamGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('Stream Gateway');
@@ -46,6 +46,7 @@ export class StreamGateway implements OnGatewayInit, OnGatewayConnection, OnGate
                     this.logger.log(`FFmpeg process closed with code ${code}`);
                     this.ffmpegProcess = null;
                 });
+                this.handleStartStream(client)
             }
 
             // Write video chunk from client to FFmpeg process stdin
@@ -77,7 +78,11 @@ export class StreamGateway implements OnGatewayInit, OnGatewayConnection, OnGate
             client.emit('streaming-stopped', { success: false, error: error.message });
         }
     }
-
+    @SubscribeMessage('startStream')
+    handleStartStream(client: Socket): void {
+        console.log('Admin is live now!')
+        client.emit('adminLive', 'Admin is live now!');
+    }
     afterInit(server: Server) {
         this.logger.log('Init');
     }

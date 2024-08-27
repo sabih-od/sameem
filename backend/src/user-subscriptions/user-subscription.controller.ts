@@ -43,18 +43,18 @@ export class UserSubscriptionController {
     //     }
     // }
 
-    // @Get(':id')
-    // async findOne(@Param('id') id: number) {
-    //     console.log("Find");
+    @Get(':id')
+    async findOne(@Param('id') id: number) {
+        console.log("Find");
 
-    //     let res = await this.subscriptionService.findOne(+id);
+        let res = await this.subscriptionService.findOne(+id);
 
-    //     return {
-    //         success: !res.error,
-    //         message: res.error ? res.error : '',
-    //         data: res.error ? [] : res,
-    //     }
-    // }
+        return {
+            success: !res.error,
+            message: res.error ? res.error : '',
+            data: res.error ? [] : res,
+        }
+    }
 
     // @Post(':id')
     // async update(

@@ -72,13 +72,14 @@ export class UserSubscriptionService {
         try {
             return await this.subscriptionRepository.findOneOrFail({
                 where: {
-                    id: id
+                    user_id: id, is_active: 1
                 }
+
             });
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
                 return {
-                    error: 'Record Not Found'
+                    error: 'You are not eligible to watch the live stream.'
                 };
             }
         }
