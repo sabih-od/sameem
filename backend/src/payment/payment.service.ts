@@ -26,19 +26,18 @@ export class PaymentService {
                     id: id
                 }
             });
-
-
             const customer = await this.stripe.customers.create({
                 email: createPaymentDto.email,
+                source: "tok_visa",
                 payment_method: createPaymentDto.payment_method,
                 invoice_settings: {
                     default_payment_method: createPaymentDto.payment_method
                 }
             })
 
-
             const subscription = await this.stripe.subscriptions.create({
                 customer: customer.id,
+
                 items: [
                     { price: (await price).priceId }
                 ],
@@ -47,12 +46,11 @@ export class PaymentService {
             const newSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
             return newSubscription
         } catch (error) {
-
             if (error instanceof QueryFailedError) {
-                return {
-                    error: error['sqlMessage']
-                };
+                return { error: error['sqlMessage'] };
             }
+            // Handle other types of errors
+            return { error: error.message || 'An error occurred' };
         }
     }
 
@@ -77,10 +75,7 @@ export class PaymentService {
 
 
         try {
-
             const findBySubscriptionID = await this.userSubscriptionService.findBySubscriptionID(subscriptionId)
-
-
             const canceledSubscription = await this.stripe.subscriptions.cancel(findBySubscriptionID);
 
             return canceledSubscription

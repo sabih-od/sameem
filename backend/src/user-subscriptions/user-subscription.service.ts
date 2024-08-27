@@ -29,7 +29,7 @@ export class UserSubscriptionService {
         userSubscription.package_name = name
         await this.subscriptionRepository.save(userSubscription);
 
-        return await this.findOne(userSubscription.id);
+        return await userSubscription;
 
     }
 

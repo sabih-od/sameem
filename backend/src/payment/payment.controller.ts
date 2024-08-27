@@ -19,19 +19,19 @@ export class PaymentController {
     ) {
 
         let subscription = await this.paymentService.findOne(+id);
-        if (subscription.error) {
+        if (!subscription || subscription.error) {
             return {
                 success: false,
-                message: subscription.error,
+                message: subscription?.error || 'Subscription not found',
                 data: [],
             }
         }
 
         let user = await this.userService.find(+createPaymentDto.user_id);
-        if (user.error) {
+        if (!user || user.error) {
             return {
                 success: false,
-                message: user.error,
+                message: user?.error || 'User not found',
                 data: [],
             }
         }
