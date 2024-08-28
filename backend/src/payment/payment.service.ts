@@ -96,7 +96,6 @@ export class PaymentService {
     async createPaymentIntent(createPaymentIntent: CreatePaymentIntentDto) {
         try {
             const customer = await this.stripe.customers.create();
-            console.log(customer);
             
             const ephemeralKey = await this.stripe.ephemeralKeys.create(
                 { customer: customer.id },
