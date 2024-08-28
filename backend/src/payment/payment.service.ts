@@ -17,6 +17,7 @@ export class PaymentService {
         private readonly userSubscriptionService: UserSubscriptionService,
     ) {
         this.stripe = new Stripe(process.env.STRIPE_API_KEY, {
+            apiVersion: '2024-06-20',
         });
     }
 
@@ -95,9 +96,11 @@ export class PaymentService {
     async createPaymentIntent(createPaymentIntent: CreatePaymentIntentDto) {
         try {
             const customer = await this.stripe.customers.create();
-
+            console.log(customer);
+            
             const ephemeralKey = await this.stripe.ephemeralKeys.create(
                 { customer: customer.id },
+                {apiVersion:"2024-06-20"}
             );
 
             const paymentIntent = await this.stripe.paymentIntents.create({
