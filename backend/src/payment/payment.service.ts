@@ -45,19 +45,18 @@ export class PaymentService {
             const paymentIntent = latestInvoice.payment_intent as Stripe.PaymentIntent;
             const clientSecret = paymentIntent.client_secret;
 
-            const userSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
             
             return {
-                userSubscription: userSubscription,
+                userSubscription: subscription,
                 latestInvoice: latestInvoice,
                 paymentIntent: paymentIntent,
                 clientSecret: clientSecret,
             }
+            // const userSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
         } catch (error) {
             if (error instanceof QueryFailedError) {
                 return { error: error['sqlMessage'] };
             }
-            // Handle other types of errors
             return { error: error.message || 'An error occurred' };
         }
     }
