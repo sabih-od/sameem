@@ -21,40 +21,46 @@ export class PaymentService {
         });
     }
 
-    // async createSubscription(id: number, createPaymentDto: CreatePaymentDto): Promise<any> {
-    //     try {
-    //         const price = await this.subscriptionRepository.findOneOrFail({
-    //             where: {
-    //                 id: id
-    //             }
-    //         });
-    //         const customer = await this.stripe.customers.create({
-    //             email: createPaymentDto.email,
-    //             source: "tok_visa",
-    //             payment_method: createPaymentDto.payment_method,
-    //             invoice_settings: {
-    //                 default_payment_method: createPaymentDto.payment_method
-    //             }
-    //         })
+    async createSubscription(id: number, createPaymentDto: CreatePaymentDto): Promise<any> {
+        try {
+            const price = await this.subscriptionRepository.findOneOrFail({
+                where: {
+                    id: id
+                }
+            });
+            const customer = await this.stripe.customers.create()
 
-    //         const subscription = await this.stripe.subscriptions.create({
-    //             customer: customer.id,
+            const subscription = await this.stripe.subscriptions.create({
+                customer: customer.id,
+                items: [
+                    { price: (await price).priceId }
+                ],
+                payment_behavior: 'default_incomplete',
+                payment_settings: { save_default_payment_method: 'on_subscription' },
+                expand: ['latest_invoice.payment_intent'],
+              });
+            
+            
+            const latestInvoice = subscription.latest_invoice as Stripe.Invoice;
+            const paymentIntent = latestInvoice.payment_intent as Stripe.PaymentIntent;
+            const clientSecret = paymentIntent.client_secret;
 
-    //             items: [
-    //                 { price: (await price).priceId }
-    //             ],
-    //             expand: ['latest_invoice.payment_intent'],
-    //         });
-    //         const newSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
-    //         return newSubscription
-    //     } catch (error) {
-    //         if (error instanceof QueryFailedError) {
-    //             return { error: error['sqlMessage'] };
-    //         }
-    //         // Handle other types of errors
-    //         return { error: error.message || 'An error occurred' };
-    //     }
-    // }
+            const userSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
+            
+            return {
+                userSubscription: userSubscription,
+                latestInvoice: latestInvoice,
+                paymentIntent: paymentIntent,
+                clientSecret: clientSecret,
+            }
+        } catch (error) {
+            if (error instanceof QueryFailedError) {
+                return { error: error['sqlMessage'] };
+            }
+            // Handle other types of errors
+            return { error: error.message || 'An error occurred' };
+        }
+    }
 
 
     async findOne(id: number): Promise<any> {
