@@ -71,7 +71,7 @@ const Stream = () => {
             // const startBroadcastData = await startBroadcastResponse.json();
             // setBroadcastId(startBroadcastData.broadcastId);
             // const streamUrl = startBroadcastData.data.ingestionAddress + '/' + startBroadcastData.data.streamName;
-             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             setMediaStream(stream);
             const mediaRecorder = new MediaRecorder(stream, {
                 mimeType: 'video/webm',
@@ -84,6 +84,17 @@ const Stream = () => {
             };
             setSuccessMessage('Streaming Started!')
             mediaRecorder.start(1000); // Record a chunk every 1 second
+            const response = fetch(`${apiUrl()}/auth/fcm-stream-init`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
+            });
+
+            setTimeout(() => {
+                response
+            }, 3000);
         } catch (error) {
             console.error('Error starting broadcast:', error);
         }
