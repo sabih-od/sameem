@@ -16,7 +16,6 @@ export class PaymentController {
     @Post(':id')
     async subscriptionCreate(
         @Param('id') id: number,
-        @Body() createPaymentDto: CreatePaymentDto
     ) {
 
         let subscription = await this.paymentService.findOne(+id);
@@ -28,17 +27,10 @@ export class PaymentController {
             }
         }
 
-        let user = await this.userService.find(+createPaymentDto.user_id);
-        if (!user || user.error) {
-            return {
-                success: false,
-                message: user?.error || 'User not found',
-                data: [],
-            }
-        }
+       
 
 
-        let res = await this.paymentService.createSubscription(+id, createPaymentDto);
+        let res = await this.paymentService.createSubscription(+id);
 
         return {
             success: !res.error,

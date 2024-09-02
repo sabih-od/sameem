@@ -21,7 +21,7 @@ export class PaymentService {
         });
     }
 
-    async createSubscription(id: number, createPaymentDto: CreatePaymentDto): Promise<any> {
+    async createSubscription(id: number): Promise<any> {
         try {
             const price = await this.subscriptionRepository.findOneOrFail({
                 where: {
