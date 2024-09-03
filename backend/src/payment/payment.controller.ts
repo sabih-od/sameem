@@ -2,7 +2,6 @@ import { Body, Controller, Param, Post, Request, UseGuards } from '@nestjs/commo
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePaymentIntentDto } from './dto/create-pament-intent.dto';
 import { PaymentService } from './payment.service';
-import { UsersService } from 'src/users/users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { UserSubscriptionService } from 'src/user-subscriptions/user-subscription.service';
 
@@ -11,7 +10,6 @@ import { UserSubscriptionService } from 'src/user-subscriptions/user-subscriptio
 export class PaymentController {
 
     constructor(private readonly paymentService: PaymentService,
-        private readonly userService: UsersService,
         private readonly userSubscriptionService: UserSubscriptionService,
     ) { }
 
