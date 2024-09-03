@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { EntityNotFoundError, QueryFailedError, Repository } from 'typeorm';
 import { Inject, Injectable } from '@nestjs/common';
 import { Subscription } from 'src/subscriptions/entities/subscription.entity';
+import { UserSubscriptionService } from 'src/user-subscriptions/user-subscription.service';
 
 
 @Injectable()
@@ -11,6 +12,7 @@ export class PaymentService {
     constructor(
         @Inject('SUBSCRIPTION_REPOSITORY')
         private readonly subscriptionRepository: Repository<Subscription>,
+        private readonly userSubscriptionService: UserSubscriptionService,
        
     ) {
         this.stripe = new Stripe(process.env.STRIPE_API_KEY, {
