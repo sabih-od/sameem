@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers, UseGuards } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
-import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
+
 
 @ApiTags('Subscription')
 @Controller('subscriptions')
@@ -10,6 +12,8 @@ export class SubscriptionController {
     constructor(private readonly subscriptionService: SubscriptionService) { }
 
     @Post()
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     async create(@Body() createSubscriptionDto: CreateSubscriptionDto) {
 
         let res = await this.subscriptionService.create(createSubscriptionDto);
@@ -33,7 +37,8 @@ export class SubscriptionController {
         }
     }
 
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Get('/get-subscriptions')
     async getAll() {
         let res = await this.subscriptionService.getfindAll();
@@ -45,9 +50,11 @@ export class SubscriptionController {
     }
 
     @Get(':id')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     async findOne(@Param('id') id: number) {
         console.log("Find");
-        
+
         let res = await this.subscriptionService.findOne(+id);
 
         return {
@@ -104,6 +111,8 @@ export class SubscriptionController {
 
 
     @Post(':id')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     async update(
         @Param('id') id: number,
         @Body() updateSubscriptionDto: UpdateSubscriptionDto,
@@ -125,11 +134,4 @@ export class SubscriptionController {
             data: res.error ? [] : res,
         }
     }
-
-
-
-  
-
-
-
 }

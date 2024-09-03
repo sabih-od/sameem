@@ -18,12 +18,11 @@ export class UserSubscriptionService {
 
     }
 
-    async create(id: number, customer_id: string, subscriptionId: string, price: number, name: string): Promise<any> {
+    async create(id: number,  subscriptionId: string, price: number, name: string): Promise<any> {
 
 
         const userSubscription = new UserSubscription();
         userSubscription.user_id = id;
-        userSubscription.customer_id = customer_id;
         userSubscription.subscription_id = subscriptionId;
         userSubscription.subscription_price = price;
         userSubscription.package_name = name
