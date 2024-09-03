@@ -62,7 +62,7 @@ export class PaymentController {
     ) {
         try {
 
-            const userSubscription = await this.userSubscriptionService.create(req.user.id, createPaymentIntentDto.subscription_id, createPaymentIntentDto.amount, createPaymentIntentDto.package_name)
+            const userSubscription = await this.userSubscriptionService.create(req.user.id, createPaymentIntentDto.subscription_id, createPaymentIntentDto.amount, createPaymentIntentDto.package_id)
             return {
                 success: true,
                 message: "Subscribed",

@@ -18,14 +18,14 @@ export class UserSubscriptionService {
 
     }
 
-    async create(id: number,  subscriptionId: string, price: number, name: string): Promise<any> {
+    async create(id: number, subscriptionId: string, price: number, packageId: number): Promise<any> {
 
 
         const userSubscription = new UserSubscription();
         userSubscription.user_id = id;
         userSubscription.subscription_id = subscriptionId;
         userSubscription.subscription_price = price;
-        userSubscription.package_name = name
+        userSubscription.package_id = packageId
         await this.subscriptionRepository.save(userSubscription);
 
         return await userSubscription;
@@ -78,7 +78,7 @@ export class UserSubscriptionService {
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
                 return {
-                    error: 'You are not eligible to watch the live stream.'
+                    error: 'Record  Not Found'
                 };
             }
         }

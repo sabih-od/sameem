@@ -11,8 +11,8 @@ export class CreatePaymentIntentDto {
     subscription_id: string;
 
     @IsNotEmpty()
-    @ApiProperty({ example: 'sub_dhfksdhkfsd' })
-    package_name: string
+    @ApiProperty({ example: 12 })
+    package_id: number
 
 
 }

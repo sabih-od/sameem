@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, Headers, UseGuards, Request } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
@@ -40,8 +40,9 @@ export class SubscriptionController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Get('/get-subscriptions')
-    async getAll() {
-        let res = await this.subscriptionService.getfindAll();
+    async getAll(@Request() req,) {
+        
+        let res = await this.subscriptionService.getfindAll(req.user.id);
         return {
             success: true,
             message: '',
