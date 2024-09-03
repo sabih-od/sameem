@@ -1,9 +1,10 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreatePaymentIntentDto } from './dto/create-pament-intent.dto';
 import { PaymentService } from './payment.service';
 import { UsersService } from 'src/users/users.service';
-import { ApiTags } from '@nestjs/swagger';
-import { CreatePaymentIntentDto } from './dto/create-pament-intent.dto';
-import { CreatePaymentDto } from './dto/create-payment.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { UserSubscriptionService } from 'src/user-subscriptions/user-subscription.service';
 
 @ApiTags('Payment')
 @Controller('payment')
@@ -11,9 +12,10 @@ export class PaymentController {
 
     constructor(private readonly paymentService: PaymentService,
         private readonly userService: UsersService,
+        private readonly userSubscriptionService: UserSubscriptionService,
     ) { }
 
-    @Post(':id')
+    @Post('subscription/:id')
     async subscriptionCreate(
         @Param('id') id: number,
     ) {
@@ -27,7 +29,7 @@ export class PaymentController {
             }
         }
 
-       
+
 
 
         let res = await this.paymentService.createSubscription(+id);
@@ -54,15 +56,23 @@ export class PaymentController {
         }
     }
 
-    @Post('sheet')
-    async paymentSheet(
+    @Post('success')
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    async paymentSheet(@Request() req,
         @Body() createPaymentIntentDto: CreatePaymentIntentDto
     ) {
-        let res = await this.paymentService.createPaymentIntent(createPaymentIntentDto)
-        return {
-            success: !res.error,
-            message: res.error ? res.error : 'Subscription Create successfully!',
-            data: res.error ? [] : res,
+        try {
+
+            const userSubscription = await this.userSubscriptionService.create(req.user.id, createPaymentIntentDto.subscription_id, createPaymentIntentDto.amount, createPaymentIntentDto.package_name)
+            return {
+                success: true,
+                message: "Subscribed",
+                data: userSubscription,
+            }
+        }
+        catch (error) {
+            return { error: error.message || 'An error occurred' };
         }
     }
 

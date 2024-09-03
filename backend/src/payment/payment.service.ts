@@ -1,11 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
-import { CreatePaymentDto } from './dto/create-payment.dto';
-
 import { EntityNotFoundError, QueryFailedError, Repository } from 'typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Subscription } from 'src/subscriptions/entities/subscription.entity';
-import { UserSubscriptionService } from 'src/user-subscriptions/user-subscription.service';
-import { CreatePaymentIntentDto } from './dto/create-pament-intent.dto';
+
 
 @Injectable()
 export class PaymentService {
@@ -14,7 +11,7 @@ export class PaymentService {
     constructor(
         @Inject('SUBSCRIPTION_REPOSITORY')
         private readonly subscriptionRepository: Repository<Subscription>,
-        private readonly userSubscriptionService: UserSubscriptionService,
+       
     ) {
         this.stripe = new Stripe(process.env.STRIPE_API_KEY, {
             apiVersion: '2024-06-20',
@@ -38,21 +35,20 @@ export class PaymentService {
                 payment_behavior: 'default_incomplete',
                 payment_settings: { save_default_payment_method: 'on_subscription' },
                 expand: ['latest_invoice.payment_intent'],
-              });
-            
-            
+            });
+
+
             const latestInvoice = subscription.latest_invoice as Stripe.Invoice;
             const paymentIntent = latestInvoice.payment_intent as Stripe.PaymentIntent;
             const clientSecret = paymentIntent.client_secret;
 
-            
+
             return {
                 userSubscription: subscription,
                 latestInvoice: latestInvoice,
                 paymentIntent: paymentIntent,
                 clientSecret: clientSecret,
             }
-            // const userSubscription = await this.userSubscriptionService.create(createPaymentDto.user_id, customer.id, subscription.id, price.price, price.name)
         } catch (error) {
             if (error instanceof QueryFailedError) {
                 return { error: error['sqlMessage'] };
@@ -98,34 +94,6 @@ export class PaymentService {
     }
 
 
-    async createPaymentIntent(createPaymentIntent: CreatePaymentIntentDto) {
-        try {
-            const customer = await this.stripe.customers.create();
-            
-            const ephemeralKey = await this.stripe.ephemeralKeys.create(
-                { customer: customer.id },
-                {apiVersion:"2024-06-20"}
-            );
-
-            const paymentIntent = await this.stripe.paymentIntents.create({
-                amount: createPaymentIntent.amount * 100,
-                currency: 'usd',
-                customer: customer.id,
-                automatic_payment_methods: {
-                    enabled: true,
-                },
-            });
-
-            return {
-                paymentIntentId: paymentIntent.id,
-                paymentIntentSecret: paymentIntent.client_secret,
-                ephemeralKeySecret: ephemeralKey.secret,
-                customerId: customer.id,
-                publishableKey: process.env.STRIPE_API_KEY,
-            };
-        } catch (error) {
-            return { error: error.message || 'An error occurred' };
-        }
-    }
+  
 
 }
