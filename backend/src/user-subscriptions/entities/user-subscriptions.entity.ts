@@ -9,9 +9,6 @@ export class UserSubscription {
     user_id: number;
 
     @Column()
-    customer_id: string;
-
-    @Column()
     subscription_id: string;
 
     @Column('decimal', { precision: 10, scale: 2 })
