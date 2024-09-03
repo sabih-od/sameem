@@ -15,7 +15,7 @@ export class UserSubscription {
     subscription_price: number;
 
     @Column()
-    package_name: string;
+    package_id: number;
 
     @Column()
     is_active: number;

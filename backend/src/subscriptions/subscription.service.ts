@@ -4,6 +4,7 @@ import { Subscription } from './entities/subscription.entity';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import Stripe from 'stripe';
+import { UserSubscriptionService } from 'src/user-subscriptions/user-subscription.service';
 
 @Injectable()
 export class SubscriptionService {
@@ -12,6 +13,7 @@ export class SubscriptionService {
     constructor(
         @Inject('SUBSCRIPTION_REPOSITORY')
         private readonly subscriptionRepository: Repository<Subscription>,
+        private readonly userSubscriptionService: UserSubscriptionService
     ) {
         this.stripe = new Stripe(process.env.STRIPE_API_KEY, {
         });
@@ -160,14 +162,23 @@ export class SubscriptionService {
         }
     }
 
-    async getfindAll(): Promise<any> {
+    async getfindAll(userID: number): Promise<any> {
+
+        const userSubscription = await this.userSubscriptionService.findOne(userID);
+
         const data = await this.subscriptionRepository.find({
             where: {
                 is_active: 1
             }
         })
+        const modifiedData = data.map((subscription) => {
+            return {
+                ...subscription,
+                subscribed: userSubscription.package_id === subscription.id ? true : false
+            };
+        });
         return {
-            data
+            modifiedData
         }
     }
 
