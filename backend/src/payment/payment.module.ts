@@ -7,13 +7,13 @@ import { SubscriptionService } from "src/subscriptions/subscription.service";
 import { subscriptionProviders } from "src/subscriptions/subscription.provider";
 import { UserSubscriptionService } from "src/user-subscriptions/user-subscription.service";
 import { userSubscriptionProviders } from "src/user-subscriptions/user-subscription.provider";
-import { UsersService } from "src/users/users.service";
-import { userProviders } from "src/users/users.provider";
+import { UsersModule } from "src/users/users.module";
+
 
 @Module({
-    imports: [DatabaseModule],
+    imports: [DatabaseModule,UsersModule],
     controllers: [PaymentController],
-    providers: [PaymentService, SubscriptionService, UserSubscriptionService, UsersService, ...subscriptionProviders, ...userSubscriptionProviders, ...userProviders],
+    providers: [PaymentService, SubscriptionService, UserSubscriptionService,  ...subscriptionProviders, ...userSubscriptionProviders ],
     exports: [PaymentService],
 })
 
