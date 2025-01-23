@@ -1,4 +1,4 @@
-import {Controller, Get, Post, Body, Param, Delete, UseGuards, Query} from '@nestjs/common';
+import {Controller, Get, Post, Body, Param, Delete, UseGuards, Query, Req} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -68,8 +68,31 @@ export class UsersController {
       }
   }
 
+  @Delete('/deletion-account')
+  async removeCurrentUser(@Req() req:any) {
+    const id = req.user.id;
+      
+    let user = await this.usersService.findOne(id);
+    if (user.error) {
+      return {
+          success: false,
+          message: user.error,
+          data: [],
+      }
+    }
+
+    let res = await this.usersService.remove(+id);
+
+      return {
+          success: !res.error,
+          message: res.error ? res.error : 'Account deleted successfully!',
+          data: res.error ? [] : res,
+      }
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
+    console.log(id)
     let user = await this.usersService.findOne(+id);
     if (user.error) {
       return {
@@ -87,4 +110,7 @@ export class UsersController {
           data: res.error ? [] : res,
       }
   }
+
+
+  
 }
