@@ -1,16 +1,16 @@
-import {Controller, Get, Post, Body, Param, Delete, UseGuards, Query, Req} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, Query, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {AuthGuard} from "../auth/auth.guard";
-import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
+import { AuthGuard } from "../auth/auth.guard";
+import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -18,23 +18,23 @@ export class UsersController {
     let res = await this.usersService.create(createUserDto);
 
     return {
-        success: !res.error,
-        message: res.error ? res.error : 'User created successfully!',
-        data: res.error ? [] : res,
+      success: !res.error,
+      message: res.error ? res.error : 'User created successfully!',
+      data: res.error ? [] : res,
     }
   }
 
   @Get()
-  @ApiQuery({ name: 'page', required: false})
-  @ApiQuery({ name: 'limit', required: false})
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
     let res = await this.usersService.findAll(page, limit);
 
-      return {
-          success: true,
-          message: '',
-          ...res
-      }
+    return {
+      success: true,
+      message: '',
+      ...res
+    }
   }
 
   @Get(':id')
@@ -42,53 +42,34 @@ export class UsersController {
     let res = await this.usersService.findOne(+id);
 
     return {
-        success: !res.error,
-        message: res.error ? res.error : '',
-        data: res.error ? [] : res,
+      success: !res.error,
+      message: res.error ? res.error : '',
+      data: res.error ? [] : res,
     }
   }
+
+
 
   @Post(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     let user = await this.usersService.findOne(+id);
     if (user.error) {
       return {
-          success: false,
-          message: user.error,
-          data: [],
+        success: false,
+        message: user.error,
+        data: [],
       }
     }
 
     let res = await this.usersService.update(+id, updateUserDto);
 
-      return {
-          success: !res.error,
-          message: res.error ? res.error : 'User updated successfully!',
-          data: res.error ? [] : res,
-      }
-  }
-
-  @Delete('/deletion-account')
-  async removeCurrentUser(@Req() req:any) {
-    const id = req.user.id;
-      
-    let user = await this.usersService.findOne(id);
-    if (user.error) {
-      return {
-          success: false,
-          message: user.error,
-          data: [],
-      }
+    return {
+      success: !res.error,
+      message: res.error ? res.error : 'User updated successfully!',
+      data: res.error ? [] : res,
     }
-
-    let res = await this.usersService.remove(+id);
-
-      return {
-          success: !res.error,
-          message: res.error ? res.error : 'Account deleted successfully!',
-          data: res.error ? [] : res,
-      }
   }
+
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
@@ -96,21 +77,21 @@ export class UsersController {
     let user = await this.usersService.findOne(+id);
     if (user.error) {
       return {
-          success: false,
-          message: user.error,
-          data: [],
+        success: false,
+        message: user.error,
+        data: [],
       }
     }
 
     let res = await this.usersService.remove(+id);
 
-      return {
-          success: !res.error,
-          message: res.error ? res.error : 'User deleted successfully!',
-          data: res.error ? [] : res,
-      }
+    return {
+      success: !res.error,
+      message: res.error ? res.error : 'User deleted successfully!',
+      data: res.error ? [] : res,
+    }
   }
 
 
-  
+
 }

@@ -8,30 +8,31 @@ import {
     Request,
     UseGuards,
     UseInterceptors,
-    UploadedFile, ParseFilePipe, MaxFileSizeValidator, Param, Inject
+    UploadedFile, ParseFilePipe, MaxFileSizeValidator, Param, Inject,
+    Req
 } from '@nestjs/common';
-import {AuthService} from "./auth.service";
+import { AuthService } from "./auth.service";
 import { AuthGuard } from './auth.guard';
-import {SigninDto} from "./dto/signin.dto";
-import {CreateUserDto} from "../users/dto/create-user.dto";
-import {ApiBearerAuth, ApiBody, ApiConsumes, ApiTags} from "@nestjs/swagger";
-import {FileInterceptor} from "@nestjs/platform-express";
+import { SigninDto } from "./dto/signin.dto";
+import { CreateUserDto } from "../users/dto/create-user.dto";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { FileInterceptor } from "@nestjs/platform-express";
 import {
     deleteFileFromUploads,
     getRandomFileName,
     uploadFile
 } from "../helpers/helper";
-import {ForgotPasswordDto} from "./dto/forgot-password.dto";
-import {SubmitOTPDto} from "./dto/submit-otp.dto";
-import {UsersService} from "../users/users.service";
-import {UpdateUserDto} from "../users/dto/update-user.dto";
-import {ResetPasswordDto} from "./dto/reset-password.dto";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { SubmitOTPDto } from "./dto/submit-otp.dto";
+import { UsersService } from "../users/users.service";
+import { UpdateUserDto } from "../users/dto/update-user.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { firebaseAdmin } from '../firebase/firebase-admin';
-import {socketIoServer} from "../main";
-import {BlockUserDto} from "./dto/block-user.dto";
-import {Repository} from "typeorm";
-import {User} from "../users/entities/user.entity";
-import {FCMTokenDto} from "./dto/fcm-token.dto";
+import { socketIoServer } from "../main";
+import { BlockUserDto } from "./dto/block-user.dto";
+import { Repository } from "typeorm";
+import { User } from "../users/entities/user.entity";
+import { FCMTokenDto } from "./dto/fcm-token.dto";
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -41,7 +42,7 @@ export class AuthController {
         private userService: UsersService,
         @Inject('USER_REPOSITORY')
         private userRepository: Repository<User>,
-    ) {}
+    ) { }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
@@ -89,7 +90,7 @@ export class AuthController {
         schema: {
             type: 'object',
             properties: {
-                profile_picture: {type: 'string', format: 'binary'}
+                profile_picture: { type: 'string', format: 'binary' }
             }
         }
     })
@@ -97,7 +98,7 @@ export class AuthController {
     async uploadProfilePicture(@Request() req, @UploadedFile(
         new ParseFilePipe({
             validators: [
-                new MaxFileSizeValidator({maxSize: 100000000})
+                new MaxFileSizeValidator({ maxSize: 100000000 })
             ]
         })
     ) profile_picture: Express.Multer.File) {
@@ -131,7 +132,7 @@ export class AuthController {
         return {
             success: !res.error,
             message: res.error ? res.error : 'Profile picture updated successfully!',
-            data: res.error ? [] : {profile_picture: file_path},
+            data: res.error ? [] : { profile_picture: file_path },
         }
     }
 
@@ -211,7 +212,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post('block-user/:flag')
     @ApiBearerAuth()
-    async blockUser (@Request() req, @Body() blockUserDto: BlockUserDto, @Param('flag') flag: number) {
+    async blockUser(@Request() req, @Body() blockUserDto: BlockUserDto, @Param('flag') flag: number) {
         let user = await this.userService.findOneByEmail(req.user.email);
         if (user.id == blockUserDto.user_id) {
             return {
@@ -291,7 +292,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Get('blocked-users')
     @ApiBearerAuth()
-    async blockedUsers (@Request() req) {
+    async blockedUsers(@Request() req) {
         let user = await this.userService.findOneByEmail(req.user.email);
         if (user.error) {
             return {
@@ -359,7 +360,7 @@ export class AuthController {
     @ApiBearerAuth()
     async fcmTokenUpdate(@Request() req, @Body() FCMTokenDto: FCMTokenDto) {
         const response = await this.authService.fcmTokenUpdate(FCMTokenDto, req.user.id);
-        
+
         return {
             success: true,
             message: 'Token update successfully!',
@@ -371,7 +372,7 @@ export class AuthController {
     @Get('fcm-stream-init')
     @ApiBearerAuth()
     async fcmStreamInit() {
-        
+
         const response = await this.authService.fcmStreamInit();
 
         return {
@@ -379,5 +380,30 @@ export class AuthController {
             message: 'FCM Stream Init',
             data: response
         };
+    }
+
+
+    @UseGuards(AuthGuard)
+    @Get('/deletion-account')
+    @ApiBearerAuth()
+    async removeCurrentUser(@Req() req: any) {
+        const id = req.user.id;
+
+        let user = await this.userService.findOne(id);
+        if (user.error) {
+            return {
+                success: false,
+                message: user.error,
+                data: [],
+            }
+        }
+
+        let res = await this.userService.remove(+id);
+
+        return {
+            success: !res.error,
+            message: res.error ? res.error : 'Account deleted successfully!',
+            data: res.error ? [] : res,
+        }
     }
 }
