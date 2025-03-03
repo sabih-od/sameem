@@ -1,31 +1,30 @@
-import {Controller, Get, Post, Body, Param, Delete, Query, UseGuards, Headers} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Query, UseGuards, Headers } from '@nestjs/common';
 import { FaqService } from './faq.service';
 import { CreateFaqDto } from './dto/create-faq.dto';
 import { UpdateFaqDto } from './dto/update-faq.dto';
-import {ApiBearerAuth, ApiHeader, ApiQuery, ApiTags} from "@nestjs/swagger";
-import {AuthGuard} from "../auth/auth.guard";
-import {MailService} from "../mail/mail.service";
-import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
-import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
-import {TranslationsService} from "../translations/translations.service";
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "../auth/auth.guard";
+import { MailService } from "../mail/mail.service";
+import { CreateTranslationDto } from "../translations/dto/create-translation.dto";
+import { UpdateTranslationDto } from "../translations/dto/update-translation.dto";
+import { TranslationsService } from "../translations/translations.service";
 
 @ApiTags('FAQs')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
 @Controller('faq')
 export class FaqController {
     private readonly translated_columns: string[];
     private readonly languages: string[];
     private readonly lang_ids: {};
-  constructor(private readonly faqService: FaqService, private readonly translationsService: TranslationsService) {
-      this.translated_columns = ['question', 'answer'];
-      this.languages = ['en', 'ar'];
-      this.lang_ids = {
-          'en': 1,
-          'ar': 2,
-      };
-  }
-
+    constructor(private readonly faqService: FaqService, private readonly translationsService: TranslationsService) {
+        this.translated_columns = ['question', 'answer'];
+        this.languages = ['en', 'ar'];
+        this.lang_ids = {
+            'en': 1,
+            'ar': 2,
+        };
+    }
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Post()
     async create(@Body() createFaqDto: CreateFaqDto) {
         let question_ar = createFaqDto.question_ar
@@ -79,15 +78,15 @@ export class FaqController {
     }
 
     @Get()
-    @ApiQuery({ name: 'page', required: false})
-    @ApiQuery({ name: 'limit', required: false})
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiQuery({ name: 'page', required: false })
+    @ApiQuery({ name: 'limit', required: false })
+    @ApiHeader({ name: 'lang', required: false })
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Headers('lang') lang?: number) {
         let res = await this.faqService.findAll(page, limit);
 
         //translation work
         let language_id = lang ?? 1;
-        if(res.data) {
+        if (res.data) {
             //get preferred language
             res.data = await Promise.all(
                 res.data.map(async (faq) => {
@@ -114,7 +113,7 @@ export class FaqController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     @Get(':id')
     async findOne(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.faqService.findOne(+id);
@@ -136,7 +135,8 @@ export class FaqController {
             data: res.error ? [] : res,
         }
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Post(':id')
     async update(@Param('id') id: string, @Body() updateFaqDto: UpdateFaqDto) {
         let faq = await this.faqService.findOne(+id);
@@ -174,7 +174,8 @@ export class FaqController {
             data: res.error ? [] : res,
         }
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Delete(':id')
     async remove(@Param('id') id: string) {
         let faq = await this.faqService.findOne(+id);
@@ -212,8 +213,9 @@ export class FaqController {
             data: res.error ? [] : res,
         }
     }
-
-    async createTranslation (module: string, module_id: number, language_id: number, key: string, value: string) {
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    async createTranslation(module: string, module_id: number, language_id: number, key: string, value: string) {
         if (value == null) {
             return null;
         }
@@ -226,8 +228,9 @@ export class FaqController {
         createTranslationDto.value = value;
         return await this.translationsService.create(createTranslationDto);
     }
-
-    async updateTranslation (module: string, module_id: number, language_id: number, key: string, value: string) {
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    async updateTranslation(module: string, module_id: number, language_id: number, key: string, value: string) {
         if (value == null) {
             return null;
         }
@@ -249,8 +252,9 @@ export class FaqController {
             return await this.createTranslation(module, module_id, language_id, key, value);
         }
     }
-
-    async addPreferredTranslation (record, language_id) {
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    async addPreferredTranslation(record, language_id) {
         for (const key of this.translated_columns) {
             let res = await this.translationsService.findOneWhere({
                 where: {
@@ -267,7 +271,9 @@ export class FaqController {
         return record;
     }
 
-    async addTranslatedColumns (record) {
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
+    async addTranslatedColumns(record) {
         for (const language of this.languages) {
             for (const key of this.translated_columns) {
                 let res = await this.translationsService.findOneWhere({

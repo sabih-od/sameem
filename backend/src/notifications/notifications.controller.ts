@@ -8,8 +8,8 @@ import {AuthService} from "../auth/auth.service";
 import {In} from "typeorm";
 
 @ApiTags('Notifications')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard)
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService, private readonly authService: AuthService) {}

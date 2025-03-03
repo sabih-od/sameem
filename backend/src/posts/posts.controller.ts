@@ -77,8 +77,8 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
 }
 
 @ApiTags('Posts')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard)
 @Controller('posts')
 export class PostsController {
     private readonly translated_columns: string[];

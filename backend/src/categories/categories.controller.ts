@@ -11,8 +11,8 @@ import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
 import {GetCategoryTranslationDto} from "./dto/get-category-translation.dto";
 
 @ApiTags('Categories')
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard)
 @Controller('categories')
 export class CategoriesController {
     private readonly translated_columns: string[];
