@@ -77,8 +77,7 @@ export class MaxFileSizeInterceptor implements NestInterceptor {
 }
 
 @ApiTags('Posts')
-// @ApiBearerAuth()
-// @UseGuards(AuthGuard)
+
 @Controller('posts')
 export class PostsController {
     private readonly translated_columns: string[];
@@ -732,7 +731,8 @@ export class PostsController {
             data: res.error ? [] : res,
         }
     }
-
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
     @Post('add-to-favourites/:id')
     async addToFavourites (@Param('id') id: string, @Request() req) {
         let post = await this.postsService.findOne(+id);
