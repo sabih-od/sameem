@@ -449,7 +449,8 @@ export class PostsController {
             data: res.error ? [] : res,
         }
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @ApiHeader({ name: 'lang', required: false})
     @ApiQuery({ name: 'page', required: false})
     @ApiQuery({ name: 'limit', required: false})
@@ -770,7 +771,8 @@ export class PostsController {
             data: []
         };
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @ApiHeader({ name: 'lang', required: false})
     @Get('favourites/list')
     async favouritesList (@Request() req, @Headers('lang') lang?: number) {
@@ -821,7 +823,8 @@ export class PostsController {
             data: favourite_posts
         };
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Get('favourites/post-ids')
     async favouritePostIds (@Request() req) {
         let user = await this.usersService.findOne(+req.user.id);
