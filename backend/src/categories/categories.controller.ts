@@ -132,9 +132,12 @@ export class CategoriesController {
         let res = await this.categoriesService.findAll(1, 10000, {
             where: {
                 parent_id: IsNull(),
-                is_active: 1
+                is_active: 1,
             },
-            relations: ['children']
+            order:{
+                ordering:'ASC'
+            },
+            relations: ['children'],
         });
 
         //translation work

@@ -18,6 +18,9 @@ export class Category {
     @Column({ type: 'text', nullable: true })
     created_at: string;
 
+    @Column({ type: 'int', nullable: true })
+    ordering: string;
+
     //relations
     @OneToMany(type => Category, category => category.parent)
     children: Category[];
