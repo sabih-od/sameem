@@ -24,6 +24,8 @@ import { StreamGateway } from './gateway/stream.gateway';
 import { PaymentModule } from './payment/payment.module';
 import { SubscriptionModule } from './subscriptions/subscription.module';
 import { UserSubscriptionModule } from './user-subscriptions/user-subscription.module';
+import { TypeModule } from './types/type.module';
+import { TypeOfPDFModule } from './types-of-pdfs/type-of-pdf.module';
 
 @Module({
     imports: [
@@ -47,7 +49,9 @@ import { UserSubscriptionModule } from './user-subscriptions/user-subscription.m
         GoogelAuthModule,
         PaymentModule,
         SubscriptionModule,
-        UserSubscriptionModule
+        UserSubscriptionModule,
+        TypeModule,
+        TypeOfPDFModule
     ],
     controllers: [AppController],
     providers: [AppService, StreamGateway],
