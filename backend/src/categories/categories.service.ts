@@ -1,15 +1,15 @@
-import {Inject, Injectable} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import {EntityNotFoundError, QueryFailedError, Repository} from "typeorm";
-import {Category} from "./entities/category.entity";
+import { EntityNotFoundError, QueryFailedError, Repository } from "typeorm";
+import { Category } from "./entities/category.entity";
 
 @Injectable()
 export class CategoriesService {
     constructor(
         @Inject('CATEGORY_REPOSITORY')
         private categoryRepository: Repository<Category>,
-    ) {}
+    ) { }
 
     async create(createCategoryDto: CreateCategoryDto): Promise<any> {
         try {
@@ -27,7 +27,7 @@ export class CategoriesService {
         }
     }
 
-    async findAll(page: number = 1, limit: number = 10, args: {} = {order: {created_at: 'DESC'}}): Promise<any> {
+    async findAll(page: number = 1, limit: number = 10, args: {} = { order: { created_at: 'DESC' } }): Promise<any> {
         const [data, total] = await this.categoryRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
@@ -68,11 +68,13 @@ export class CategoriesService {
             if (category.error) {
                 return category;
             }
+            if (updateCategoryDto.name_ar) {
 
-            let name_ar = updateCategoryDto.name_ar;
-            delete updateCategoryDto.name_ar;
-            await this.categoryRepository.update(category.id, updateCategoryDto);
-            updateCategoryDto['name_ar'] = name_ar;
+                let name_ar = updateCategoryDto.name_ar;
+                delete updateCategoryDto.name_ar;
+                await this.categoryRepository.update(category.id, updateCategoryDto);
+                updateCategoryDto['name_ar'] = name_ar;
+            }
 
             return await this.findOne(id);
         } catch (error) {
