@@ -1,5 +1,5 @@
-import {ApiProperty} from "@nestjs/swagger";
-import {IsNotEmpty} from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty } from "class-validator";
 
 export class CreateCategoryDto {
     @IsNotEmpty()
@@ -14,6 +14,9 @@ export class CreateCategoryDto {
 
     @ApiProperty({ example: 1 })
     is_active: number;
+
+    @ApiProperty({ example: 'Image File?' })
+    image: string;
 
     created_at: string;
 }

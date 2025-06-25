@@ -21,6 +21,9 @@ export class Category {
     @Column({ type: 'int', nullable: true })
     ordering: string;
 
+    @Column({ type: 'varchar', nullable: true })
+    image: string;
+
     //relations
     @OneToMany(type => Category, category => category.parent)
     children: Category[];

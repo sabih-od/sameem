@@ -1,14 +1,17 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Headers} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Headers, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import {ApiBearerAuth, ApiHeader, ApiQuery, ApiTags} from "@nestjs/swagger";
-import {AuthGuard} from "../auth/auth.guard";
-import {IsNull} from "typeorm";
-import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
-import {TranslationsService} from "../translations/translations.service";
-import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
-import {GetCategoryTranslationDto} from "./dto/get-category-translation.dto";
+import { ApiBearerAuth, ApiHeader, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "../auth/auth.guard";
+import { IsNull } from "typeorm";
+import { CreateTranslationDto } from "../translations/dto/create-translation.dto";
+import { TranslationsService } from "../translations/translations.service";
+import { UpdateTranslationDto } from "../translations/dto/update-translation.dto";
+import { GetCategoryTranslationDto } from "./dto/get-category-translation.dto";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @ApiTags('Categories')
 // @ApiBearerAuth()
@@ -16,15 +19,25 @@ import {GetCategoryTranslationDto} from "./dto/get-category-translation.dto";
 @Controller('categories')
 export class CategoriesController {
     private readonly translated_columns: string[];
-  constructor(
-      private readonly categoriesService: CategoriesService,
-      private readonly translationsService: TranslationsService,
-  ) {
-      this.translated_columns = ['name'];
-  }
+    constructor(
+        private readonly categoriesService: CategoriesService,
+        private readonly translationsService: TranslationsService,
+    ) {
+        this.translated_columns = ['name'];
+    }
 
     @Post()
-    async create(@Body() createCategoryDto: CreateCategoryDto) {
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: './uploads/category/',
+            filename: (req, file, callback) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const ext = extname(file.originalname);
+                callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+            },
+        }),
+    }))
+    async create(@Body() createCategoryDto: CreateCategoryDto, @UploadedFile() file: Express.Multer.File) {
         if (createCategoryDto.parent_id) {
             let parent = await this.categoriesService.findOne(+createCategoryDto.parent_id);
 
@@ -34,6 +47,11 @@ export class CategoriesController {
                     message: parent.error,
                 }
             }
+        }
+        console.log("File" ,file);
+        if (file) {
+            let app_url = process.env.APP_URL + ':' + process.env.PORT;
+            createCategoryDto.image = `${app_url}/uploads/category/${file.filename}`;
         }
 
         createCategoryDto.created_at = Date.now().toString();
@@ -63,9 +81,9 @@ export class CategoriesController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
-    @ApiQuery({ name: 'page', required: false})
-    @ApiQuery({ name: 'limit', required: false})
+    @ApiHeader({ name: 'lang', required: false })
+    @ApiQuery({ name: 'page', required: false })
+    @ApiQuery({ name: 'limit', required: false })
     @Get()
     async findAll(@Query('page') page?: number, @Query('limit') limit?: number, @Headers('lang') lang?: number) {
         let res = await this.categoriesService.findAll(page, limit, {
@@ -79,7 +97,7 @@ export class CategoriesController {
         });
 
         //translation work
-        if(res.data) {
+        if (res.data) {
             let language_id = lang ?? 1;
             res.data = await Promise.all(
                 res.data.map(async (category) => {
@@ -127,21 +145,21 @@ export class CategoriesController {
     }
 
     @Get('get-menu')
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     async getMenu(@Headers('lang') lang?: number) {
         let res = await this.categoriesService.findAll(1, 10000, {
             where: {
                 parent_id: IsNull(),
                 is_active: 1,
             },
-            order:{
-                ordering:'ASC'
+            order: {
+                ordering: 'ASC'
             },
             relations: ['children'],
         });
 
         //translation work
-        if(res.data) {
+        if (res.data) {
             let language_id = lang ?? 1;
             res.data = await Promise.all(
                 res.data.map(async (category) => {
@@ -188,7 +206,7 @@ export class CategoriesController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     @Get(':id')
     async findOne(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.categoriesService.findOne(+id);
@@ -218,7 +236,18 @@ export class CategoriesController {
     }
 
     @Post(':id')
-    async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    @UseInterceptors(FileInterceptor('file', {
+        storage: diskStorage({
+            destination: './uploads/category/',
+            filename: (req, file, callback) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const ext = extname(file.originalname);
+                callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+            },
+        }),
+    }))
+    async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto, @UploadedFile() file: Express.Multer.File) {
+
         let category = await this.categoriesService.findOne(+id);
         if (category.error) {
             return {
@@ -226,6 +255,10 @@ export class CategoriesController {
                 message: category.error,
                 data: [],
             }
+        }
+        if (file) {
+            let app_url = process.env.APP_URL + ':' + process.env.PORT;
+            updateCategoryDto.image = `${app_url}/uploads/category/${file.filename}`;
         }
 
         if (updateCategoryDto.parent_id) {
@@ -329,7 +362,7 @@ export class CategoriesController {
     }
 
     @Post('translation/get')
-    async getTranslation (@Body() getCategoryTranslationDto: GetCategoryTranslationDto) {
+    async getTranslation(@Body() getCategoryTranslationDto: GetCategoryTranslationDto) {
         let res = await this.translationsService.findOneWhere({
             where: {
                 module: 'category',
