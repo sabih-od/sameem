@@ -18,27 +18,27 @@ import {
     UseGuards,
     UseInterceptors
 } from '@nestjs/common';
-import {PostsService} from './posts.service';
-import {CreatePostDto} from './dto/create-post.dto';
-import {UpdatePostDto} from './dto/update-post.dto';
-import {ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiTags} from "@nestjs/swagger";
-import {FileFieldsInterceptor} from "@nestjs/platform-express";
-import {Observable} from "rxjs";
-import {Post as PostEntity} from './entities/post.entity';
-import {map} from "rxjs/operators";
-import {deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate,} from "../helpers/helper";
-import {MediaService} from "../media/media.service";
-import {CreateMediaDto} from "../media/dto/create-media.dto";
-import {ILike, IsNull, Repository} from "typeorm";
-import {CategoriesService} from "../categories/categories.service";
-import {CreateTranslationDto} from "../translations/dto/create-translation.dto";
-import {TranslationsService} from "../translations/translations.service";
-import {UpdateTranslationDto} from "../translations/dto/update-translation.dto";
-import {UsersService} from "../users/users.service";
-import {AuthGuard} from "../auth/auth.guard";
-import {User} from "../users/entities/user.entity";
-import {GetPostTranslationDto} from "./dto/get-post-translation.dto";
-import {UserPostHistoriesService} from "../user_post_histories/user_post_histories.service";
+import { PostsService } from './posts.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiHeader, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { FileFieldsInterceptor } from "@nestjs/platform-express";
+import { Observable } from "rxjs";
+import { Post as PostEntity } from './entities/post.entity';
+import { map } from "rxjs/operators";
+import { deleteFileFromUploads, handleUploadOnCreate, handleUploadOnUpdate, } from "../helpers/helper";
+import { MediaService } from "../media/media.service";
+import { CreateMediaDto } from "../media/dto/create-media.dto";
+import { ILike, IsNull, Repository } from "typeorm";
+import { CategoriesService } from "../categories/categories.service";
+import { CreateTranslationDto } from "../translations/dto/create-translation.dto";
+import { TranslationsService } from "../translations/translations.service";
+import { UpdateTranslationDto } from "../translations/dto/update-translation.dto";
+import { UsersService } from "../users/users.service";
+import { AuthGuard } from "../auth/auth.guard";
+import { User } from "../users/entities/user.entity";
+import { GetPostTranslationDto } from "./dto/get-post-translation.dto";
+import { UserPostHistoriesService } from "../user_post_histories/user_post_histories.service";
 
 @Injectable()
 export class MaxFileSizeInterceptor implements NestInterceptor {
@@ -109,15 +109,15 @@ export class PostsController {
         schema: {
             type: 'object',
             properties: {
-                title: {type: 'string'},
-                description: {type: 'string'},
-                url: {type: 'string'},
-                date: {type: 'string'},
-                time: {type: 'string'},
-                video: {type: 'string', format: 'binary'},
-                audio: {type: 'string', format: 'binary'},
-                image: {type: 'string', format: 'binary'},
-                pdf: {type: 'string', format: 'binary'},
+                title: { type: 'string' },
+                description: { type: 'string' },
+                url: { type: 'string' },
+                date: { type: 'string' },
+                time: { type: 'string' },
+                video: { type: 'string', format: 'binary' },
+                audio: { type: 'string', format: 'binary' },
+                image: { type: 'string', format: 'binary' },
+                pdf: { type: 'string', format: 'binary' },
                 images: {
                     type: 'array',
                     items: { type: 'string', format: 'binary' },
@@ -127,11 +127,11 @@ export class PostsController {
     })
     @UseInterceptors(
         FileFieldsInterceptor([
-            {name: 'video', maxCount: 1},
-            {name: 'audio', maxCount: 1},
-            {name: 'image', maxCount: 1},
-            {name: 'pdf', maxCount: 1},
-            {name: 'images', maxCount: 100},
+            { name: 'video', maxCount: 1 },
+            { name: 'audio', maxCount: 1 },
+            { name: 'image', maxCount: 1 },
+            { name: 'pdf', maxCount: 1 },
+            { name: 'images', maxCount: 100 },
         ]),
         new MaxFileSizeInterceptor(),
     )
@@ -236,11 +236,11 @@ export class PostsController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
-    @ApiQuery({ name: 'page', required: false})
-    @ApiQuery({ name: 'limit', required: false})
-    @ApiQuery({ name: 'category_id', required: false})
-    @ApiQuery({ name: 'title', required: false})
+    @ApiHeader({ name: 'lang', required: false })
+    @ApiQuery({ name: 'page', required: false })
+    @ApiQuery({ name: 'limit', required: false })
+    @ApiQuery({ name: 'category_id', required: false })
+    @ApiQuery({ name: 'title', required: false })
     @Get()
     async findAll(
         @Query('page') page?: number,
@@ -267,7 +267,7 @@ export class PostsController {
         }
 
         if (title) {
-            where_object['where']['translations'] = {  module: 'post', key: 'title', 'value': ILike(`%${title}%`)  }
+            where_object['where']['translations'] = { module: 'post', key: 'title', 'value': ILike(`%${title}%`) }
         }
 
         let res = await this.postsService.findAll(page, limit, {
@@ -277,7 +277,7 @@ export class PostsController {
 
         //translation work
         let language_id = lang ?? 1;
-        if(res.data) {
+        if (res.data) {
             //get preferred language
             res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
@@ -292,7 +292,7 @@ export class PostsController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     @Get('get/featured-posts')
     async findAllFeatured(@Headers('lang') lang?: number) {
 
@@ -308,7 +308,7 @@ export class PostsController {
 
         //translation work
         let language_id = lang ?? 1;
-        if(res.data) {
+        if (res.data) {
             //get preferred language
             res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
@@ -323,9 +323,9 @@ export class PostsController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
-    @ApiQuery({ name: 'category_id', required: false})
-    @ApiQuery({ name: 'title', required: false})
+    @ApiHeader({ name: 'lang', required: false })
+    @ApiQuery({ name: 'category_id', required: false })
+    @ApiQuery({ name: 'title', required: false })
     @Get('/screen-wise')
     async findAllScreenWise(@Query('category_id') category_id?: number, @Query('title') title?: string, @Headers('lang') lang?: number) {
         let video_where_object = { where: {} };
@@ -410,7 +410,7 @@ export class PostsController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     @Get(':id')
     async findOne(@Param('id') id: string, @Headers('lang') lang?: number) {
         let res = await this.postsService.findOne(+id);
@@ -451,11 +451,11 @@ export class PostsController {
     }
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
-    @ApiHeader({ name: 'lang', required: false})
-    @ApiQuery({ name: 'page', required: false})
-    @ApiQuery({ name: 'limit', required: false})
+    @ApiHeader({ name: 'lang', required: false })
+    @ApiQuery({ name: 'page', required: false })
+    @ApiQuery({ name: 'limit', required: false })
     @Get('/get/post-history')
-    async postHistory (
+    async postHistory(
         @Request() req,
         @Query('page') page?: number,
         @Query('limit') limit?: number,
@@ -483,7 +483,7 @@ export class PostsController {
 
         //translation work
         let language_id = lang ?? 1;
-        if(res.data) {
+        if (res.data) {
             //get preferred language
             res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
@@ -503,24 +503,25 @@ export class PostsController {
     @ApiBody({
         schema: {
             type: 'object',
-            properties: {video: {type: 'string', format: 'binary'},
-                audio: {type: 'string', format: 'binary'},
-                image: {type: 'string', format: 'binary'},
-                pdf: {type: 'string', format: 'binary'},
+            properties: {
+                video: { type: 'string', format: 'binary' },
+                audio: { type: 'string', format: 'binary' },
+                image: { type: 'string', format: 'binary' },
+                pdf: { type: 'string', format: 'binary' },
                 images: {
                     type: 'array',
-                    items: { type: 'string', format: 'binary'},
+                    items: { type: 'string', format: 'binary' },
                 },
             }
         }
     })
     @UseInterceptors(
         FileFieldsInterceptor([
-            {name: 'video', maxCount: 1},
-            {name: 'audio', maxCount: 1},
-            {name: 'image', maxCount: 1},
-            {name: 'pdf', maxCount: 1},
-            {name: 'images', maxCount: 100},
+            { name: 'video', maxCount: 1 },
+            { name: 'audio', maxCount: 1 },
+            { name: 'image', maxCount: 1 },
+            { name: 'pdf', maxCount: 1 },
+            { name: 'images', maxCount: 100 },
         ]),
         new MaxFileSizeInterceptor(),
     )
@@ -567,7 +568,7 @@ export class PostsController {
                 );
             }
         }
-         catch (error) {
+        catch (error) {
             throw new BadRequestException(error.message);
         }
 
@@ -631,7 +632,7 @@ export class PostsController {
     }
 
     @Post(':id/mark-as-featured')
-    async markAsFeatured (@Param('id') id: number, @Body() updatePostDto: UpdatePostDto) {
+    async markAsFeatured(@Param('id') id: number, @Body() updatePostDto: UpdatePostDto) {
         let post = await this.postsService.findOne(+id);
         if (post.error) {
             return {
@@ -672,10 +673,10 @@ export class PostsController {
 
         //multiple image delete
         let media_res = await this.mediaService.findAll(1, 1000, {
-           where: {
-               module: 'post',
-               module_id: post.id,
-           }
+            where: {
+                module: 'post',
+                module_id: post.id,
+            }
         });
 
         await Promise.all(
@@ -711,14 +712,14 @@ export class PostsController {
         }
     }
 
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     @Get('category-post/:id')
     async findByCategoryById(@Param('id') id: string, @Headers('lang') lang?: number) {
-        let res = await this.postsService.findAllByCategory(+id,1, 1000);
+        let res = await this.postsService.findAllByCategory(+id, 1, 1000);
 
         //translation work
         let language_id = lang ?? 1;
-        if(res.data) {
+        if (res.data) {
             //get preferred language
             res.data = await this.addPreferredTranslationToArray(res.data, language_id);
 
@@ -732,10 +733,10 @@ export class PostsController {
             data: res.error ? [] : res,
         }
     }
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard)
     @Post('add-to-favourites/:id')
-    async addToFavourites (@Param('id') id: string, @Request() req) {
+    async addToFavourites(@Param('id') id: string, @Request() req) {
         let post = await this.postsService.findOne(+id);
         if (post.error) {
             return {
@@ -773,9 +774,9 @@ export class PostsController {
     }
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
-    @ApiHeader({ name: 'lang', required: false})
+    @ApiHeader({ name: 'lang', required: false })
     @Get('favourites/list')
-    async favouritesList (@Request() req, @Headers('lang') lang?: number) {
+    async favouritesList(@Request() req, @Headers('lang') lang?: number) {
         let user = await this.usersService.findOne(+req.user.id);
 
         let favourite_posts;
@@ -809,7 +810,7 @@ export class PostsController {
 
         //translation work
         let language_id = lang ?? 1;
-        if(favourite_posts) {
+        if (favourite_posts) {
             //get preferred language
             favourite_posts = await this.addPreferredTranslationToArray(favourite_posts, language_id);
 
@@ -826,7 +827,7 @@ export class PostsController {
     @ApiBearerAuth()
     @UseGuards(AuthGuard)
     @Get('favourites/post-ids')
-    async favouritePostIds (@Request() req) {
+    async favouritePostIds(@Request() req) {
         let user = await this.usersService.findOne(+req.user.id);
 
         let favourite_posts;
@@ -844,7 +845,7 @@ export class PostsController {
     }
 
     @Post('translation/get')
-    async getTranslation (@Body() getPostTranslationDto: GetPostTranslationDto) {
+    async getTranslation(@Body() getPostTranslationDto: GetPostTranslationDto) {
         let res = await this.translationsService.findOneWhere({
             where: {
                 module: 'post',
@@ -861,7 +862,7 @@ export class PostsController {
         }
     }
 
-    async createTranslation (module: string, module_id: number, language_id: number, key: string, value: string) {
+    async createTranslation(module: string, module_id: number, language_id: number, key: string, value: string) {
         if (value == null) {
             return null;
         }
@@ -875,7 +876,7 @@ export class PostsController {
         return await this.translationsService.create(createTranslationDto);
     }
 
-    async updateTranslation (module: string, module_id: number, language_id: number, key: string, value: string) {
+    async updateTranslation(module: string, module_id: number, language_id: number, key: string, value: string) {
         if (value == null) {
             return null;
         }
@@ -898,7 +899,7 @@ export class PostsController {
         }
     }
 
-    async addPreferredTranslation (record, language_id) {
+    async addPreferredTranslation(record, language_id) {
         for (const key of this.translated_columns) {
             let res = await this.translationsService.findOneWhere({
                 where: {
@@ -915,7 +916,7 @@ export class PostsController {
         return record;
     }
 
-    async addPreferredTranslationToArray (array, language_id) {
+    async addPreferredTranslationToArray(array, language_id) {
         return await Promise.all(
             array.map(async (item) => {
                 //get preferred language translation
@@ -925,7 +926,7 @@ export class PostsController {
         );
     }
 
-    async addTranslatedColumns (record) {
+    async addTranslatedColumns(record) {
         for (const language of this.languages) {
             for (const key of this.translated_columns) {
                 let res = await this.translationsService.findOneWhere({
@@ -944,7 +945,7 @@ export class PostsController {
         return record;
     }
 
-    async addTranslatedColumnsToArray (array) {
+    async addTranslatedColumnsToArray(array) {
         return await Promise.all(
             array.map(async (item) => {
                 //add translated columns
@@ -953,4 +954,49 @@ export class PostsController {
             })
         );
     }
+
+    @ApiQuery({
+        name: 'param',
+        required: true,
+        enum: ['video', 'audio', 'pdf', 'image', 'url'],
+        description: 'Filter by media type: video, audio, pdf, image, url'
+    })
+    @Get('category/by')
+    async postGetBy(@Query('param') param: string) {
+        try {
+            const allowedParams = ['video', 'audio', 'pdf', 'image', 'url'];
+
+            if (!allowedParams.includes(param)) {
+                return {
+                    success: false,
+                    message: `Invalid param. Allowed values are: ${allowedParams.join(', ')}`
+                };
+            }
+
+            const posts = await this.postsService.getPostsByParam(param);
+
+            // Filter out null or empty values
+            const filteredPosts = posts.filter(post => post[param] !== null && post[param] !== '');
+
+            const result = filteredPosts.map(post => ({
+                id: post.id,
+                title: post.title,
+                [param]: post[param],
+            }));
+
+            return {
+                success: true,
+                message: 'Posts fetched successfully',
+                data: result,
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: error.message || 'Something went wrong',
+            };
+        }
+    }
+
+
+
 }

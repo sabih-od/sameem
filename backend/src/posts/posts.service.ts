@@ -1,10 +1,10 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {CreatePostDto} from './dto/create-post.dto';
-import {UpdatePostDto} from './dto/update-post.dto';
-import {EntityNotFoundError, QueryFailedError, Repository} from "typeorm";
-import {Post} from "./entities/post.entity";
-import {Media} from "../media/entities/media.entity";
-import {Category} from "../categories/entities/category.entity";
+import { Inject, Injectable } from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { EntityNotFoundError, IsNull, Not, QueryFailedError, Repository } from "typeorm";
+import { Post } from "./entities/post.entity";
+import { Media } from "../media/entities/media.entity";
+import { Category } from "../categories/entities/category.entity";
 
 @Injectable()
 export class PostsService {
@@ -15,7 +15,7 @@ export class PostsService {
         private mediaRepository: Repository<Media>,
         @Inject('CATEGORY_REPOSITORY')
         private categoryRepository: Repository<Category>,
-    ) {}
+    ) { }
 
     async create(createPostDto: CreatePostDto): Promise<any> {
         try {
@@ -155,4 +155,13 @@ export class PostsService {
             totalPages,
         };
     }
+
+   async getPostsByParam(param: string): Promise<Post[]> {
+  return await this.postRepository.find({
+    where: {
+      [param]: Not(IsNull())
+    },
+    select: ['id', 'title', param as keyof Post], // 👈 selected param bhi include kare
+  });
+}
 }
