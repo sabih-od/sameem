@@ -63,6 +63,8 @@ export class CategoriesService {
 
     async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<any> {
         try {
+            // console.log('updateCategoryDto', updateCategoryDto);
+            
             const category = await this.findOne(id);
 
             if (category.error) {
@@ -70,11 +72,11 @@ export class CategoriesService {
             }
             if (updateCategoryDto.name_ar) {
 
-                let name_ar = updateCategoryDto.name_ar;
+                var name_ar = updateCategoryDto.name_ar;
                 delete updateCategoryDto.name_ar;
-                await this.categoryRepository.update(category.id, updateCategoryDto);
-                updateCategoryDto['name_ar'] = name_ar;
             }
+            await this.categoryRepository.update(category.id, updateCategoryDto);
+            updateCategoryDto['name_ar'] = name_ar;
 
             return await this.findOne(id);
         } catch (error) {
