@@ -12,15 +12,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @ApiProperty({ example: 'maya' })
     last_name: string;
 
-    @IsEmail()
-    @ApiProperty({ example: 'asd441@mailinator.com' })
-    email: string;
-
     @ApiProperty({ example: '123456' })
     phone: string;
-
-    @ApiProperty({ example: 'admin!@#' })
-    password: string;
 
     role_id: number;
 

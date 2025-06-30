@@ -106,9 +106,6 @@ export class AuthService {
                 }
             });
 
-            if (updateUserDto.password) {
-                updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
-            }
 
             await this.userRepository.update(user.id, updateUserDto);
 
