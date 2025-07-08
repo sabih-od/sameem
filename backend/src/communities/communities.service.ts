@@ -1,0 +1,120 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Community } from './entities/communities.entity';
+import { CreateCommunityDto } from './dto/create-community.dto';
+import { UpdateCommunityDto } from './dto/update-community.dto';
+import { Reason } from 'src/reasons/entities/reason.entity';
+import { CommunityCategory } from './entities/community-category.entity';
+import { User } from 'src/users/entities/user.entity';
+    
+@Injectable()
+export class CommunitiesService {
+  constructor(
+    @InjectRepository(Community)
+    private communityRepo: Repository<Community>,
+
+    @InjectRepository(Reason)
+    private reasonRepo: Repository<Reason>,
+
+    @InjectRepository(CommunityCategory)
+    private communityCategoryRepo: Repository<CommunityCategory>, 
+  ) {}
+
+  async create(dto: CreateCommunityDto) {
+  const community = new Community();
+  community.name = dto.name;
+  community.description = dto.description;
+  community.image = dto.image;
+
+  if (dto.created_by) {
+    community.created_by = { id: dto.created_by } as User;
+  }
+
+  if (dto.reason_ids?.length) {
+    community.reasons = await this.reasonRepo.findByIds(dto.reason_ids);
+  }
+
+  if (dto.community_category_id) {
+    community.community_category = await this.communityCategoryRepo.findOneBy({ 
+      id: dto.community_category_id 
+    });
+  }
+
+  return this.communityRepo.save(community);
+}
+
+
+  findAll() {
+    return this.communityRepo.find({ relations: ['reasons', 'community_category'] });
+  }
+
+  findOne(id: number) {
+    return this.communityRepo.findOne({
+      where: { id },
+      relations: ['reasons', 'community_category'],
+    });
+  }
+
+  async update(id: number, dto: UpdateCommunityDto) {
+  const community = await this.communityRepo.findOne({ 
+    where: { id },
+    relations: ['reasons', 'community_category']
+  });
+
+  if (!community) {
+    throw new Error(`Community with ID ${id} not found`);
+  }
+
+  Object.assign(community, dto);
+
+  if (dto.reason_ids) {
+    const reasons = dto.reason_ids.length 
+      ? await this.reasonRepo.findByIds(dto.reason_ids) 
+      : [];
+    community.reasons = reasons;
+  }
+
+  if (dto.community_category_id !== undefined) {
+    const category = dto.community_category_id 
+      ? await this.communityCategoryRepo.findOneBy({ id: dto.community_category_id })
+      : null;
+    community.community_category = category;
+  }
+
+  try {
+    return await this.communityRepo.save(community);
+  } catch (error) {
+    throw new Error(`Failed to update community: ${error.message}`);
+  }
+}
+
+async remove(id: number) {
+  const exists = await this.communityRepo.existsBy({ id });
+  if (!exists) {
+    throw new Error(`Community with ID ${id} not found`);
+  }
+
+  try {
+    const result = await this.communityRepo.delete(id);
+    if (result.affected === 0) {
+      throw new Error(`No community was deleted (ID: ${id})`);
+    }
+    return { success: true, message: `Community ${id} deleted` };
+  } catch (error) {
+    throw new Error(`Failed to delete community: ${error.message}`);
+  }
+}
+
+async findByCategory(categoryId: number) {
+  return this.communityRepo.find({
+    where: {
+      community_category: {
+        id: categoryId,
+      },
+    },
+    relations: ['reasons', 'community_category'],
+  });
+}
+
+}
