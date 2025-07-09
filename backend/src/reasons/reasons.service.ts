@@ -8,7 +8,7 @@ import { UpdateReasonDto } from './dto/update-reason.dto';
 @Injectable()
 export class ReasonsService {
  constructor(
-         @Inject('TYPE_REPOSITORY')
+         @Inject('REASON_REPOSITORY')
          private reasonRepo: Repository<Reason>,
      ) { }
 
