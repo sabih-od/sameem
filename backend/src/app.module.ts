@@ -38,18 +38,6 @@ import { CommunityJoinsModule } from './community-joins/community-joins.module';
   imports: [
     ConfigModule.forRoot(),
 
-    TypeOrmModule.forRoot({
-        type: 'mysql',
-        host: '192.168.56.56', 
-        port: 3306,           
-        username: 'homestead',
-        password: 'secret',
-        database: 'sameem',
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: false,
-        }),
-
-
     UsersModule,
     AuthModule,
     ContactsModule,
