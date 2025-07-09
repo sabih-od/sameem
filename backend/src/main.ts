@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from "fs";
 import * as path from 'path';
-// import * as https from 'https';
-import * as http from 'http';
+import * as https from 'https';
+// import * as http from 'http';
 import {ValidationPipe} from "@nestjs/common";
 import {join} from "path";
 import {config} from "dotenv";
@@ -13,16 +13,17 @@ import * as express from 'express';
 import * as cors from 'cors';
 const { ExpressPeerServer } = require('peer');
 import { useSocketIoServer } from './socket';
-// const httpsOptions = {
-//     key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
-//     cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
-// };
+const httpsOptions = {
+    key: fs.readFileSync(path.join(__dirname, '', '/ssl/key.txt').replace('dist', 'src')),
+    cert: fs.readFileSync(path.join(__dirname, '', '/ssl/cert.txt').replace('dist', 'src')),
+};
 
+console.log('Ponka =============  Ponka ')
 const app = express();
 
 app.use(cors());
-// const server = https.createServer(httpsOptions, app);
-const server = http.createServer(app);
+const server = https.createServer(httpsOptions, app);
+// const server = http.createServer(app);
 
 // Socket io configuration
 const { Server } = require("socket.io");
@@ -72,9 +73,9 @@ io.on('connection', socket => {
 //     socket.broadcast.emit('ice-candidate', data); // Broadcasting ICE candidate to other clients
 //   });
 });
-const _server = server.listen(process.env.SOCKET_IO_PORT, () => {
-    console.log('socket io server listening on *:' + process.env.SOCKET_IO_PORT);
-});
+// const _server = server.listen(process.env.SOCKET_IO_PORT, () => {
+//     console.log('socket io server listening on *:' + process.env.SOCKET_IO_PORT);
+// });
 
 // const peerServer = ExpressPeerServer(_server, {
 //   debug: true
@@ -87,8 +88,8 @@ const _server = server.listen(process.env.SOCKET_IO_PORT, () => {
 export const socketIoServer = io;
 
 async function bootstrap() {
-  //  const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
-  const app = await NestFactory.create(AppModule, { cors: true });
+    const app = await NestFactory.create(AppModule, { cors: true, httpsOptions });
+//   const app = await NestFactory.create(AppModule, { cors: true });
 
   app.useGlobalPipes(new ValidationPipe());
   app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
