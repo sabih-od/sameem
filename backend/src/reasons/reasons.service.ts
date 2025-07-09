@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Reason } from './entities/reason.entity';
@@ -7,10 +7,10 @@ import { UpdateReasonDto } from './dto/update-reason.dto';
 
 @Injectable()
 export class ReasonsService {
-  constructor(
-    @InjectRepository(Reason)
-    private reasonRepo: Repository<Reason>,
-  ) {}
+ constructor(
+         @Inject('TYPE_REPOSITORY')
+         private reasonRepo: Repository<Reason>,
+     ) { }
 
   create(dto: CreateReasonDto) {
     const reason = this.reasonRepo.create(dto);

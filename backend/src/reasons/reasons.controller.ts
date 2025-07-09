@@ -4,7 +4,8 @@ import {
 import { ReasonsService } from './reasons.service';
 import { CreateReasonDto } from './dto/create-reason.dto';
 import { UpdateReasonDto } from './dto/update-reason.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Reasons')
 @Controller('reasons')
 export class ReasonsController {
   constructor(private readonly reasonsService: ReasonsService) {}
