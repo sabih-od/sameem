@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+// src/community-categories/community-categories.service.ts
+
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CommunityCategory } from './entities/community-category.entity';
 import { CreateCommunityCategoryDto } from './dto/create-community-category.dto';
@@ -8,7 +9,7 @@ import { UpdateCommunityCategoryDto } from './dto/update-community-category.dto'
 @Injectable()
 export class CommunityCategoriesService {
   constructor(
-    @InjectRepository(CommunityCategory)
+    @Inject('COMMUNITY_CATEGORY_REPOSITORY')
     private repo: Repository<CommunityCategory>,
   ) {}
 

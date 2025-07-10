@@ -60,11 +60,11 @@ import { CommunityJoinsModule } from './community-joins/community-joins.module';
     UserSubscriptionModule,
     TypeModule,
     TypeOfPDFModule,
-    // CommunitiesModule,
+    CommunitiesModule,
     ReasonsModule,
-    // CommunityCategoriesModule,
-    // CommunitiesModule,
-    // CommunityJoinsModule
+    CommunityCategoriesModule,
+    CommunitiesModule,
+    CommunityJoinsModule
     
   ],
   controllers: [AppController],

@@ -4,7 +4,8 @@ import {
 import { CommunityCategoriesService } from './community-categories.service';
 import { CreateCommunityCategoryDto } from './dto/create-community-category.dto';
 import { UpdateCommunityCategoryDto } from './dto/update-community-category.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Community Categories')
 @Controller('community-categories')
 export class CommunityCategoriesController {
   constructor(private readonly service: CommunityCategoriesService) {}

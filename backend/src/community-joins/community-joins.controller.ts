@@ -1,7 +1,8 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CommunityJoinsService } from './community-joins.service';
 import { CreateCommunityJoinDto } from './dto/create-community-join.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Community Joins')
 @Controller('community-joins')
 export class CommunityJoinsController {
   constructor(private readonly service: CommunityJoinsService) {}
@@ -14,7 +15,7 @@ export class CommunityJoinsController {
   @Get()
   findAll() {
     return this.service.findAll();
-  } 
+  }
 
   @Get('user/:user_id')
   findByUser(@Param('user_id') user_id: string) {

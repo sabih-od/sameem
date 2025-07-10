@@ -10,7 +10,8 @@ import {
 import { CommunitiesService } from './communities.service';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Communities')
 @Controller('communities')
 export class CommunitiesController {
   constructor(private readonly service: CommunitiesService) {}

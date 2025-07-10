@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Community } from './entities/communities.entity';
@@ -10,15 +10,15 @@ import { User } from 'src/users/entities/user.entity';
     
 @Injectable()
 export class CommunitiesService {
-  constructor(
-    @InjectRepository(Community)
+   constructor(
+    @Inject('COMMUNITY_REPOSITORY')
     private communityRepo: Repository<Community>,
 
-    @InjectRepository(Reason)
+    @Inject('REASON_REPOSITORY')
     private reasonRepo: Repository<Reason>,
 
-    @InjectRepository(CommunityCategory)
-    private communityCategoryRepo: Repository<CommunityCategory>, 
+     @Inject('COMMUNITY_CATEGORY_REPOSITORY')
+    private communityCategoryRepo: Repository<CommunityCategory>,
   ) {}
 
   async create(dto: CreateCommunityDto) {
