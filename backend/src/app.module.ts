@@ -32,11 +32,22 @@ import { CommunitiesModule } from './communities/communities.module';
 import { ReasonsModule } from './reasons/reasons.module';
 import { CommunityCategoriesModule } from './community-categories/community-categories.module';
 import { CommunityJoinsModule } from './community-joins/community-joins.module';
+import { CommunityPostsModule } from './community-post/community-posts.module';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    // TypeOrmModule.forRoot({
+    //     type: 'mysql',
+    //     host: '192.168.56.56', 
+    //     port: 3306,           
+    //     username: 'homestead',
+    //     password: 'secret',
+    //     database: 'sameem',
+    //     entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    //     synchronize: true,
+    // }),
 
     UsersModule,
     AuthModule,
@@ -64,7 +75,8 @@ import { CommunityJoinsModule } from './community-joins/community-joins.module';
     ReasonsModule,
     CommunityCategoriesModule,
     CommunitiesModule,
-    CommunityJoinsModule
+    CommunityJoinsModule,
+    CommunityPostsModule,
     
   ],
   controllers: [AppController],
