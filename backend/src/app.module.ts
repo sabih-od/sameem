@@ -33,6 +33,7 @@ import { ReasonsModule } from './reasons/reasons.module';
 import { CommunityCategoriesModule } from './community-categories/community-categories.module';
 import { CommunityJoinsModule } from './community-joins/community-joins.module';
 import { CommunityPostsModule } from './community-post/community-posts.module';
+import { FriendModule } from './friend/friend.module';
 
 
 @Module({
@@ -77,6 +78,7 @@ import { CommunityPostsModule } from './community-post/community-posts.module';
     CommunitiesModule,
     CommunityJoinsModule,
     CommunityPostsModule,
+    FriendModule,
     
   ],
   controllers: [AppController],
