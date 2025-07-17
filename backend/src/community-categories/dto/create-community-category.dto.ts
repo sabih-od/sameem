@@ -7,8 +7,10 @@ export class CreateCommunityCategoryDto {
   @ApiProperty({ example: 'abc' })
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ example: 'url' })
-  image: string;
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Image file for the community category',
+  })
+  image: any;
 }

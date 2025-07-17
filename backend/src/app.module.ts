@@ -34,6 +34,8 @@ import { CommunityCategoriesModule } from './community-categories/community-cate
 import { CommunityJoinsModule } from './community-joins/community-joins.module';
 import { CommunityPostsModule } from './community-post/community-posts.module';
 import { FriendModule } from './friend/friend.module';
+import { ChatsModule } from './chats/chats.module';
+
 
 
 @Module({
@@ -79,6 +81,7 @@ import { FriendModule } from './friend/friend.module';
     CommunityJoinsModule,
     CommunityPostsModule,
     FriendModule,
+    ChatsModule,
     
   ],
   controllers: [AppController],
