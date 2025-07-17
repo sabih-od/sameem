@@ -1,7 +1,9 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class CreateCommunityPostDto {
+  @Type(() => Number)
   @IsNumber()
   @ApiProperty({ example: 1 })
   community_id: number;
@@ -11,8 +13,17 @@ export class CreateCommunityPostDto {
   @ApiProperty({ example: 'This is a sample post' })
   text: string;
 
-  @IsString()
+  // @IsString()
+  // @IsOptional()
+  // @ApiProperty({ example: 'image.jpg', required: false })
+  // image?: string;
+
   @IsOptional()
-  @ApiProperty({ example: 'image.jpg', required: false })
-  image?: string;
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Community Post image file to upload',
+    required: false,
+  })
+  image?: any;
 }
