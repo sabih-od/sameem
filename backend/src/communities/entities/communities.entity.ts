@@ -28,7 +28,7 @@ export class Community {
   @ApiProperty({ example: 'A community for learning NestJS and sharing knowledge', required: false })
   description: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true ,  type: 'text'})
   @ApiProperty({ example: 'nestjs-community.png', required: false })
   image: string;
 
