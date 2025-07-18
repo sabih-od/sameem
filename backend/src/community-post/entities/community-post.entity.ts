@@ -21,7 +21,7 @@ export class CommunityPost {
   @Column('longtext')
   text: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'text', nullable: true })
   image: string;
 
   @CreateDateColumn()

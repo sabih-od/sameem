@@ -14,7 +14,7 @@ export class CommunityCategory {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text', nullable: true })
   image: string;
 
   @CreateDateColumn({ type: 'timestamp' })
