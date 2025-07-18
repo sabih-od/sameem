@@ -14,7 +14,8 @@ export class CommunityPost {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Community)
+  // @ManyToOne(() => Community)
+  @ManyToOne(() => Community, (community) => community.community_posts)
   @JoinColumn({ name: 'community_id' })
   community: Community;
 

@@ -22,7 +22,7 @@ export class CommunityJoinsController {
   @Post()
   @ApiOperation({
     summary: 'Join a community',
-    description: 'This endpoint allows a user to join and leave a community by providing user and community IDs and using status.',
+    description: 'This endpoint allows a user to join and leave a community by providing user and community IDs and using status.(status = 1 =>join |  status = 0 =>leave)',
   })
   @ApiOkResponse({
     description: 'Join or leave a community',
