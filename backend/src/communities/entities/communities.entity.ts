@@ -8,11 +8,13 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
 import { Reason } from 'src/reasons/entities/reason.entity';
 import { CommunityCategory } from './community-category.entity';
+import { CommunityPost } from 'src/community-post/entities/community-post.entity';
 
 @Entity()
 export class Community {
@@ -72,4 +74,8 @@ export class Community {
     required: false,
   })
   community_category: CommunityCategory;
+
+
+  @OneToMany(() => CommunityPost, (post) => post.community)
+  community_posts: CommunityPost[];
 }

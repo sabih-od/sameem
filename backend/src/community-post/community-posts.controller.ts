@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,8 +16,9 @@ import { extname } from 'path';
 import { CommunityPostsService } from './community-posts.service';
 import { CreateCommunityPostDto } from './dto/create-community-post.dto';
 import { UpdateCommunityPostDto } from './dto/update-community-post.dto';
-import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
 import { CommunityPost } from './entities/community-post.entity';
+
 
 @ApiTags('Community Posts')
 @Controller('community-posts')
@@ -74,5 +76,12 @@ export class CommunityPostsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.remove(+id);
+  }
+
+  @Get('by-community/:communityId')
+  @ApiParam({ name: 'communityId', type: Number })
+  @ApiOkResponse({ type: [CommunityPost] })
+  async getPostsByCommunity(@Param('communityId', ParseIntPipe) communityId: number) {
+    return this.service.findByCommunityId(communityId);
   }
 }

@@ -48,6 +48,7 @@ export class CommunitiesController {
   }
 
   @Get('by-category/:categoryId')
+  @ApiOperation({ summary: 'Get communities by Category Id' })
   @ApiOkResponse({ description: 'Communities by category', type: Community, isArray: true })
   getByCategory(@Param('categoryId') categoryId: string) {
     return this.service.findByCategory(+categoryId);

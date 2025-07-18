@@ -38,4 +38,16 @@ export class CommunityPostsService {
   remove(id: number) {
     return this.repo.delete(id);
   }
+
+  async findByCommunityId(communityId: number): Promise<CommunityPost[]> {
+    return this.repo.find({
+      where: {
+        community: { id: communityId },
+      },
+      relations: ['community'],
+      order: {
+        created_at: 'DESC',
+      },
+    });
+  }
 }

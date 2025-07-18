@@ -94,7 +94,7 @@ export class CommunitiesService {
   findOne(id: number) {
     return this.communityRepo.findOne({
       where: { id },
-      relations: ['reasons', 'community_category'],
+      relations: ['reasons', 'community_category', 'community_posts'],
     });
   }
 
@@ -178,7 +178,7 @@ async findByCategory(categoryId: number) {
         id: categoryId,
       },
     },
-    relations: ['reasons', 'community_category'],
+    relations: ['reasons', 'community_category', 'community_posts'],
   });
 }
 
