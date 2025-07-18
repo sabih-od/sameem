@@ -15,7 +15,7 @@ import { extname } from 'path';
 import { CommunitiesService } from './communities.service';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
-import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody , ApiOperation, ApiParam} from '@nestjs/swagger';
 import { Community } from './entities/communities.entity';
 
 @ApiTags('Communities')
@@ -78,5 +78,13 @@ export class CommunitiesController {
     }
 
     return this.service.create(dto);
+  }
+
+  @Get('user/:userId')
+  @ApiOperation({ summary: 'Get communities created by a user' })
+  @ApiParam({ name: 'userId', required: true, description: 'User ID of the creator' })
+  @ApiOkResponse({ description: 'List of communities created by user', type: [Community] })
+  async getCommunitiesByUser(@Param('userId') userId: number) {
+    return await this.service.getCommunitiesByUser(+userId);
   }
 }

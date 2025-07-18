@@ -10,32 +10,81 @@ export class CommunityJoinsService {
     private repo: Repository<CommunityJoin>,
   ) {}
 
+  // async create(dto: CreateCommunityJoinDto) {
+  //   const existing = await this.repo.findOne({
+  //     where: {
+  //       user: { id: dto.user_id },
+  //       community: { id: dto.community_id },
+  //     },
+  //   });
+  //
+  //   if (dto.status === 1) {
+  //     if (existing) return existing;
+  //
+  //     const join = this.repo.create({
+  //       user: { id: dto.user_id },
+  //       community: { id: dto.community_id },
+  //     });
+  //     return this.repo.save(join);
+  //   } else if (dto.status === 0) {
+  //     if (existing) {
+  //       await this.repo.remove(existing);
+  //       return { message: 'Left community successfully' };
+  //     }
+  //     return { message: 'No existing join found to remove' };
+  //   }
+  //
+  //   return { message: 'Invalid status value (must be 0 or 1)' };
+  // }
+
   async create(dto: CreateCommunityJoinDto) {
     const existing = await this.repo.findOne({
       where: {
         user: { id: dto.user_id },
         community: { id: dto.community_id },
       },
+      relations: ['user', 'community'], // in case user already joined
     });
 
     if (dto.status === 1) {
-      if (existing) return existing;
+      if (existing) {
+        return {
+          message: 'Already joined community',
+          user: existing.user,
+          community: existing.community,
+        };
+      }
 
       const join = this.repo.create({
         user: { id: dto.user_id },
         community: { id: dto.community_id },
       });
-      return this.repo.save(join);
+
+      const saved = await this.repo.save(join);
+
+      // Load full user & community details
+      const full = await this.repo.findOne({
+        where: { id: saved.id },
+        relations: ['user', 'community'],
+      });
+
+      return {
+        message: 'Joined community successfully',
+        user: full.user,
+        community: full.community,
+      };
     } else if (dto.status === 0) {
       if (existing) {
         await this.repo.remove(existing);
         return { message: 'Left community successfully' };
       }
+
       return { message: 'No existing join found to remove' };
     }
 
     return { message: 'Invalid status value (must be 0 or 1)' };
   }
+
 
   findAll() {
     return this.repo.find({

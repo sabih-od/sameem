@@ -7,6 +7,7 @@ import { UpdateCommunityDto } from './dto/update-community.dto';
 import { Reason } from 'src/reasons/entities/reason.entity';
 import { CommunityCategory } from './entities/community-category.entity';
 import { User } from 'src/users/entities/user.entity';
+import {CommunityJoin} from "../community-joins/entities/community-join.entity";
     
 @Injectable()
 export class CommunitiesService {
@@ -19,30 +20,71 @@ export class CommunitiesService {
 
      @Inject('COMMUNITY_CATEGORY_REPOSITORY')
     private communityCategoryRepo: Repository<CommunityCategory>,
+
+    @Inject('COMMUNITY_JOIN_REPOSITORY')
+    private communityJoinRepo: Repository<CommunityJoin>,
   ) {}
 
+//   async create(dto: CreateCommunityDto) {
+//   const community = new Community();
+//   community.name = dto.name;
+//   community.description = dto.description;
+//   community.image = dto.image;
+//
+//   if (dto.created_by) {
+//     community.created_by = { id: dto.created_by } as User;
+//   }
+//
+//   if (dto.reason_ids?.length) {
+//     community.reasons = await this.reasonRepo.findByIds(dto.reason_ids);
+//   }
+//
+//   if (dto.community_category_id) {
+//     community.community_category = await this.communityCategoryRepo.findOneBy({
+//       id: dto.community_category_id
+//     });
+//   }
+//
+//   return this.communityRepo.save(community);
+// }
+
   async create(dto: CreateCommunityDto) {
-  const community = new Community();
-  community.name = dto.name;
-  community.description = dto.description;
-  community.image = dto.image;
+    const community = new Community();
+    community.name = dto.name;
+    community.description = dto.description;
+    community.image = dto.image;
 
-  if (dto.created_by) {
-    community.created_by = { id: dto.created_by } as User;
+    if (dto.created_by) {
+      community.created_by = { id: dto.created_by } as User;
+    }
+
+    if (dto.reason_ids?.length) {
+      community.reasons = await this.reasonRepo.findByIds(dto.reason_ids);
+    }
+
+    if (dto.community_category_id) {
+      community.community_category = await this.communityCategoryRepo.findOneBy({
+        id: dto.community_category_id
+      });
+    }
+
+    // Step 1: Save the new community
+    const savedCommunity = await this.communityRepo.save(community);
+
+    // Step 2: Automatically join the creator to the community
+    if (dto.created_by) {
+      const join = this.communityJoinRepo.create({
+        user: { id: dto.created_by },
+        community: savedCommunity,
+      });
+      await this.communityJoinRepo.save(join);
+    }
+
+    return {
+      message: 'Community created and user joined successfully',
+      community: savedCommunity,
+    };
   }
-
-  if (dto.reason_ids?.length) {
-    community.reasons = await this.reasonRepo.findByIds(dto.reason_ids);
-  }
-
-  if (dto.community_category_id) {
-    community.community_category = await this.communityCategoryRepo.findOneBy({ 
-      id: dto.community_category_id 
-    });
-  }
-
-  return this.communityRepo.save(community);
-}
 
 
   findAll() {
@@ -89,22 +131,45 @@ export class CommunitiesService {
   }
 }
 
-async remove(id: number) {
-  const exists = await this.communityRepo.existsBy({ id });
-  if (!exists) {
-    throw new Error(`Community with ID ${id} not found`);
-  }
+// async remove(id: number) {
+//   const exists = await this.communityRepo.exist({ where: { id } });
+//   if (!exists) {
+//     throw new Error(`Community with ID ${id} not found`);
+//   }
+//
+//   try {
+//     const result = await this.communityRepo.delete(id);
+//     if (result.affected === 0) {
+//       throw new Error(`No community was deleted (ID: ${id})`);
+//     }
+//     return { success: true, message: `Community ${id} deleted` };
+//   } catch (error) {
+//     throw new Error(`Failed to delete community: ${error.message}`);
+//   }
+// }
 
-  try {
-    const result = await this.communityRepo.delete(id);
-    if (result.affected === 0) {
-      throw new Error(`No community was deleted (ID: ${id})`);
+  async remove(id: number) {
+    // const exists = await this.communityRepo.exist({ where: { id } });
+    const exists = await this.communityRepo.existsBy({ id });
+    if (!exists) {
+      throw new Error(`Community with ID ${id} not found`);
     }
-    return { success: true, message: `Community ${id} deleted` };
-  } catch (error) {
-    throw new Error(`Failed to delete community: ${error.message}`);
+
+    try {
+      // Step 1: Delete related community joins
+      await this.communityJoinRepo.delete({ community: { id } });
+
+      // Step 2: Delete the community
+      const result = await this.communityRepo.delete(id);
+      if (result.affected === 0) {
+        throw new Error(`No community was deleted (ID: ${id})`);
+      }
+
+      return { success: true, message: `Community ${id} and related joins deleted` };
+    } catch (error) {
+      throw new Error(`Failed to delete community: ${error.message}`);
+    }
   }
-}
 
 async findByCategory(categoryId: number) {
   return this.communityRepo.find({
@@ -116,5 +181,12 @@ async findByCategory(categoryId: number) {
     relations: ['reasons', 'community_category'],
   });
 }
+
+  async getCommunitiesByUser(userId: number) {
+    return this.communityRepo.find({
+      where: { created_by: { id: userId } },
+      relations: ['community_category', 'reasons'], // Add any other needed relations
+    });
+  }
 
 }

@@ -8,6 +8,7 @@ import { CommunityCategory } from './entities/community-category.entity';
 import { communityProviders } from './community.providers';
 import { DatabaseModule } from 'src/database/database.module';
 import { ReasonsModule } from 'src/reasons/reasons.module';
+import { CommunityJoinsModule } from 'src/community-joins/community-joins.module';
 import { CommunityCategoriesModule } from 'src/community-categories/community-categories.module';
 
 
@@ -16,6 +17,7 @@ import { CommunityCategoriesModule } from 'src/community-categories/community-ca
   DatabaseModule,
     ReasonsModule,
     CommunityCategoriesModule,
+    CommunityJoinsModule,
     // TypeOrmModule.forFeature([CommunityCategory]),
   ],
   controllers: [CommunitiesController],
