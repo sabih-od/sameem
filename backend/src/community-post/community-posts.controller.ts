@@ -23,7 +23,8 @@ import { CommunityPost } from './entities/community-post.entity';
 @ApiTags('Community Posts')
 @Controller('community-posts')
 export class CommunityPostsController {
-  constructor(private readonly service: CommunityPostsService) {}
+  constructor(private readonly service: CommunityPostsService) {
+  }
 
   // @Post()
   // create(@Body() dto: CreateCommunityPostDto) {
@@ -31,9 +32,9 @@ export class CommunityPostsController {
   // }
 
   @Post()
-  @ApiOkResponse({ description: 'Create a community post', type: CommunityPost })
+  @ApiOkResponse({description: 'Create a community post', type: CommunityPost})
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateCommunityPostDto })
+  @ApiBody({type: CreateCommunityPostDto})
   @UseInterceptors(
       FileInterceptor('image', {
         storage: diskStorage({
@@ -55,12 +56,43 @@ export class CommunityPostsController {
       dto.image = `${app_url.replace(/\/api$/, '')}/uploads/community-posts/${file.filename}`;
     }
 
-    return this.service.create(dto);
+    // return this.service.create(dto);
+    const result = await this.service.create(dto);
+    return {
+      success: true,
+      message: 'Community post created successfully',
+      data: result,
+    };
   }
 
+  catch(error) {
+    return {
+      success: false,
+      message: error.message || 'Failed to create community post',
+    };
+  }
+
+
+  // @Get()
+  // findAll() {
+  //   return this.service.findAll();
+  // }
+
   @Get()
-  findAll() {
-    return this.service.findAll();
+  async findAll() {
+    try {
+      const posts = await this.service.findAll();
+      return {
+        success: true,
+        message: 'Community posts fetched successfully',
+        data: posts,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Error fetching community posts',
+      };
+    }
   }
 
   @Get(':id')
@@ -68,20 +100,56 @@ export class CommunityPostsController {
     return this.service.findOne(+id);
   }
 
+  // @Put(':id')
+  // update(@Param('id') id: string, @Body() dto: UpdateCommunityPostDto) {
+  //   return this.service.update(+id, dto);
+  // }
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateCommunityPostDto) {
-    return this.service.update(+id, dto);
+  async update(@Param('id') id: string, @Body() dto: UpdateCommunityPostDto) {
+    const updated = await this.service.update(+id, dto);
+    return {
+      message: 'Community post updated successfully.',
+      data: updated,
+    };
   }
 
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.service.remove(+id);
+  // }
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.service.remove(+id);
+    return {
+      message: 'Community post deleted successfully.',
+    };
   }
+
+  // @Get('by-community/:communityId')
+  // @ApiParam({ name: 'communityId', type: Number })
+  // @ApiOkResponse({ type: [CommunityPost] })
+  // async getPostsByCommunity(@Param('communityId', ParseIntPipe) communityId: number) {
+  //   return this.service.findByCommunityId(communityId);
+  // }
 
   @Get('by-community/:communityId')
   @ApiParam({ name: 'communityId', type: Number })
   @ApiOkResponse({ type: [CommunityPost] })
   async getPostsByCommunity(@Param('communityId', ParseIntPipe) communityId: number) {
-    return this.service.findByCommunityId(communityId);
+    try {
+      const posts = await this.service.findByCommunityId(communityId);
+      return {
+        success: true,
+        message: 'Posts fetched successfully',
+        data: posts,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: 'Error fetching posts for the community',
+      };
+    }
   }
+
 }
