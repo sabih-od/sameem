@@ -8,6 +8,7 @@ import { Reason } from 'src/reasons/entities/reason.entity';
 import { CommunityCategory } from './entities/community-category.entity';
 import { User } from 'src/users/entities/user.entity';
 import {CommunityJoin} from "../community-joins/entities/community-join.entity";
+import {ChatService} from "../chat/chat.service";
     
 @Injectable()
 export class CommunitiesService {
@@ -23,6 +24,8 @@ export class CommunitiesService {
 
     @Inject('COMMUNITY_JOIN_REPOSITORY')
     private communityJoinRepo: Repository<CommunityJoin>,
+
+    private readonly chatService: ChatService,
   ) {}
 
 //   async create(dto: CreateCommunityDto) {
@@ -78,6 +81,13 @@ export class CommunitiesService {
         community: savedCommunity,
       });
       await this.communityJoinRepo.save(join);
+
+      // create channel for community
+      await this.chatService.createChannel({
+        chatType: 'community',
+        communityId: savedCommunity.id,
+        participantIds: [dto.created_by],
+      });
     }
 
     return {
