@@ -156,8 +156,8 @@ export class CommunitiesService {
       image: dto.image ?? community.image,
     });
 
-    if (dto.hasOwnProperty('reason_ids')) {
-      if (Array.isArray(dto.reason_ids) && dto.reason_ids.length > 0) {
+    if (Object.prototype.hasOwnProperty.call(dto, 'reason_ids')) {
+        if (Array.isArray(dto.reason_ids) && dto.reason_ids.length > 0) {
         const reasons = await this.reasonRepo.findByIds(dto.reason_ids);
         community.reasons = reasons;
       } else {
@@ -166,7 +166,7 @@ export class CommunitiesService {
     }
 
     // Update category if provided
-    if (dto.hasOwnProperty('community_category_id')) {
+    if (Object.prototype.hasOwnProperty.call(dto, 'community_category_id')) {
       if (dto.community_category_id) {
         const category = await this.communityCategoryRepo.findOneBy({ id: dto.community_category_id });
         community.community_category = category;
