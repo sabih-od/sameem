@@ -35,9 +35,36 @@ export class CommunitiesController {
     return this.service.findOne(+id);
   }
 
+  // @Put(':id')
+  // @ApiOkResponse({ description: 'Update community', type: Community })
+  // update(@Param('id') id: string, @Body() dto: UpdateCommunityDto) {
+  //   return this.service.update(+id, dto);
+  // }
+
   @Put(':id')
   @ApiOkResponse({ description: 'Update community', type: Community })
-  update(@Param('id') id: string, @Body() dto: UpdateCommunityDto) {
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: UpdateCommunityDto })
+  @UseInterceptors(FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './uploads/community/',
+      filename: (req, file, callback) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const ext = extname(file.originalname);
+        callback(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
+      },
+    }),
+  }))
+  async update(
+      @Param('id') id: string,
+      @Body() dto: UpdateCommunityDto,
+      @UploadedFile() file?: Express.Multer.File,
+  ) {
+    if (file) {
+      const app_url = process.env.APP_URL || 'http://localhost:3013/';
+      dto.image = `${app_url.replace(/\/api$/, '')}/uploads/community/${file.filename}`;
+    }
+
     return this.service.update(+id, dto);
   }
 

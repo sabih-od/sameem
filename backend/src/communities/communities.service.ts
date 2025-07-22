@@ -108,38 +108,79 @@ export class CommunitiesService {
     });
   }
 
+//   async update(id: number, dto: UpdateCommunityDto) {
+//   const community = await this.communityRepo.findOne({
+//     where: { id },
+//     relations: ['reasons', 'community_category']
+//   });
+//
+//   if (!community) {
+//     throw new Error(`Community with ID ${id} not found`);
+//   }
+//
+//   Object.assign(community, dto);
+//
+//   if (dto.reason_ids) {
+//     const reasons = dto.reason_ids.length
+//       ? await this.reasonRepo.findByIds(dto.reason_ids)
+//       : [];
+//     community.reasons = reasons;
+//   }
+//
+//   if (dto.community_category_id !== undefined) {
+//     const category = dto.community_category_id
+//       ? await this.communityCategoryRepo.findOneBy({ id: dto.community_category_id })
+//       : null;
+//     community.community_category = category;
+//   }
+//
+//   try {
+//     return await this.communityRepo.save(community);
+//   } catch (error) {
+//     throw new Error(`Failed to update community: ${error.message}`);
+//   }
+// }
   async update(id: number, dto: UpdateCommunityDto) {
-  const community = await this.communityRepo.findOne({ 
-    where: { id },
-    relations: ['reasons', 'community_category']
-  });
+    const community = await this.communityRepo.findOne({
+      where: { id },
+      relations: ['reasons', 'community_category'],
+    });
 
-  if (!community) {
-    throw new Error(`Community with ID ${id} not found`);
+    if (!community) {
+      throw new Error(`Community with ID ${id} not found`);
+    }
+
+    Object.assign(community, {
+      name: dto.name ?? community.name,
+      description: dto.description ?? community.description,
+      image: dto.image ?? community.image,
+    });
+
+    if (dto.hasOwnProperty('reason_ids')) {
+      if (Array.isArray(dto.reason_ids) && dto.reason_ids.length > 0) {
+        const reasons = await this.reasonRepo.findByIds(dto.reason_ids);
+        community.reasons = reasons;
+      } else {
+        community.reasons = [];
+      }
+    }
+
+    // Update category if provided
+    if (dto.hasOwnProperty('community_category_id')) {
+      if (dto.community_category_id) {
+        const category = await this.communityCategoryRepo.findOneBy({ id: dto.community_category_id });
+        community.community_category = category;
+      } else {
+        community.community_category = null;
+      }
+    }
+
+    try {
+      return await this.communityRepo.save(community);
+    } catch (error) {
+      throw new Error(`Failed to update community: ${error.message}`);
+    }
   }
-
-  Object.assign(community, dto);
-
-  if (dto.reason_ids) {
-    const reasons = dto.reason_ids.length 
-      ? await this.reasonRepo.findByIds(dto.reason_ids) 
-      : [];
-    community.reasons = reasons;
-  }
-
-  if (dto.community_category_id !== undefined) {
-    const category = dto.community_category_id 
-      ? await this.communityCategoryRepo.findOneBy({ id: dto.community_category_id })
-      : null;
-    community.community_category = category;
-  }
-
-  try {
-    return await this.communityRepo.save(community);
-  } catch (error) {
-    throw new Error(`Failed to update community: ${error.message}`);
-  }
-}
 
 // async remove(id: number) {
 //   const exists = await this.communityRepo.exist({ where: { id } });
