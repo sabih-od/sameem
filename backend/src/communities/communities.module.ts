@@ -10,6 +10,7 @@ import { DatabaseModule } from 'src/database/database.module';
 import { ReasonsModule } from 'src/reasons/reasons.module';
 import { CommunityJoinsModule } from 'src/community-joins/community-joins.module';
 import { CommunityCategoriesModule } from 'src/community-categories/community-categories.module';
+import {ChatModule} from "../chat/chat.module";
 
 
 @Module({
@@ -18,9 +19,10 @@ import { CommunityCategoriesModule } from 'src/community-categories/community-ca
     ReasonsModule,
     CommunityCategoriesModule,
     CommunityJoinsModule,
+    ChatModule,
     // TypeOrmModule.forFeature([CommunityCategory]),
   ],
   controllers: [CommunitiesController],
-  providers: [CommunitiesService, ...communityProviders],
+  providers: [CommunitiesService, ...communityProviders, CommunitiesService],
 })
 export class CommunitiesModule {}

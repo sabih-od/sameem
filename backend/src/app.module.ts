@@ -35,6 +35,7 @@ import { CommunityJoinsModule } from './community-joins/community-joins.module';
 import { CommunityPostsModule } from './community-post/community-posts.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatsModule } from './chats/chats.module';
+import { ChatModule } from './chat/chat.module';
 
 
 
@@ -43,8 +44,8 @@ import { ChatsModule } from './chats/chats.module';
     ConfigModule.forRoot(),
     // TypeOrmModule.forRoot({
     //     type: 'mysql',
-    //     host: '192.168.56.56', 
-    //     port: 3306,           
+    //     host: '192.168.56.56',
+    //     port: 3306,
     //     username: 'homestead',
     //     password: 'secret',
     //     database: 'sameem',
@@ -82,6 +83,7 @@ import { ChatsModule } from './chats/chats.module';
     CommunityPostsModule,
     FriendModule,
     ChatsModule,
+    ChatModule,
     
   ],
   controllers: [AppController],
