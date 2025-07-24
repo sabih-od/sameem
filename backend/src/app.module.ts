@@ -36,6 +36,8 @@ import { CommunityPostsModule } from './community-post/community-posts.module';
 import { FriendModule } from './friend/friend.module';
 import { ChatsModule } from './chats/chats.module';
 import { ChatModule } from './chat/chat.module';
+import { MusicCategoryModule } from './music-category/music-category.module';
+import { MusicModule } from './music/music.module';
 
 
 
@@ -84,6 +86,8 @@ import { ChatModule } from './chat/chat.module';
     FriendModule,
     ChatsModule,
     ChatModule,
+    MusicCategoryModule,
+    MusicModule,
     
   ],
   controllers: [AppController],
