@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -16,7 +17,7 @@ import { extname } from 'path';
 import { CommunityPostsService } from './community-posts.service';
 import { CreateCommunityPostDto } from './dto/create-community-post.dto';
 import { UpdateCommunityPostDto } from './dto/update-community-post.dto';
-import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody, ApiParam } from '@nestjs/swagger';
+import {ApiTags, ApiOkResponse, ApiConsumes, ApiBody, ApiParam, ApiQuery, ApiOperation} from '@nestjs/swagger';
 import { CommunityPost } from './entities/community-post.entity';
 
 
@@ -79,13 +80,18 @@ export class CommunityPostsController {
   // }
 
   @Get()
-  async findAll() {
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  async findAll(
+      @Query('page') page = 1,
+      @Query('limit') limit = 10
+  ) {
     try {
-      const posts = await this.service.findAll();
+      const result = await this.service.findAll(+page, +limit);
       return {
         success: true,
         message: 'Community posts fetched successfully',
-        data: posts,
+        ...result,
       };
     } catch (error) {
       return {
@@ -94,6 +100,7 @@ export class CommunityPostsController {
       };
     }
   }
+
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -134,15 +141,20 @@ export class CommunityPostsController {
   // }
 
   @Get('by-community/:communityId')
-  @ApiParam({ name: 'communityId', type: Number })
-  @ApiOkResponse({ type: [CommunityPost] })
-  async getPostsByCommunity(@Param('communityId', ParseIntPipe) communityId: number) {
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiOperation({ summary: 'Get Community Posts bu Community ID' })
+  async getPostsByCommunity(
+      @Param('communityId', ParseIntPipe) communityId: number,
+      @Query('page') page = 1,
+      @Query('limit') limit = 10
+  ) {
     try {
-      const posts = await this.service.findByCommunityId(communityId);
+      const result = await this.service.findByCommunityId(communityId, +page, +limit);
       return {
         success: true,
         message: 'Posts fetched successfully',
-        data: posts,
+        ...result,
       };
     } catch (error) {
       return {
@@ -151,5 +163,4 @@ export class CommunityPostsController {
       };
     }
   }
-
 }
