@@ -1,5 +1,5 @@
 // src/music-category/music-category.service.ts
-import { Inject, Injectable, BadRequestException } from '@nestjs/common';
+import { Inject, Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { MusicCategory } from './entities/music-category.entity';
 import { CreateMusicCategoryDto } from './dto/create-music-category.dto';
@@ -33,7 +33,16 @@ export class MusicCategoryService {
         return this.categoryRepo.find({ relations: ['musics'] });
     }
 
-    findOne(id: number): Promise<MusicCategory> {
-        return this.categoryRepo.findOne({ where: { id }, relations: ['musics'] });
+    async findOne(id: number): Promise<MusicCategory> {
+        const category = await this.categoryRepo.findOne({
+            where: { id },
+            relations: ['musics'],
+        });
+
+        if (!category) {
+            throw new NotFoundException(`Music category with ID ${id} not found`);
+        }
+
+        return category;
     }
 }

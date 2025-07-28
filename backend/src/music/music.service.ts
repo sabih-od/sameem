@@ -23,20 +23,32 @@ export class MusicService {
             throw new BadRequestException('Missing required fields');
         }
 
+        // Check if music category exists
+        const category = await this.categoryRepo.findOne({ where: { id: categoryId } });
+
+        if (!category) {
+            throw new NotFoundException(`Music category with ID ${categoryId} not found`);
+        }
+
         const image = files.image?.[0]?.filename || null;
         const audio = files.audio?.[0]?.filename || null;
 
+        const music = this.musicRepo.create({
+            title,
+            description,
+            category,
+            image,
+            audio,
+        });
+
+        await this.musicRepo.save(music);
+
         return {
             message: 'Music uploaded successfully',
-            data: {
-                title,
-                description,
-                categoryId,
-                image,
-                audio,
-            },
+            data: music,
         };
     }
+
     findAll(): Promise<Music[]> {
         return this.musicRepo.find({ relations: ['category'] });
     }
