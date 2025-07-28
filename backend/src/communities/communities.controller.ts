@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,7 +16,7 @@ import { extname } from 'path';
 import { CommunitiesService } from './communities.service';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
-import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody , ApiOperation, ApiParam} from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiConsumes, ApiBody , ApiOperation, ApiParam, ApiQuery} from '@nestjs/swagger';
 import { Community } from './entities/communities.entity';
 
 @ApiTags('Communities')
@@ -23,10 +24,30 @@ import { Community } from './entities/communities.entity';
 export class CommunitiesController {
   constructor(private readonly service: CommunitiesService) {}
 
+  // @Get()
+  // @ApiOkResponse({ description: 'List all communities', type: Community, isArray: true })
+  // findAll() {
+  //   return this.service.findAll();
+  // }
+
   @Get()
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   @ApiOkResponse({ description: 'List all communities', type: Community, isArray: true })
-  findAll() {
-    return this.service.findAll();
+  async findAll(
+      @Query('page') page = '1',
+      @Query('limit') limit = '10'
+  ) {
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
+    const result = await this.service.findAll(pageNum, limitNum);
+
+    return {
+      success: true,
+      message: '',
+      ...result,
+    };
   }
 
   @Get(':id')
@@ -74,11 +95,26 @@ export class CommunitiesController {
     return this.service.remove(+id);
   }
 
+  // @Get('by-category/:categoryId')
+  // @ApiOperation({ summary: 'Get communities by Category Id' })
+  // @ApiOkResponse({ description: 'Communities by category', type: Community, isArray: true })
+  // getByCategory(@Param('categoryId') categoryId: string) {
+  //   return this.service.findByCategory(+categoryId);
+  // }
+
   @Get('by-category/:categoryId')
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'Get communities by Category Id' })
   @ApiOkResponse({ description: 'Communities by category', type: Community, isArray: true })
-  getByCategory(@Param('categoryId') categoryId: string) {
-    return this.service.findByCategory(+categoryId);
+  getByCategory(
+      @Param('categoryId') categoryId: string,
+      @Query('page') page?: string,
+      @Query('limit') limit?: string,
+  ) {
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 10;
+    return this.service.findByCategory(+categoryId, pageNum, limitNum);
   }
 
   @Post()
@@ -109,10 +145,19 @@ export class CommunitiesController {
   }
 
   @Get('user/:userId')
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({ summary: 'Get communities created by a user' })
   @ApiParam({ name: 'userId', required: true, description: 'User ID of the creator' })
   @ApiOkResponse({ description: 'List of communities created by user', type: [Community] })
-  async getCommunitiesByUser(@Param('userId') userId: number) {
-    return await this.service.getCommunitiesByUser(+userId);
+  async getCommunitiesByUser(
+      @Param('userId') userId: number,
+      @Query('page') page?: string,
+      @Query('limit') limit?: string,
+  ) {
+    const pageNum = parseInt(page) || 1;
+    const limitNum = parseInt(limit) || 10;
+    return await this.service.getCommunitiesByUser(userId, pageNum, limitNum);
   }
+
 }

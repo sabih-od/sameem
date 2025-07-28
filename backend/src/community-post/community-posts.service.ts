@@ -20,9 +20,22 @@ export class CommunityPostsService {
     return this.repo.save(post);
   }
 
-  findAll() {
-    return this.repo.find({ relations: ['community'] });
+  async findAll(page: number, limit: number) {
+    const [data, total] = await this.repo.findAndCount({
+      relations: ['community'],
+      take: limit,
+      skip: (page - 1) * limit,
+      order: { created_at: 'DESC' },
+    });
+
+    return {
+      data,
+      total,
+      currentPage: page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
+
 
   findOne(id: number) {
     return this.repo.findOne({ where: { id }, relations: ['community'] });
@@ -39,15 +52,20 @@ export class CommunityPostsService {
     return this.repo.delete(id);
   }
 
-  async findByCommunityId(communityId: number): Promise<CommunityPost[]> {
-    return this.repo.find({
-      where: {
-        community: { id: communityId },
-      },
+  async findByCommunityId(communityId: number, page: number, limit: number) {
+    const [data, total] = await this.repo.findAndCount({
+      where: { community: { id: communityId } },
       relations: ['community'],
-      order: {
-        created_at: 'DESC',
-      },
+      take: limit,
+      skip: (page - 1) * limit,
+      order: { created_at: 'DESC' },
     });
+
+    return {
+      data,
+      total,
+      currentPage: page,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 }

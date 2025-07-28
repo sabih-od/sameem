@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable,  } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Community } from './entities/communities.entity';
@@ -96,9 +96,24 @@ export class CommunitiesService {
     };
   }
 
+  //
+  // findAll() {
+  //   return this.communityRepo.find({ relations: ['reasons', 'community_category'] });
+  // }
 
-  findAll() {
-    return this.communityRepo.find({ relations: ['reasons', 'community_category'] });
+  async findAll(page: number = 1, limit: number = 10) {
+    const [data, total] = await this.communityRepo.findAndCount({
+      relations: ['reasons', 'community_category'],
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return {
+      data,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   findOne(id: number) {
@@ -222,22 +237,37 @@ export class CommunitiesService {
     }
   }
 
-async findByCategory(categoryId: number) {
-  return this.communityRepo.find({
-    where: {
-      community_category: {
-        id: categoryId,
-      },
-    },
-    relations: ['reasons', 'community_category', 'community_posts'],
-  });
-}
-
-  async getCommunitiesByUser(userId: number) {
-    return this.communityRepo.find({
-      where: { created_by: { id: userId } },
-      relations: ['community_category', 'reasons'], // Add any other needed relations
+  async findByCategory(categoryId: number, page = 1, limit = 10) {
+    const [data, total] = await this.communityRepo.findAndCount({
+      where: { community_category: { id: categoryId } },
+      relations: ['reasons', 'community_category', 'community_posts'],
+      skip: (page - 1) * limit,
+      take: limit,
     });
+
+    return {
+      data,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+
+  async getCommunitiesByUser(userId: number, page = 1, limit = 10) {
+    const [data, total] = await this.communityRepo.findAndCount({
+      where: { created_by: { id: userId } },
+      relations: ['community_category', 'reasons'],
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return {
+      data,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
 }
