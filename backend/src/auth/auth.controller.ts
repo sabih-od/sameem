@@ -8,29 +8,31 @@ import {
     Request,
     UseGuards,
     UseInterceptors,
-    UploadedFile, ParseFilePipe, MaxFileSizeValidator, Param, Inject
+    UploadedFile, ParseFilePipe, MaxFileSizeValidator, Param, Inject,
+    Req
 } from '@nestjs/common';
-import {AuthService} from "./auth.service";
+import { AuthService } from "./auth.service";
 import { AuthGuard } from './auth.guard';
-import {SigninDto} from "./dto/signin.dto";
-import {CreateUserDto} from "../users/dto/create-user.dto";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {FileInterceptor} from "@nestjs/platform-express";
+import { SigninDto } from "./dto/signin.dto";
+import { CreateUserDto } from "../users/dto/create-user.dto";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { FileInterceptor } from "@nestjs/platform-express";
 import {
     deleteFileFromUploads,
     getRandomFileName,
     uploadFile
 } from "../helpers/helper";
-import {ForgotPasswordDto} from "./dto/forgot-password.dto";
-import {SubmitOTPDto} from "./dto/submit-otp.dto";
-import {UsersService} from "../users/users.service";
-import {UpdateUserDto} from "../users/dto/update-user.dto";
-import {ResetPasswordDto} from "./dto/reset-password.dto";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { SubmitOTPDto } from "./dto/submit-otp.dto";
+import { UsersService } from "../users/users.service";
+import { UpdateUserDto } from "../users/dto/update-user.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { firebaseAdmin } from '../firebase/firebase-admin';
-import {socketIoServer} from "../main";
-import {BlockUserDto} from "./dto/block-user.dto";
-import {Repository} from "typeorm";
-import {User} from "../users/entities/user.entity";
+import { socketIoServer } from "../main";
+import { BlockUserDto } from "./dto/block-user.dto";
+import { Repository } from "typeorm";
+import { User } from "../users/entities/user.entity";
+import { FCMTokenDto } from "./dto/fcm-token.dto";
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -40,7 +42,7 @@ export class AuthController {
         private userService: UsersService,
         @Inject('USER_REPOSITORY')
         private userRepository: Repository<User>,
-    ) {}
+    ) { }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
@@ -83,11 +85,20 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post('upload-profile-picture')
     @ApiBearerAuth()
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                profile_picture: { type: 'string', format: 'binary' }
+            }
+        }
+    })
     @UseInterceptors(FileInterceptor('profile_picture'))
     async uploadProfilePicture(@Request() req, @UploadedFile(
         new ParseFilePipe({
             validators: [
-                new MaxFileSizeValidator({maxSize: 100000000})
+                new MaxFileSizeValidator({ maxSize: 100000000 })
             ]
         })
     ) profile_picture: Express.Multer.File) {
@@ -121,7 +132,7 @@ export class AuthController {
         return {
             success: !res.error,
             message: res.error ? res.error : 'Profile picture updated successfully!',
-            data: res.error ? [] : {profile_picture: file_path},
+            data: res.error ? [] : { profile_picture: file_path },
         }
     }
 
@@ -181,11 +192,10 @@ export class AuthController {
         }
     }
 
-    @UseGuards(AuthGuard)
     @Post('reset-password')
     @ApiBearerAuth()
     async resetPassword(@Request() req, @Body() resetPasswordDto: ResetPasswordDto) {
-        let user = await this.authService.getUserByEmail(req.user.email);
+        let user = await this.authService.getUserByEmail(resetPasswordDto.email);
 
         let updateUserDto = new UpdateUserDto();
         updateUserDto.password = resetPasswordDto.password
@@ -202,7 +212,7 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Post('block-user/:flag')
     @ApiBearerAuth()
-    async blockUser (@Request() req, @Body() blockUserDto: BlockUserDto, @Param('flag') flag: number) {
+    async blockUser(@Request() req, @Body() blockUserDto: BlockUserDto, @Param('flag') flag: number) {
         let user = await this.userService.findOneByEmail(req.user.email);
         if (user.id == blockUserDto.user_id) {
             return {
@@ -236,7 +246,7 @@ export class AuthController {
                     };
                 }
 
-                blocked_users.push(user.id);
+                blocked_users.push(user_to_block.id);
                 user.blocked_users = JSON.stringify(blocked_users);
             }
         } else if (flag == 0) {
@@ -275,14 +285,14 @@ export class AuthController {
         return {
             success: true,
             message: 'User ' + ((flag == 0) ? 'un-' : '') + 'blocked successfully.',
-            data: [],
+            data: user_to_block,
         }
     }
 
     @UseGuards(AuthGuard)
     @Get('blocked-users')
     @ApiBearerAuth()
-    async blockedUsers (@Request() req) {
+    async blockedUsers(@Request() req) {
         let user = await this.userService.findOneByEmail(req.user.email);
         if (user.error) {
             return {
@@ -292,8 +302,22 @@ export class AuthController {
             }
         }
 
-        let blocked_users = (user.blocked_users == null) ? JSON.stringify([]) : user.blocked_users;
-        blocked_users = JSON.parse(blocked_users);
+        let blocked_users_ids = (user.blocked_users == null) ? JSON.stringify([]) : user.blocked_users;
+        blocked_users_ids = JSON.parse(blocked_users_ids);
+
+        let blocked_users = await Promise.all(
+            blocked_users_ids.map(async (blocked_users_id) => {
+                let blocked_user = await this.userService.findOne(+blocked_users_id);
+
+                if (!blocked_user.error) {
+                    delete blocked_user.otp;
+                    delete blocked_user.password;
+
+                    return blocked_user;
+                }
+
+            }).filter((item) => item !== null && item !== undefined)
+        );
 
         return {
             success: true,
@@ -309,14 +333,10 @@ export class AuthController {
                 title: 'Test Notification',
                 body: 'Test Body',
             },
-            // topic: 'test', // The topic to which the notification will be sent
-            tokens: ['cK-GQIkDT065HxEaeydpBr:APA91bHZuskTSOaPArpLkRCU3D4iNYtEnRNZsZN-lA2aaEXGwtvbUIMrAN1u0qeOntdRWXVjgbxuE6rt40RBSfbzo21sBMwFCL6KhR7U8vZVHuK_KeMKTP9N6GQqz_O21va2ZvwzeXw6'], // The topic to which the notification will be sent
+            tokens: ['fweFoukD8TUZEBnzIRSJHn:APA91bF9OCiyv6mQaHyFB7MhXnR53_ZB_IiCvnWBucyKKVr758oidSu4bD4BogAvUWGbua9-tcd4Ekr1tB1pNy3qaCCvA6Z1PK9MJA5Xcuy48NlnKMnewm3CrT_8klih9eoJb42Ysbkm'],
         };
 
-        // let response = await firebaseAdmin.messaging().send(message);
         let response = await firebaseAdmin.messaging().sendMulticast(message);
-
-        console.log(response);
 
         return response;
     }
@@ -333,5 +353,57 @@ export class AuthController {
             message: 'Socket sent successfully!',
             data: []
         };
+    }
+
+    @UseGuards(AuthGuard)
+    @Post('fcm-token')
+    @ApiBearerAuth()
+    async fcmTokenUpdate(@Request() req, @Body() FCMTokenDto: FCMTokenDto) {
+        const response = await this.authService.fcmTokenUpdate(FCMTokenDto, req.user.id);
+
+        return {
+            success: true,
+            message: 'Token update successfully!',
+            data: response
+        };
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('fcm-stream-init')
+    @ApiBearerAuth()
+    async fcmStreamInit() {
+
+        const response = await this.authService.fcmStreamInit();
+
+        return {
+            success: true,
+            message: 'FCM Stream Init',
+            data: response
+        };
+    }
+
+
+    @UseGuards(AuthGuard)
+    @Get('/deletion-account')
+    @ApiBearerAuth()
+    async removeCurrentUser(@Req() req: any) {
+        const id = req.user.id;
+
+        let user = await this.userService.findOne(id);
+        if (user.error) {
+            return {
+                success: false,
+                message: user.error,
+                data: [],
+            }
+        }
+
+        let res = await this.userService.remove(+id);
+
+        return {
+            success: !res.error,
+            message: res.error ? res.error : 'Account deleted successfully!',
+            data: res.error ? [] : res,
+        }
     }
 }

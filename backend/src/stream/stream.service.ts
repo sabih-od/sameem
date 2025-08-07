@@ -1,0 +1,110 @@
+import { Inject, Injectable } from '@nestjs/common';
+import * as fs from 'fs';
+import * as path from 'path';
+import { spawn } from 'child_process';
+import { Repository } from 'typeorm';
+import { Stream } from 'src/google-auth/entities/stream.entity';
+import axios, { AxiosResponse } from 'axios';
+
+@Injectable()
+export class StreamService {
+  private ffmpegProcess = null;
+  constructor(
+    @Inject('STREAM_REPOSITORY')
+    private readonly streamRepository: Repository<Stream>,
+  ) { }
+  async handleVideoUpload(
+    videoChunk: string
+  ) {
+    const latestStream = await this.streamRepository
+      .createQueryBuilder('stream')
+      .orderBy('stream.id', 'DESC')
+      .getOne();
+    if (!this.ffmpegProcess) {
+      this.ffmpegProcess = spawn('ffmpeg', [
+        '-re',
+        '-f', 'webm',
+        '-i', 'pipe:0',
+        '-c:v', 'libx264',
+        '-preset', 'ultrafast',
+        '-b:v', '3000k',
+        '-maxrate', '1000k',
+        '-bufsize', '2500k',
+        '-c:a', 'aac',
+        '-ar', '44100',
+        '-b:a', '128k',
+        '-f', 'flv',
+
+        latestStream.stream_url
+      ]);
+
+      this.ffmpegProcess.stdin.on('error', (e) => {
+        console.error('FFmpeg stdin error:', e);
+      });
+
+      this.ffmpegProcess.stderr.on('data', (data) => {
+        console.error('FFmpeg stderr:', data.toString());
+      });
+
+      this.ffmpegProcess.on('close', (code) => {
+        console.log(`FFmpeg process closed with code ${code}`);
+        this.ffmpegProcess = null;
+      });
+    }
+
+    fs.createReadStream(videoChunk).pipe(this.ffmpegProcess.stdin, { end: false });
+  }
+
+  async stopBroadcast() {
+    if (this.ffmpegProcess) {
+      this.ffmpegProcess.kill('SIGINT'); // Gracefully stop ffmpeg process
+      this.ffmpegProcess = null;
+      return 'The Streaming is stopped';
+    } else {
+      return 'Some Thing went wrong';
+    }
+  }
+  async getLiveStream(): Promise<string | false> {
+    const latestStream = await this.streamRepository
+      .createQueryBuilder('stream')
+      .orderBy('stream.id', 'DESC')
+      .getOne();
+
+    if (!latestStream) {
+      throw new Error('No latest stream found.');
+    }
+
+    const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=id&type=video&eventType=live&key=${latestStream.youtube_api_key}&channel_id=${latestStream.youtube_channel_id}&maxResults=1&order=date`;
+
+    try {
+      const response: AxiosResponse<any> = await axios.get(apiUrl);
+
+      // Accessing the data property
+      const data: any = response.data;
+      const liveEvent = data?.items?.[0];
+
+      if (!liveEvent) {
+        return false;
+      }
+
+      const videoId = liveEvent.id.videoId;
+      if (videoId) {
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        return embedUrl;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      throw new Error(`Error in fetching live event: ${error.message}`);
+    }
+  }
+
+  async getStreamUrl() {
+    const stream = await this.streamRepository
+      .createQueryBuilder('stream')
+      .orderBy('stream.id', 'DESC')
+      .getOne();
+    return stream.stream_url
+  }
+
+}

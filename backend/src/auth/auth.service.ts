@@ -1,4 +1,4 @@
-import {Inject, Injectable} from '@nestjs/common';
+import {ConflictException, Inject, Injectable} from '@nestjs/common';
 import { UsersService } from "../users/users.service";
 import * as bcrypt from 'bcrypt';
 import {JwtService} from "@nestjs/jwt";
@@ -11,6 +11,8 @@ import {generateOTP} from "../helpers/helper";
 import {MailService} from "../mail/mail.service";
 import {SubmitOTPDto} from "./dto/submit-otp.dto";
 import {UpdateUserDto} from "../users/dto/update-user.dto";
+import {FCMTokenDto} from "./dto/fcm-token.dto";
+import { firebaseAdmin } from '../firebase/firebase-admin';
 
 @Injectable()
 export class AuthService {
@@ -22,33 +24,46 @@ export class AuthService {
     ) {}
 
     async signIn(signInDto: SigninDto): Promise<any> {
-        const user = await this.usersService.findOneByEmail(signInDto.email);
+        try {
+            const user = await this.usersService.findOneByEmail(signInDto.email);
 
-        if (user.error) {
-            return user;
-        }
+            if (user.error) {
+                return user;
+            }
 
-        if (user.blocked_at && user.blocked_at != "") {
+            if (user.blocked_at && user.blocked_at != "") {
+                return {
+                    error: 'Your account has been blocked.'
+                }
+            }
+
+            if (!await bcrypt.compare(signInDto.password, user?.password)) {
+                return {
+                    error: 'Unauthorized'
+                };
+            }
+            const { password, ...result } = user;
+            const payload = { sub: user.id, ...user};
+
             return {
-                error: 'Your account has been blocked.'
+                ...payload,
+                access_token: await this.jwtService.signAsync(payload),
+            };
+        } catch (error) {
+            return {
+                error: error
             }
         }
-
-        if (!await bcrypt.compare(signInDto.password, user?.password)) {
-            return {
-                error: 'Unauthorized'
-            };
-        }
-        const { password, ...result } = user;
-        const payload = { sub: user.id, ...user};
-
-        return {
-            ...payload,
-            access_token: await this.jwtService.signAsync(payload),
-        };
     }
 
     async signup(signUpDto: CreateUserDto): Promise<any> {
+        const { email } = signUpDto;
+
+        // Check if the email already exists
+        const existingUser = await this.usersService.userByEmail(email);
+        if (existingUser) {
+          throw new ConflictException('Email already exists');
+        }
         const user = await this.usersService.create(signUpDto);
 
         if (user.error) {
@@ -91,9 +106,6 @@ export class AuthService {
                 }
             });
 
-            if (updateUserDto.password) {
-                updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
-            }
 
             await this.userRepository.update(user.id, updateUserDto);
 
@@ -147,9 +159,9 @@ export class AuthService {
             });
 
             let mailService = new MailService();
-            let html = "Thank you for using our service! Please find your One-Time Password (OTP) below:<br/><br/>Dear "+ (user.first_name + ' ' + user.last_name) +",<br/><br/>Thank you for using our service! Please find your One-Time Password (OTP) below:<br/><br/>OTP: "+ generated_otp +"<br/><br/>Please use this OTP to complete your action or verification. This code is valid for a single use and will expire in an hour.<br/><br/>If you did not request this OTP, please ignore this email. Your account and information are safe.<br/><br/>Thank you,<br/>Texas Christian Ashram.";
-            await mailService.sendEmail(user.email, 'OTP - Texas Christian Ashram', html);
-
+            let html = "Dear "+ (user.first_name + ' ' + user.last_name) +",<br/><br/>Thank you for using our service! Please find your One-Time Password (OTP) below:<br/><br/>OTP: "+ generated_otp +"<br/><br/>Please use this OTP to complete your action or verification. This code is valid for a single use and will expire in an hour.<br/><br/>If you did not request this OTP, please ignore this email. Your account and information are safe.<br/><br/>Thank you,<br/>Texas Christian Ashram.";
+          await mailService.sendEmail(user.email, 'OTP', html);
+            
             return 'An OTP was sent to your email';
         } catch (error) {
             if (error instanceof EntityNotFoundError) {
@@ -201,6 +213,44 @@ export class AuthService {
                 return {
                     error: 'No user with the provided email was found.'
                 };
+            }
+        }
+    }
+
+    async fcmTokenUpdate(FCMTokenDto: FCMTokenDto, user_id: number): Promise<any> {
+        try {
+            const result = await this.userRepository.update(user_id, {
+                fcm_token: FCMTokenDto.token
+            });
+
+            return result;
+        } catch (error) {
+            if (error instanceof EntityNotFoundError) {
+                return error;
+            }
+        }
+    }
+
+    async fcmStreamInit() : Promise<any> {
+        try {
+            const message = {
+                notification: {
+                    title: 'Live Streaming!',
+                    body: '"Currently, the admin is live."',
+                },
+                tokens: [],
+            };
+
+            const user = await this.usersService.getAllFCMTokens();
+            
+            await user.forEach(async data => {
+                await message.tokens.push(data);
+            });
+
+            return await firebaseAdmin.messaging().sendMulticast(message);
+        } catch (error) {
+            if (error instanceof EntityNotFoundError) {
+                return error;
             }
         }
     }

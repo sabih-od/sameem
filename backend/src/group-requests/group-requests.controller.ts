@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Inj
 import { GroupRequestsService } from './group-requests.service';
 import { CreateGroupRequestDto } from './dto/create-group-request.dto';
 import { UpdateGroupRequestDto } from './dto/update-group-request.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 import {AcceptGroupRequestDto} from "./dto/accept-group-request.dto";
 import {GroupsService} from "../groups/groups.service";
@@ -75,6 +75,8 @@ export class GroupRequestsController {
       }
   }
 
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'limit', required: false})
   @Get()
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
       let res = await this.groupRequestsService.findAll(page, limit);

@@ -2,7 +2,7 @@ import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query} fro
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "../auth/auth.guard";
 
 @ApiTags('Contacts')
@@ -25,6 +25,8 @@ export class ContactsController {
   }
 
   @Get()
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'limit', required: false})
   async findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
       let res = await this.contactsService.findAll(page, limit);
 
