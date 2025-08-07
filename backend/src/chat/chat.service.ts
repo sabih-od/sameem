@@ -95,13 +95,6 @@ export class ChatService {
     }
 
     async sendMessage(dto: SendMessageDto) {
-        // const msg = this.chatMessageRepository.create({
-        //     channel: { id: dto.channelId },
-        //     sender: { id: dto.senderId },
-        //     content: dto.content,
-        // });
-        //
-        // return this.chatMessageRepository.save(msg);
         const channel = await this.channelRepository.findOne({ where: { id: dto.channelId } });
         if (!channel) throw new NotFoundException('Channel not found');
 
@@ -111,8 +104,14 @@ export class ChatService {
             content: dto.content,
         });
 
-        return this.chatMessageRepository.save(message);
+        const savedMessage = await this.chatMessageRepository.save(message);
+
+        return this.chatMessageRepository.findOne({
+            where: { id: savedMessage.id },
+            relations: ['sender', 'channel'],
+        });
     }
+
 
     async getMessages(channelId: number, userId: number) {
         const channel = await this.channelRepository.findOne({
