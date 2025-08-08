@@ -7,6 +7,7 @@ import { CreateChannelDto } from './dto/create-channel.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { Community } from '../communities/entities/communities.entity';
 import {CommunityJoin} from "../community-joins/entities/community-join.entity";
+import { Not } from 'typeorm';
 
 @Injectable()
 export class ChatService {
@@ -88,10 +89,38 @@ export class ChatService {
 
 
     async getUserChannels(userId: number) {
-        return this.chatUserRepository.find({
+        const userChannels = await this.chatUserRepository.find({
             where: { user: { id: userId } },
             relations: ['channel', 'channel.community'],
         });
+
+        const channelsWithDetails = await Promise.all(
+            userChannels.map(async (userChannel) => {
+                const channel = userChannel.channel;
+                
+                if (channel.chatType === 'private') {
+                    const otherParticipant = await this.chatUserRepository.findOne({
+                        where: { 
+                            channel: { id: channel.id },
+                            user: { id: Not(userId) }
+                        },
+                        relations: ['user'],
+                    });
+                    
+                    return {
+                        ...userChannel,
+                        channel: {
+                            ...channel,
+                            participant: otherParticipant?.user || null,
+                        }
+                    };
+                }
+                
+                return userChannel;
+            })
+        );
+
+        return channelsWithDetails;
     }
 
     async sendMessage(dto: SendMessageDto) {
