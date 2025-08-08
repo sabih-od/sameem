@@ -89,7 +89,7 @@ export class ChatService {
 
 
     async getUserChannels(userId: number) {
-        const userChannels = await this.chatUserRepository.find({
+const userChannels = await this.chatUserRepository.find({
             where: { user: { id: userId } },
             relations: ['channel', 'channel.community'],
         });
